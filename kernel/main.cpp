@@ -1,0 +1,21 @@
+#include "type.h"
+#include "printer.h"
+#include "interruptmanager.h"
+#include "utils.h"
+#include "driver/vga.h"
+
+int main() {
+    InterruptManager interruptManager;
+    interruptManager.setup();
+
+    VGA vga;
+    vga.setupVideoMode();
+    vga.drawRectangle(0,0, 160, 100, VGAColor::YELLOW);
+
+    
+    asm ("          \
+    _cpp_stop: \n   \
+        hlt;   \n   \
+        jmp _cpp_stop;");
+    return 0;
+}

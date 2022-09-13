@@ -1,0 +1,151 @@
+#include "interruptmanager.h"
+#include "printer.h"
+#include "iocommand.h"
+#include "utils.h"
+
+#define PIC1		0x20		/* IO base address for master PIC */
+#define PIC2		0xA0		/* IO base address for slave PIC */
+#define PIC1_COMMAND	PIC1
+#define PIC1_DATA	(PIC1+1)
+#define PIC2_COMMAND	PIC2
+#define PIC2_DATA	(PIC2+1)
+
+#define ICW1_ICW4	0x01		/* ICW4 (not) needed */
+#define ICW1_SINGLE	0x02		/* Single (cascade) mode */
+#define ICW1_INTERVAL4	0x04		/* Call address interval 4 (8) */
+#define ICW1_LEVEL	0x08		/* Level triggered (edge) mode */
+#define ICW1_INIT	0x10		/* Initialization - required! */
+ 
+#define ICW4_8086	0x01		/* 8086/88 (MCS-80/85) mode */
+#define ICW4_AUTO	0x02		/* Auto (normal) EOI */
+#define ICW4_BUF_SLAVE	0x08		/* Buffered mode/slave */
+#define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
+#define ICW4_SFNM	0x10		/* Special fully nested (not) */
+
+#define OFFSET 0
+
+extern uint16 GDT64Code;
+extern void* isrStubTable[];
+extern void *print;
+
+// static void testPageFault() {
+//     uint64 a = 12;
+//     uint64 m = 0xffffffff;
+//     uint64 *p = (uint64*)m;
+//     *p = a;
+//     Printer::print("Page Fault", 10);
+// }
+
+// static void testDivZero() {
+//     uint8 a = 12;
+//     uint8 b = 4;
+//     b = b - 4;
+//     uint8 c = a/b;
+//     Printer::print("Page Fault", 10);
+// }
+
+void PIC_remap()
+{
+	unsigned char a1, a2;
+ 
+	a1 = IOCommand::inb(PIC1_DATA);                        // save masks
+	a2 = IOCommand::inb(PIC2_DATA);
+ 
+	IOCommand::outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);  // starts the initialization sequence (in cascade mode)
+	IOCommand::io_wait();
+	IOCommand::outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
+	IOCommand::io_wait();
+	IOCommand::outb(PIC1_DATA, 0x0);                 // ICW2: Master PIC vector offset
+	IOCommand::io_wait();
+	IOCommand::outb(PIC2_DATA, 0x8);                 // ICW2: Slave PIC vector offset
+	IOCommand::io_wait();
+	IOCommand::outb(PIC1_DATA, 4);                       // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
+	IOCommand::io_wait();
+	IOCommand::outb(PIC2_DATA, 2);                       // ICW3: tell Slave PIC its cascade identity (0000 0010)
+	IOCommand::io_wait();
+ 
+	IOCommand::outb(PIC1_DATA, ICW4_8086);
+	IOCommand::io_wait();
+	IOCommand::outb(PIC2_DATA, ICW4_8086);
+	IOCommand::io_wait();
+ 
+	IOCommand::outb(PIC1_DATA, a1);
+	IOCommand::outb(PIC2_DATA, a2);
+}
+
+InterruptManager::InterruptManager() {
+
+}
+
+InterruptManager::~InterruptManager(){
+
+}
+
+void InterruptManager::setup() {
+    this->setupIDT();
+}
+
+void* InterruptManager::getIDTAddress() {
+    return this->idt;
+}
+
+void InterruptManager::exceptionHandle(uint64 vector) {
+    // Printer::printAddress(vector);
+    // if (vector == 0xD) {
+    //     // Printer::println("STOP", 5);
+    //     // asm("cli");
+    //     while (true)
+    //     {
+    //         asm ("          \
+    //         _int_stop: \n   \
+    //             hlt;   \n   \
+    //             jmp _int_stop;");
+    //         }
+        
+    // }
+    
+    uint8 value = IOCommand::inb(0x60);
+    // Printer::print(" INT ", 5);
+    // Printer::printAddress(value);
+
+    // if (value > 0) {
+        // keyboard.onTranslateScanCode(value);
+    // }else {
+    //     Printer::print(" [] ", 4);
+    // }
+    IOCommand::outb(0x20, 0x20);
+    IOCommand::outb(0xA0, 0x20);
+}
+
+void InterruptManager::setupIDT() {
+    idtr.base = (uint64)&idt[0];
+    idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
+ 
+    for (uint8 vector = 0; vector < 32; vector++) {
+        this->setGateEntry(vector, isrStubTable[vector], 0x8E);
+    }
+    PIC_remap();
+    IOCommand::outb(0x21, 0xfd);
+	IOCommand::outb(0xa1, 0xff);
+    asm ("lidt %0" : : "m"(idtr));
+    // asm ("int $10");
+    // Printer::println("OK1", 3);
+    // asm ("int $12");
+    // Printer::println("OK2", 3);
+    asm ("sti");
+
+    // testPageFault();
+    // testDivZero();
+}
+
+void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags) {
+    GateEntry* entry    = &idt[vector];
+    entry->isr_low      = (uint64)isr & 0xFFFF;
+    entry->kernel_cs    = GDT64Code;
+    entry->ist          = 0;
+    entry->attributes   = flags;
+    entry->isr_mid      = ((uint64)isr >> 16) & 0xFFFF;
+    entry->isr_high     = ((uint64)isr >> 32) & 0xFFFFFFFF;
+    entry->reserved     = 0;
+}
+
