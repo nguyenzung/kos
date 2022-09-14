@@ -12,6 +12,18 @@ char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len){
         
         len--;
     }
+    message[len-1]=48;
+    return message;
+}
+
+char* Utils::convertIntToDecString(uint64 value, char* message, uint8 len){
+    while (value > 0) {
+        uint8 r = value % 10;
+        value = value / 10;
+        message[len-1] = (r + 48);
+        len--;
+    }
+    message[len-1]=48;
     return message;
 }
 

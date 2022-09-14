@@ -24,6 +24,7 @@ ClassName* ClassName::getInstance() {               \
 class Utils{
 public:
     static char* convertIntToHexString(uint64 value, char* message, uint8 len);
+    static char* convertIntToDecString(uint64 value, char* message, uint8 len);
     static uint8 length(char *string);
 };
 

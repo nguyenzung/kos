@@ -1,5 +1,6 @@
 #include "vga.h"
 #include "../iocommand.h"
+#include "../printer.h"
 
 #define VGA_MISC            0x3c2
 #define VGA_CRTC_INDEX      0x3d4

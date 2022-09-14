@@ -1,5 +1,6 @@
 BUILD_DIR=build/
 
+# CPP_HEAD_FILES := $(shell find . -name *.h)
 CPP_SOURCE_FILES := $(shell find . -name *.cpp)
 CPP_OBJ_FILES := $(patsubst ./%.cpp, $(BUILD_DIR)%.o, $(CPP_SOURCE_FILES))
 
@@ -20,7 +21,7 @@ $(ASM_OBJ_FILES): $(BUILD_DIR)%.o : %.s
 	@echo $@ $<
 	nasm -f elf64 $< -o $@
 
-$(CPP_OBJ_FILES): $(BUILD_DIR)%.o : %.cpp
+$(CPP_OBJ_FILES): $(BUILD_DIR)%.o : %.cpp %.h
 	@echo $@ $<
 	g++ -fno-stack-protector -fno-exceptions -fno-rtti  -c $< -o $@
 

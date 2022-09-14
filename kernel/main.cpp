@@ -3,11 +3,26 @@
 #include "interruptmanager.h"
 #include "utils.h"
 #include "driver/vga.h"
+#include "memorymanager.h"
 
 int main() {
-    InterruptManager interruptManager;
-    interruptManager.setup();
+    // Printer::printlnNumber(12);
+    // InterruptManager interruptManager;
+    // interruptManager.setup();
 
+
+    MemoryManager memoryManager;
+    Printer::printlnAddress((uint64)&memoryManager);
+
+    void *p1 = memoryManager.malloc(6);
+    void *p2 = memoryManager.malloc(12);
+    void *p3 = memoryManager.malloc(20);
+    void *p4 = memoryManager.malloc(40);
+
+    Printer::printlnNumber((uint64)p1);
+    Printer::printlnNumber((uint64)p2);
+    Printer::printlnNumber((uint64)p3);
+    Printer::printlnNumber((uint64)p4);
     
     // VGA vga;
     // vga.setupVideoMode();

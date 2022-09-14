@@ -151,6 +151,8 @@ GDT64:
 GDTPTR		equ GDT64.Pointer
 ; GDT64Code   equ GDT64.Code
 section .data
+global protected_start_bss
+global protected_end_bss
 	current_lv2_index 			dw 0
 	current_lv1_index 			dw 0
 	support_cpuid_message 		db "[Support CPUID]",7
@@ -162,13 +164,17 @@ section .data
 	enable_paging_message 		db "[Enable Paging]",7
 	debug						db "[DEBUG]", 7
 	GDT64Code					dq  GDT64.Code
+	protected_start_bss			dq  lv4_page_address
+	protected_end_bss			dq  end_page_address
 
 section .bss
+
 	align 4096
 	lv4_page_address:	resb PAGE_TABLE_SIZE
 	lv3_page_address: 	resb LV3_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
 	lv2_page_address: 	resb LV2_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
 	lv1_page_address: 	resb LV1_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
+	end_page_address:	
 	
 
 	PAGE_TABLE_SIZE 	equ 4096

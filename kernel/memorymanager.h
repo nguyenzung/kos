@@ -4,28 +4,32 @@
 #include "type.h"
 #include "utils.h"
 
+#define MEMORY_ENTRY_SIZE 10
 typedef struct MemoryEntry {
     MemoryEntry *next;
-    MemoryEntry *back;
     uint16 size;
-} MemoryEntry;
+}__attribute__((packed))  MemoryEntry;
 
 class MemoryManager {
-    uint64 kernelHeapAddress;
-    uint64 kernelStackBase;
+    void* kernelHeapAddress;
+    void* kernelStackBase;
     MemoryEntry *first;
-    MemoryEntry *last;
     DEF_MODULE_INSTANCE(MemoryManager)
 public:
     MemoryManager();
     ~MemoryManager();
 
-    MemoryEntry* find(uint16 size);
+    
+    MemoryEntry* find(uint16 size);    // return the address of the entry such that will point to the creating entry
 
     void* malloc(uint16 size);
-    bool free(void *ptr);
+    void* free(void *ptr);
 
-    bool reserve(void* ptr, uint16 size);
+    void* reserve(void* ptr, uint16 size);  // reserve for drivers, modules
+
+// protected:
+    void* makeFirstMemoryEntry(uint16 size);
+    void* makeMemoryEntry(void* prevAddress, uint16 size);
 };
 
 #endif

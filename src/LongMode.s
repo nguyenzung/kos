@@ -135,6 +135,7 @@ global stackBase
 global stackSize
 global heapBase
 
+section .data
 isrStubTable:
     dq 0
 %assign i 0 
@@ -145,7 +146,7 @@ isrStubTable:
     stackBase dq stack_base
     heapBase  dq heap_base
     stackSize dq stack_size
-; section .data
+;
 
 section .bss
 global stack_base

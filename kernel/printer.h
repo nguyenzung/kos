@@ -11,6 +11,8 @@ public:
     static void println(char *message, uint8 length);
     static void printAddress(uint64 address);
     static void printlnAddress(uint64 address);
+    static void printNumber(uint64 address);
+    static void printlnNumber(uint64 address);
     static void clearScreen();
 };
 
