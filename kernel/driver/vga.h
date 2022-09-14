@@ -1,5 +1,6 @@
 #include "basegraphicsdevice.h"
 #include "../type.h"
+#include "../utils.h"
 
 #ifndef VGA_H
 #define VGA_H
@@ -29,7 +30,7 @@ class VGA: BaseGraphicsDevice
 protected:
     uint8* getFrameSegment();        
     VGAColor getColorIndex(uint8 r, uint8 g, uint8 b);
-    
+    DEF_MODULE_INSTANCE(VGA)
 public:
     VGA();
     void setupVideoMode() override;

@@ -26,6 +26,8 @@
 isrStub_%+%1:
     PUSH_REGISTERS
     cld
+    call _ZN16InterruptManager11getInstanceEv
+    mov rdi, rax
     mov rsi, %1
     call _ZN16InterruptManager15exceptionHandleEm
     POP_REGISTERS
@@ -36,6 +38,8 @@ isrStub_%+%1:
 isrStub_%+%1:
     PUSH_REGISTERS
     cld
+    call _ZN16InterruptManager11getInstanceEv
+    mov rdi, rax
     mov rsi, %1
     call _ZN16InterruptManager15exceptionHandleEm
     POP_REGISTERS
@@ -44,13 +48,13 @@ isrStub_%+%1:
 
 section .text
 global startLongMode
-global isrStubTable
 global __cxa_pure_virtual
 ; extern callConstructors;
-extern stack_base
+; extern stack_base
 extern GDT64.Data
 extern main
-extern _ZN16InterruptManager15exceptionHandleEm
+extern _ZN16InterruptManager15exceptionHandleEm ; exceptionHandler
+extern _ZN16InterruptManager11getInstanceEv ; getInterruptHandler
 bits 64
 %assign i 0 
 %rep    32 
@@ -65,6 +69,7 @@ __cxa_pure_virtual:
 startLongMode:
     cli               
     ; sti
+    ; mov rax, rip
     mov rax, GDT64.Data
     mov ss, rax
     mov ds, rax
@@ -80,6 +85,11 @@ startLongMode:
     ; mov rax, isrStub_0
     ; cmp rax, [isrStubTable]
     ; je debug
+    mov rsi, [stackBase]
+    mov qword [rsi], 0x12345678
+    mov qword [rsi-8], 0x87654321
+    mov rsi, [heapBase]
+    mov qword [rsi], 0x23456789
     call main
 debug:
     call isrStub_0
@@ -119,10 +129,27 @@ IRS_NO_ERR_STUB 29
 IRS_ERR_STUB 30
 IRS_NO_ERR_STUB 31
 
-; section .data
+section .data
+global isrStubTable
+global stackBase
+global stackSize
+global heapBase
+
 isrStubTable:
+    dq 0
 %assign i 0 
 %rep    32 
     dq isrStub_%+i
 %assign i i+1 
 %endrep
+    stackBase dq stack_base
+    heapBase  dq heap_base
+    stackSize dq stack_size
+; section .data
+
+section .bss
+global stack_base
+global heap_base
+heap_base: 			resb 64*1024*1024
+stack_base:
+stack_size 			equ $ - heap_base

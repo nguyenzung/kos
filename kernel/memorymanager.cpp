@@ -1,11 +1,16 @@
 #include "memorymanager.h"
 
-extern void* heap_base;
+extern uint64 heapBase;
+extern uint64 stackBase;
+
+IMPLE_MODULE_INSTANCE(MemoryManager)
 
 MemoryManager::MemoryManager() {
-    heapAddress = (uint64)heap_base;
+    kernelHeapAddress = (uint64)heapBase;
+    kernelStackBase = (uint64) stackBase;
     first = nullptr;
     last = nullptr;
+    MemoryManager::setInstance(this);
 }
 
 MemoryManager::~MemoryManager() {
@@ -17,5 +22,9 @@ void* MemoryManager::malloc(uint16 size) {
 }
 
 bool MemoryManager::free(void *ptr) {
+    return true;
+}
+
+bool MemoryManager::reserve(void* ptr, uint16 size) {
     return true;
 }

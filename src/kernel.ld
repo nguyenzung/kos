@@ -14,6 +14,7 @@ SECTIONS
 	{	
 		*(.rodata)
 		*(.data)
+		KEEP(*(.init_array))
 	}
 	.bss : {
 		*(.bss)

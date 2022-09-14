@@ -6,7 +6,7 @@
 #define SCREEN_HIEGHT 25
 
 uint8 Printer::x = 0;
-uint8 Printer::y = 10;
+uint8 Printer::y = 0;
 
 void Printer::print(char *message, uint8 len) {
     unsigned char *VideoMapAddress = (unsigned char*) 0xb8000 + y * SCREEN_WITH * 2 + x * 2;

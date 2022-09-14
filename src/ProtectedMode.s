@@ -111,8 +111,10 @@ endBoot64:
 	ret
 
 section .rodata
-extern GDT64Code
-extern GDT64.Data
+global GDT64
+global GDT64Code
+global GDT64.Data
+global GDTPTR
 ; Access bits
 PRESENT		equ 1 << 7
 NOT_SYS     equ 1 << 4
@@ -125,7 +127,6 @@ ACCESSED    equ 1 << 0
 GRAN_4K     equ 1 << 7
 SZ_32       equ 1 << 6
 LONG_MODE   equ 1 << 5
-GDT64Code   equ GDT64.Code 
 GDT64:
     .Null: equ $ - GDT64
         dq 0
@@ -147,7 +148,8 @@ GDT64:
     .Pointer:
         dw $ - GDT64 - 1
         dq GDT64
-
+GDTPTR		equ GDT64.Pointer
+; GDT64Code   equ GDT64.Code
 section .data
 	current_lv2_index 			dw 0
 	current_lv1_index 			dw 0
@@ -159,19 +161,15 @@ section .data
 	finish_lv2_message 			db "[Finish Level 2 ROW]",7
 	enable_paging_message 		db "[Enable Paging]",7
 	debug						db "[DEBUG]", 7
-
+	GDT64Code					dq  GDT64.Code
 
 section .bss
-global stack_base
-global heap_base
 	align 4096
 	lv4_page_address:	resb PAGE_TABLE_SIZE
 	lv3_page_address: 	resb LV3_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
 	lv2_page_address: 	resb LV2_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
 	lv1_page_address: 	resb LV1_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
-	heap_base: 			resb 32*1024*1024
-	stack_base:
-	stack_top 			equ $ - heap_base
+	
 
 	PAGE_TABLE_SIZE 	equ 4096
 

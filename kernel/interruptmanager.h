@@ -1,6 +1,7 @@
 #ifndef INTERRUPT_MANAGER
 #define INTERRUPT_MANAGER
 
+#include "utils.h"
 #include "type.h"
 #include "driver/keyboard.h"
 
@@ -24,12 +25,19 @@ class InterruptManager {
 protected:
     GateEntry idt[256];
 	IDTR idtr;
-
 	Keyboard keyboard;
+	uint64 testData;
+	
 
 public:
     InterruptManager();
     ~InterruptManager();
+
+	// static InterruptManager* instance;
+	// static void setInstance(InterruptManager *instance);
+	// static InterruptManager* getInstance();
+
+	DEF_MODULE_INSTANCE(InterruptManager)
 
     void setup();
 	void* getIDTAddress();
@@ -41,5 +49,4 @@ protected:
 	void setGateEntry(uint8 vector, void* irs, uint8 flags);
 
 };
-
 #endif

@@ -1,11 +1,11 @@
 #include "vga.h"
 #include "../iocommand.h"
 
-#define VGA_MISC 0x3c2
-#define VGA_CRTC_INDEX 0x3d4
-#define VGA_CRTC_DATA 0x3d5
-#define VGA_SEQ_INDEX 0x3c4
-#define VGA_SEQ_DATA 0x3c5
+#define VGA_MISC            0x3c2
+#define VGA_CRTC_INDEX      0x3d4
+#define VGA_CRTC_DATA       0x3d5
+#define VGA_SEQ_INDEX       0x3c4
+#define VGA_SEQ_DATA        0x3c5
 #define VGA_GC_INDEX 		0x3CE
 #define VGA_GC_DATA 		0x3CF 
 
@@ -13,9 +13,11 @@
 #define	VGA_AC_INDEX		0x3C0
 #define	VGA_AC_WRITE		0x3C0
 
+IMPLE_MODULE_INSTANCE(VGA)
 
 VGA::VGA()
 {
+    VGA::setInstance(this);
 }
             
 void VGA::setupVideoMode()
@@ -102,8 +104,6 @@ uint8* VGA::getFrameSegment()
         case 3<<2: return (uint8*)0xB8000;
     }
 }
-            
-
 
 VGAColor VGA::getColorIndex(uint8 r, uint8 g, uint8 b)
 {
@@ -142,8 +142,6 @@ VGAColor VGA::getColorIndex(uint8 r, uint8 g, uint8 b)
         return VGAColor::YELLOW;
     case 0xa8a8a8:
         return VGAColor::BRIGHT_WHITE;
-    
-    
     default:
         break; VGAColor::WHITE;
     }

@@ -24,6 +24,10 @@
 
 #define OFFSET 0
 
+extern void* GDT64;
+extern void* stackBase;
+extern void* heapBase;
+extern void* GDTPTR;
 extern uint16 GDT64Code;
 extern void* isrStubTable[];
 extern void *print;
@@ -74,12 +78,16 @@ void PIC_remap()
 }
 
 InterruptManager::InterruptManager() {
-
+    testData=0x123454321;
+    InterruptManager::setInstance(this);
 }
 
 InterruptManager::~InterruptManager(){
 
 }
+
+
+IMPLE_MODULE_INSTANCE(InterruptManager)
 
 void InterruptManager::setup() {
     this->setupIDT();
@@ -90,52 +98,36 @@ void* InterruptManager::getIDTAddress() {
 }
 
 void InterruptManager::exceptionHandle(uint64 vector) {
+    Printer::printlnAddress(testData);
     // Printer::printAddress(vector);
-    // if (vector == 0xD) {
-    //     // Printer::println("STOP", 5);
-    //     // asm("cli");
-    //     while (true)
-    //     {
-    //         asm ("          \
-    //         _int_stop: \n   \
-    //             hlt;   \n   \
-    //             jmp _int_stop;");
-    //         }
-        
-    // }
-    
     uint8 value = IOCommand::inb(0x60);
-    // Printer::print(" INT ", 5);
-    // Printer::printAddress(value);
-
-    // if (value > 0) {
-        // keyboard.onTranslateScanCode(value);
-    // }else {
-    //     Printer::print(" [] ", 4);
-    // }
+    if (value > 0) {
+        keyboard.onTranslateScanCode(value);
+    }else {
+        Printer::print(" [] ", 4);
+    }
     IOCommand::outb(0x20, 0x20);
     IOCommand::outb(0xA0, 0x20);
 }
 
 void InterruptManager::setupIDT() {
+    uint64* sp = (uint64*)stackBase;
     idtr.base = (uint64)&idt[0];
     idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
  
     for (uint8 vector = 0; vector < 32; vector++) {
-        this->setGateEntry(vector, isrStubTable[vector], 0x8E);
+        this->setGateEntry(vector, isrStubTable[vector + 1], 0x8E);
     }
     PIC_remap();
     IOCommand::outb(0x21, 0xfd);
 	IOCommand::outb(0xa1, 0xff);
     asm ("lidt %0" : : "m"(idtr));
-    // asm ("int $10");
-    // Printer::println("OK1", 3);
-    // asm ("int $12");
-    // Printer::println("OK2", 3);
+    // asm("int $10");
     asm ("sti");
-
+    // Printer::println("OK",2);
     // testPageFault();
     // testDivZero();
+    // Printer::printAddress(123);
 }
 
 void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags) {

@@ -1,8 +1,10 @@
 #include "keyboard.h"
 #include "../printer.h"
 
-Keyboard::Keyboard() {
+IMPLE_MODULE_INSTANCE(Keyboard)
 
+Keyboard::Keyboard() {
+    Keyboard::setInstance(this);
 }
 
 Keyboard::~Keyboard() {
@@ -66,9 +68,11 @@ void Keyboard::onTranslateScanCode(uint8 code) {
                 break;
             }
         }
+    }else {
+        Printer::printAddress(code);
     }
 }
 
 void Keyboard::onKeyDown(char c) {
-    // Printer::print(&c, 1);
+    Printer::print(&c, 1);
 }

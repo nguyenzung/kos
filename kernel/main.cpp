@@ -8,11 +8,10 @@ int main() {
     InterruptManager interruptManager;
     interruptManager.setup();
 
-    VGA vga;
-    vga.setupVideoMode();
-    vga.drawRectangle(0,0, 160, 100, VGAColor::YELLOW);
-
     
+    // VGA vga;
+    // vga.setupVideoMode();
+    // vga.drawRectangle(0,0, 320, 200, VGAColor::YELLOW);
     asm ("          \
     _cpp_stop: \n   \
         hlt;   \n   \

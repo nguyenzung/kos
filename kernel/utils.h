@@ -6,6 +6,21 @@
 #define ASM_CMD(reg) "movq %%" #reg ", %0;" 
 #define READ_CPU(reg, variable) asm (ASM_CMD(reg) :"=m"(variable)::);   
 
+#define DEF_MODULE_INSTANCE(ClassName)              \
+    public:                                         \
+    static ClassName *instance;                     \
+    static void setInstance(ClassName *instance);   \
+    static ClassName* getInstance();
+
+#define IMPLE_MODULE_INSTANCE(ClassName)            \
+ClassName* ClassName::instance = nullptr;           \   
+void ClassName::setInstance(ClassName *instance) {  \
+    ClassName::instance = instance;                 \
+}                                                   \
+ClassName* ClassName::getInstance() {               \
+    return ClassName::instance;                     \
+}                                                   
+
 class Utils{
 public:
     static char* convertIntToHexString(uint64 value, char* message, uint8 len);
