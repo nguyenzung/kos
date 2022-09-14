@@ -12,9 +12,6 @@ int main() {
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::YELLOW);
-    asm ("          \
-    _cpp_stop: \n   \
-        hlt;   \n   \
-        jmp _cpp_stop;");
+    asm ("_cpp_stop:; hlt; jmp _cpp_stop;");
     return 0;
 }

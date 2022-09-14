@@ -69,10 +69,10 @@ void Keyboard::onTranslateScanCode(uint8 code) {
             }
         }
     }else {
-        Printer::printAddress(code);
+        // Printer::printAddress(code);
     }
 }
 
 void Keyboard::onKeyDown(char c) {
-    Printer::print(&c, 1);
+    // Printer::print(&c, 1);
 }

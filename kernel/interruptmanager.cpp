@@ -22,7 +22,7 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
-#define OFFSET 0
+#define OFFSET 0x20
 
 extern void* GDT64;
 extern void* stackBase;
@@ -59,9 +59,9 @@ void PIC_remap()
 	IOCommand::io_wait();
 	IOCommand::outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
 	IOCommand::io_wait();
-	IOCommand::outb(PIC1_DATA, 0x0);                 // ICW2: Master PIC vector offset
+	IOCommand::outb(PIC1_DATA, 0x0 + OFFSET);                 // ICW2: Master PIC vector offset
 	IOCommand::io_wait();
-	IOCommand::outb(PIC2_DATA, 0x8);                 // ICW2: Slave PIC vector offset
+	IOCommand::outb(PIC2_DATA, 0x8 + OFFSET);                 // ICW2: Slave PIC vector offset
 	IOCommand::io_wait();
 	IOCommand::outb(PIC1_DATA, 4);                       // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
 	IOCommand::io_wait();
@@ -98,8 +98,8 @@ void* InterruptManager::getIDTAddress() {
 }
 
 void InterruptManager::exceptionHandle(uint64 vector) {
-    Printer::printlnAddress(testData);
-    // Printer::printAddress(vector);
+    // Printer::printlnAddress(testData);
+    Printer::printAddress(vector);
     uint8 value = IOCommand::inb(0x60);
     if (value > 0) {
         keyboard.onTranslateScanCode(value);
@@ -115,8 +115,8 @@ void InterruptManager::setupIDT() {
     idtr.base = (uint64)&idt[0];
     idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
  
-    for (uint8 vector = 0; vector < 32; vector++) {
-        this->setGateEntry(vector, isrStubTable[vector + 1], 0x8E);
+    for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
+        this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
     PIC_remap();
     IOCommand::outb(0x21, 0xfd);
