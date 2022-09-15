@@ -122,8 +122,8 @@ void InterruptManager::setupIDT() {
     IOCommand::outb(0x21, 0xfd);
 	IOCommand::outb(0xa1, 0xff);
     asm ("lidt %0" : : "m"(idtr));
-    asm("int $10");
-    // asm ("sti");
+    // asm("int $10");
+    asm ("sti");
     // Printer::println("OK",2);
     // testPageFault();
     // testDivZero();

@@ -64,15 +64,15 @@ void Keyboard::onTranslateScanCode(uint8 code) {
 
             default:
             {
-                // Printer::print("KEY PRESS", 10);
+                Printer::print("KEY PRESS", 10);
                 break;
             }
         }
     }else {
-        // Printer::printAddress(code);
+        Printer::printAddress(code);
     }
 }
 
 void Keyboard::onKeyDown(char c) {
-    // Printer::print(&c, 1);
+    Printer::print(&c, 1);
 }

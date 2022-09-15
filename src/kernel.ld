@@ -2,18 +2,17 @@ ENTRY(start)
 
 SECTIONS
 {
-	. = 50000;
+	. = 1M;
 
 	.text :
 	{
 		KEEP(*(.multiboot))
 		*(.text) 
 	}
-
 	.data :
 	{	
-		*(.rodata)
-		*(.data)
+		*(.rodata*)
+		*(.data*)
 		KEEP(*(.init_array))
 	}
 	.bss : {

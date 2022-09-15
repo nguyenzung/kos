@@ -134,8 +134,6 @@ global isrStubTable
 global stackBase
 global stackSize
 global heapBase
-
-section .data
 isrStubTable:
     dq 0
 %assign i 0 

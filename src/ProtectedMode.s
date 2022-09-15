@@ -168,7 +168,6 @@ global protected_end_bss
 	protected_end_bss			dq  end_page_address
 
 section .bss
-
 	align 4096
 	lv4_page_address:	resb PAGE_TABLE_SIZE
 	lv3_page_address: 	resb LV3_PAGE_TABLE_NUM*PAGE_TABLE_SIZE

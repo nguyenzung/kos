@@ -4,14 +4,14 @@
 #include "type.h"
 #include "utils.h"
 
-#define MEMORY_ENTRY_SIZE 10
+#define MEMORY_ENTRY_SIZE 16
 typedef struct MemoryEntry {
     MemoryEntry *next;
     uint16 size;
-}__attribute__((packed))  MemoryEntry;
+} MemoryEntry;
 
 class MemoryManager {
-    void* kernelHeapAddress;
+    void* kernelHeapBase;
     void* kernelStackBase;
     MemoryEntry *first;
     DEF_MODULE_INSTANCE(MemoryManager)
