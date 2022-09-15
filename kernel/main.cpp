@@ -12,17 +12,21 @@ int main() {
 
 
     MemoryManager memoryManager;
-    // Printer::printlnAddress((uint64)&memoryManager);
+    Printer::printlnNumber((uint64)&memoryManager);
 
-    void *p1 = memoryManager.malloc(0xffff);
-    void *p2 = memoryManager.malloc(12);
-    void *p3 = memoryManager.malloc(20);
-    void *p4 = memoryManager.malloc(40);
+    int *a = new int[5];
+    Printer::printlnNumber((uint64)a);
 
-    Printer::printlnAddress((uint64)p1);
-    Printer::printlnAddress((uint64)p2);
-    Printer::printlnAddress((uint64)p3);
-    Printer::printlnAddress((uint64)p4);
+    int *b = new int[10];
+    Printer::printlnNumber((uint64)b);
+
+    delete[] a;
+
+    a = new int[6];
+    Printer::printlnNumber((uint64)a);
+
+
+    // delete a;
     
     // VGA vga;
     // vga.setupVideoMode();

@@ -23,7 +23,7 @@ $(ASM_OBJ_FILES): $(BUILD_DIR)%.o : %.s
 
 $(CPP_OBJ_FILES): $(BUILD_DIR)%.o : %.cpp %.h
 	@echo $@ $<
-	g++ -fno-stack-protector -fno-exceptions -fno-rtti  -c $< -o $@
+	x86_64-linux-gnu-g++ -fno-stack-protector -fno-exceptions -fno-rtti  -nostdlib -c $< -o $@
 
 clean:
 	rm -rf $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(BUILD_DIR)kernel.bin $(BUILD_DIR)kernel.iso
