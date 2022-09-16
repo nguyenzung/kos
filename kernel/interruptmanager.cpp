@@ -26,15 +26,8 @@ using namespace kernel;
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
-#define OFFSET 0x20
-
-extern void* GDT64;
-extern void* stackBase;
-extern void* heapBase;
-extern void* GDTPTR;
 extern uint16 GDT64Code;
 extern void* isrStubTable[];
-extern void *print;
 
 // static void testPageFault() {
 //     uint64 a = 12;
@@ -56,29 +49,43 @@ void PIC_remap()
 {
 	unsigned char a1, a2;
  
-	a1 = IOCommand::inb(PIC1_DATA);                        // save masks
-	a2 = IOCommand::inb(PIC2_DATA);
+	a1 = inb(PIC1_DATA);                        // save masks
+	a2 = inb(PIC2_DATA);
  
-	IOCommand::outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);  // starts the initialization sequence (in cascade mode)
-	IOCommand::io_wait();
-	IOCommand::outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
-	IOCommand::io_wait();
-	IOCommand::outb(PIC1_DATA, 0x0 + OFFSET);                 // ICW2: Master PIC vector offset
-	IOCommand::io_wait();
-	IOCommand::outb(PIC2_DATA, 0x8 + OFFSET);                 // ICW2: Slave PIC vector offset
-	IOCommand::io_wait();
-	IOCommand::outb(PIC1_DATA, 4);                       // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
-	IOCommand::io_wait();
-	IOCommand::outb(PIC2_DATA, 2);                       // ICW3: tell Slave PIC its cascade identity (0000 0010)
-	IOCommand::io_wait();
+	outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);  // starts the initialization sequence (in cascade mode)
+	io_wait();
+	outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
+	io_wait();
+	outb(PIC1_DATA, 0x0 + OFFSET);                 // ICW2: Master PIC vector offset
+	io_wait();
+	outb(PIC2_DATA, 0x8 + OFFSET);                 // ICW2: Slave PIC vector offset
+	io_wait();
+	outb(PIC1_DATA, 4);                       // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
+	io_wait();
+	outb(PIC2_DATA, 2);                       // ICW3: tell Slave PIC its cascade identity (0000 0010)
+	io_wait();
  
-	IOCommand::outb(PIC1_DATA, ICW4_8086);
-	IOCommand::io_wait();
-	IOCommand::outb(PIC2_DATA, ICW4_8086);
-	IOCommand::io_wait();
+	outb(PIC1_DATA, ICW4_8086);
+	io_wait();
+	outb(PIC2_DATA, ICW4_8086);
+	io_wait();
  
-	IOCommand::outb(PIC1_DATA, a1);
-	IOCommand::outb(PIC2_DATA, a2);
+	// outb(PIC1_DATA, a1);
+	// outb(PIC2_DATA, a2);
+}
+
+void IRQ_clear_mask(unsigned char IRQline) {
+    uint16 port;
+    uint8 value;
+ 
+    if(IRQline < 8) {
+        port = PIC1_DATA;
+    } else {
+        port = PIC2_DATA;
+        IRQline -= 8;
+    }
+    value = inb(port) & ~(1 << IRQline);
+    outb(port, value);        
 }
 
 InterruptManager::InterruptManager() {
@@ -103,14 +110,17 @@ void* InterruptManager::getIDTAddress() {
 
 void InterruptManager::exceptionHandle(uint64 vector) {
     // // Printer::printlnAddress(testData);
-        Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
-
+    Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
+    if (vector - OFFSET <= 8) 
+    {
+        outb(0xA0, 0x20);
+    }
+    outb(0x20, 0x20);
     // Printer::printAddress(vector);
    
 }
 
 void InterruptManager::setupIDT() {
-    uint64* sp = (uint64*)stackBase;
     idtr.base = (uint64)&idt[0];
     idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
  
@@ -118,6 +128,8 @@ void InterruptManager::setupIDT() {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
     PIC_remap();
+    // IRQ_clear_mask(8);
+    // IRQ_clear_mask(8 + OFFSET);
     
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");

@@ -3,22 +3,15 @@
 
 #include <kernel/type.h>
 
-namespace kernel {
+using namespace kernel;
 
-class IOCommand {
-public:
-    static void outb(uint16 port, uint8 value);
-    static uint8 inb(uint16 port);
+void outb(uint16 port, uint8 value);
+uint8 inb(uint16 port);
+void outw(uint16 port, uint16 value);
+uint16 inw(uint16 port);
+void outl(uint16 port, uint32 value);
+uint32 inl(uint16 port);
+void io_wait(void);
 
-    static void outw(uint16 port, uint16 value);
-    static uint16 inw(uint16 port);
 
-    static void outl(uint16 port, uint32 value);
-    static uint32 inl(uint16 port);
-
-    static void io_wait(void);
-
-};
-
-}
 #endif

@@ -1,6 +1,7 @@
 #include <driver/keyboard.h>
 #include <kernel/iocommand.h>
 #include <kernel/printer.h>
+#include <kernel/interruptmanager.h>
 
 // IMPLE_MODULE_INSTANCE(Keyboard)
 
@@ -11,7 +12,7 @@ Keyboard::Keyboard()
     :BaseDriver()
 {
     // Keyboard::setInstance(this);
-    vector = 33;
+    vector = 1 + OFFSET;
 }
 
 Keyboard::~Keyboard() {
@@ -19,8 +20,8 @@ Keyboard::~Keyboard() {
 }
 
 void Keyboard::active() {
-    IOCommand::outb(0x21, 0xfd);
-	IOCommand::outb(0xa1, 0xff);
+    outb(0x21, 0xfd);
+	outb(0xa1, 0xff);
 }
 
 void Keyboard::deactive() {
@@ -28,14 +29,13 @@ void Keyboard::deactive() {
 }
 
 void Keyboard::handleInterrupt() {
-     uint8 value = IOCommand::inb(0x60);
+     uint8 value = inb(0x60);
     if (value > 0) {
         this->onTranslateScanCode(value);
     }else {
         Printer::print(" [] ", 4);
     }
-    IOCommand::outb(0x20, 0x20);
-    IOCommand::outb(0xA0, 0x20);
+
 }
 
 void Keyboard::onTranslateScanCode(uint8 code) {

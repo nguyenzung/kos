@@ -7,6 +7,8 @@
 
 namespace kernel {
 
+#define OFFSET 0x20
+
 typedef struct {
 	uint16    isr_low;      
 	uint16    kernel_cs;    

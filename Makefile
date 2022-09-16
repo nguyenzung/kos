@@ -11,8 +11,8 @@ info: $(ASM_SOURCE_FILES)
 	@echo $(ASM_SOURCE_FILES)
 
 all: kernel.bin
-kernel.bin: $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) src/kernel.ld
-	x86_64-elf-ld -n  -o $(BUILD_DIR)kernel.bin -T src/kernel.ld $(CPP_OBJ_FILES) $(ASM_OBJ_FILES) -nostdlib && \
+kernel.bin: $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) kernel.ld
+	x86_64-elf-ld -n  -o $(BUILD_DIR)kernel.bin -T kernel.ld $(CPP_OBJ_FILES) $(ASM_OBJ_FILES) -nostdlib && \
 	cp $(BUILD_DIR)kernel.bin $(BUILD_DIR)iso/boot && \
 	grub-mkrescue /usr/lib/grub/i386-pc -o $(BUILD_DIR)kernel.iso $(BUILD_DIR)iso
 	@echo $(shell ls -lia build/iso/boot/kernel.bin)

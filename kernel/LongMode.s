@@ -28,7 +28,7 @@ isrStub_%+%1:
     cld
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
-    mov rsi, (0x20 + %1)
+    mov rsi, (%1 + 0x20)
     call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
@@ -40,7 +40,7 @@ isrStub_%+%1:
     cld
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
-    mov rsi, (0x20 + %1)
+    mov rsi, (%1 + 0x20)
     call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
@@ -145,6 +145,6 @@ isrStubTable:
 section .bss
 global stack_base
 global heap_base
-heap_base: 			resb 64*1024*1024
+heap_base: 			resb 120*1024*1024
 stack_base:
 stack_size 			equ $ - heap_base

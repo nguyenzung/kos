@@ -4,7 +4,6 @@
 #include <kernel/utils.h>
 #include <kernel/type.h>
 #include <kernel/basedriver.h>
-#include <kernel/interrupthandler.h>
 
 using namespace kernel;
 
@@ -15,6 +14,7 @@ protected:
     char keys[16];
     // static Keyboard *instance;
     // DEF_MODULE_INSTANCE(Keyboard)
+    
 public:
 
     Keyboard();

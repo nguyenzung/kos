@@ -46,58 +46,58 @@ void VGA::setupVideoMode()
     };
     //  misc
     uint8 *data = g_320x200x256;
-    IOCommand::outb(VGA_MISC, *data) ;
+    outb(VGA_MISC, *data) ;
     data++;
     
     // sequencer
     for(uint8 i = 0; i < 5; i++)
     {
-        IOCommand::outb(VGA_SEQ_INDEX, i);
-        IOCommand::outb(VGA_SEQ_DATA, *data);
+        outb(VGA_SEQ_INDEX, i);
+        outb(VGA_SEQ_DATA, *data);
         data++;
     }
     
     // cathode ray tube controller
-    IOCommand::outb(VGA_CRTC_INDEX, 0x03);
-    IOCommand::outb(VGA_CRTC_DATA, IOCommand::inb(VGA_CRTC_DATA) | 0x80);
-    IOCommand::outb(VGA_CRTC_INDEX, 0x11);
-    IOCommand::outb(VGA_CRTC_DATA, IOCommand::inb(VGA_CRTC_DATA) & ~0x80);
+    outb(VGA_CRTC_INDEX, 0x03);
+    outb(VGA_CRTC_DATA, inb(VGA_CRTC_DATA) | 0x80);
+    outb(VGA_CRTC_INDEX, 0x11);
+    outb(VGA_CRTC_DATA, inb(VGA_CRTC_DATA) & ~0x80);
     
     data[0x03] = data[0x03] | 0x80;
     data[0x11] = data[0x11] & ~0x80;
     
     for(uint8 i = 0; i < 25; i++)
     {
-        IOCommand::outb(VGA_CRTC_INDEX, i);
-        IOCommand::outb(VGA_CRTC_DATA, *data);
+        outb(VGA_CRTC_INDEX, i);
+        outb(VGA_CRTC_DATA, *data);
         data++;
     }
     
     // graphics controller
     for(uint8 i = 0; i < 9; i++)
     {
-        IOCommand::outb(VGA_GC_INDEX, i);
-        IOCommand::outb(VGA_GC_DATA, *data);
+        outb(VGA_GC_INDEX, i);
+        outb(VGA_GC_DATA, *data);
         data++;
     }
     
     // attribute controller
     for(uint8 i = 0; i < 21; i++)
     {
-        IOCommand::inb(VGA_INSTAT_READ);
-        IOCommand::outb(VGA_AC_INDEX, i);
-        IOCommand::outb(VGA_AC_WRITE, *data);
+        inb(VGA_INSTAT_READ);
+        outb(VGA_AC_INDEX, i);
+        outb(VGA_AC_WRITE, *data);
         data++;
     }
-    IOCommand::inb(VGA_INSTAT_READ);
-    IOCommand::outb(VGA_AC_INDEX, 0x20);    
+    inb(VGA_INSTAT_READ);
+    outb(VGA_AC_INDEX, 0x20);    
 }
 
 
 uint8* VGA::getFrameSegment()
 {
-    IOCommand::outb(VGA_GC_INDEX, 0x06);
-    uint8 segmentNumber = IOCommand::inb(VGA_GC_DATA) & (3<<2);
+    outb(VGA_GC_INDEX, 0x06);
+    uint8 segmentNumber = inb(VGA_GC_DATA) & (3<<2);
     switch(segmentNumber)
     {
         default:
