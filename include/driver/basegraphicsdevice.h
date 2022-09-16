@@ -1,8 +1,8 @@
 #ifndef BASE_GRAPHICS_DEVICE
 #define BASE_GRAPHICS_DEVICE
 
-#include "../basedriver.h"
-#include "../type.h"
+#include "kernel/basedriver.h"
+#include "kernel/type.h"
 
 class BaseGraphicsDevice : kernel::BaseDriver {
 public:

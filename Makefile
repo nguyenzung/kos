@@ -21,9 +21,9 @@ $(ASM_OBJ_FILES): $(BUILD_DIR)%.o : %.s
 	@echo $@ $<
 	nasm -f elf64 $< -o $@
 
-$(CPP_OBJ_FILES): $(BUILD_DIR)%.o : %.cpp %.h
+$(CPP_OBJ_FILES): $(BUILD_DIR)%.o : %.cpp 
 	@echo $@ $<
-	x86_64-linux-gnu-g++ -fno-stack-protector -fno-exceptions -fno-rtti  -nostdlib -c $< -o $@
+	x86_64-linux-gnu-g++ -Iinclude -fno-stack-protector -fno-exceptions -fno-rtti  -nostdlib -c $< -o $@
 
 clean:
 	rm -rf $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(BUILD_DIR)kernel.bin $(BUILD_DIR)kernel.iso

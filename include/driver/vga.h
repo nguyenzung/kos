@@ -1,6 +1,6 @@
 #include "basegraphicsdevice.h"
-#include "../type.h"
-#include "../utils.h"
+#include "kernel/type.h"
+#include "kernel/utils.h"
 
 #ifndef VGA_H
 #define VGA_H

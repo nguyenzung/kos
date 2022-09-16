@@ -1,6 +1,6 @@
-#include "keyboard.h"
-#include "../iocommand.h"
-#include "../printer.h"
+#include "driver/keyboard.h"
+#include "kernel/iocommand.h"
+#include "kernel/printer.h"
 
 // IMPLE_MODULE_INSTANCE(Keyboard)
 

@@ -1,10 +1,10 @@
 #ifndef KEYBOARD
 #define KEYBOARD
 
-#include "../utils.h"
-#include "../type.h"
-#include "../basedriver.h"
-#include "../interrupthandler.h"
+#include "kernel/utils.h"
+#include "kernel/type.h"
+#include "kernel/basedriver.h"
+#include "kernel/interrupthandler.h"
 
 class Keyboard : public kernel::BaseDriver {
 protected:
