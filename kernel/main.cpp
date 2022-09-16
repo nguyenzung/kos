@@ -2,7 +2,7 @@
 #include "kernel.h"
 
 int main() {
-    Kernel kernel;
+    kernel::Kernel kernel;
     kernel.startKernel();
     kernel.hlt();
 }

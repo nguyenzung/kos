@@ -5,6 +5,7 @@
 #include "interruptmanager.h"
 #include "devicemanager.h"
 #include "memorymanager.h"
+namespace kernel {
 
 class Kernel {
     MemoryManager memoryManager;
@@ -28,4 +29,5 @@ public:
 
 };
 
+}
 #endif

@@ -2,18 +2,18 @@
 #define BASE_DRIVER
 
 #include "interrupthandler.h"
+namespace kernel {
 
-class BaseDriver : InterruptHandler
+class BaseDriver : public InterruptHandler
 {
 private:
 public:
-    BaseDriver();
+    BaseDriver(uint8 vector = 0xff);
     ~BaseDriver();
 
     virtual void active() = 0;
     virtual void deactive() = 0;
 };
 
-
-
+}
 #endif

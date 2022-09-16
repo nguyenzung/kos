@@ -26,10 +26,10 @@
 isrStub_%+%1:
     PUSH_REGISTERS
     cld
-    call _ZN16InterruptManager11getInstanceEv
+    call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, (0x20 + %1)
-    call _ZN16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
 %endmacro
@@ -38,10 +38,10 @@ isrStub_%+%1:
 isrStub_%+%1:
     PUSH_REGISTERS
     cld
-    call _ZN16InterruptManager11getInstanceEv
+    call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, (0x20 + %1)
-    call _ZN16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
 %endmacro
@@ -54,8 +54,8 @@ global __cxa_pure_virtual
 ; extern stack_base
 extern GDT64.Data
 extern main
-extern _ZN16InterruptManager15exceptionHandleEm ; exceptionHandler
-extern _ZN16InterruptManager11getInstanceEv ; getInterruptHandler
+extern _ZN6kernel16InterruptManager15exceptionHandleEm ; exceptionHandler
+extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
 extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 %assign i 0 
 %rep    32 

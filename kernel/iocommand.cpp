@@ -1,5 +1,7 @@
 #include "iocommand.h"
 
+using namespace kernel;
+
 void IOCommand::outb(uint16 port, uint8 value) {
     asm ("outb %0, %1" : : "a" (value), "Nd" (port));
 }

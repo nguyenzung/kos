@@ -1,14 +1,37 @@
 #include "keyboard.h"
+#include "../iocommand.h"
 #include "../printer.h"
 
-IMPLE_MODULE_INSTANCE(Keyboard)
+// IMPLE_MODULE_INSTANCE(Keyboard)
+
+using namespace kernel;
 
 Keyboard::Keyboard() {
-    Keyboard::setInstance(this);
+    // Keyboard::setInstance(this);
 }
 
 Keyboard::~Keyboard() {
 
+}
+
+void Keyboard::active() {
+    IOCommand::outb(0x21, 0xfd);
+	IOCommand::outb(0xa1, 0xff);
+}
+
+void Keyboard::deactive() {
+
+}
+
+void Keyboard::handleInterrupt() {
+     uint8 value = IOCommand::inb(0x60);
+    if (value > 0) {
+        this->onTranslateScanCode(value);
+    }else {
+        Printer::print(" [] ", 4);
+    }
+    IOCommand::outb(0x20, 0x20);
+    IOCommand::outb(0xA0, 0x20);
 }
 
 void Keyboard::onTranslateScanCode(uint8 code) {

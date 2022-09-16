@@ -5,6 +5,8 @@
 
 #include "kernel.h"
 
+using namespace kernel;
+
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
 #define PIC1_COMMAND	PIC1
@@ -104,14 +106,7 @@ void InterruptManager::exceptionHandle(uint64 vector) {
         Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
 
     // Printer::printAddress(vector);
-    // uint8 value = IOCommand::inb(0x60);
-    // if (value > 0) {
-    //     keyboard.onTranslateScanCode(value);
-    // }else {
-    //     Printer::print(" [] ", 4);
-    // }
-    // IOCommand::outb(0x20, 0x20);
-    // IOCommand::outb(0xA0, 0x20);
+   
 }
 
 void InterruptManager::setupIDT() {
@@ -123,8 +118,7 @@ void InterruptManager::setupIDT() {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
     PIC_remap();
-    IOCommand::outb(0x21, 0xfd);
-	IOCommand::outb(0xa1, 0xff);
+    
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");
     asm ("sti");

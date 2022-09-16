@@ -4,6 +4,7 @@
 #include "driver/vga.h"
 #include "utils.h"
 
+using namespace kernel;
 
 Kernel* Kernel::instance = nullptr;
 

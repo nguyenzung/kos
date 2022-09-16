@@ -3,11 +3,19 @@
 
 #include "type.h"
 
+namespace kernel {
+
 class InterruptHandler {
 protected:
     uint8 vector;
 
-    virtual void handle() = 0;
+public:
+    InterruptHandler(uint8 vector);
+    uint8 getVector();
+
+    virtual void handleInterrupt() = 0;
 };
+
+}
 
 #endif

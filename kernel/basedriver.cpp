@@ -1,7 +1,10 @@
 #include "basedriver.h"
 #include "memorymanager.h"
 
-BaseDriver::BaseDriver(/* args */)
+using namespace kernel;
+
+BaseDriver::BaseDriver(uint8 vector)
+    :InterruptHandler(vector)
 {
 }
 

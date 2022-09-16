@@ -4,7 +4,7 @@
 #include "../basedriver.h"
 #include "../type.h"
 
-class BaseGraphicsDevice : BaseDriver {
+class BaseGraphicsDevice : kernel::BaseDriver {
 public:
     BaseGraphicsDevice();
     ~BaseGraphicsDevice();

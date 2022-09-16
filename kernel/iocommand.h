@@ -3,6 +3,8 @@
 
 #include "type.h"
 
+namespace kernel {
+
 class IOCommand {
 public:
     static void outb(uint16 port, uint8 value);
@@ -17,4 +19,6 @@ public:
     static void io_wait(void);
 
 };
+
+}
 #endif

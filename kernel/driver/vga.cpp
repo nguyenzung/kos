@@ -16,6 +16,8 @@
 
 IMPLE_MODULE_INSTANCE(VGA)
 
+using namespace kernel;
+
 VGA::VGA()
 {
     VGA::setInstance(this);

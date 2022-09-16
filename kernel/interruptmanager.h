@@ -5,6 +5,8 @@
 #include "type.h"
 #include "driver/keyboard.h"
 
+namespace kernel {
+
 typedef struct {
 	uint16    isr_low;      
 	uint16    kernel_cs;    
@@ -25,7 +27,7 @@ class InterruptManager {
 protected:
     GateEntry idt[256];
 	IDTR idtr;
-	Keyboard keyboard;
+	// Keyboard keyboard;
 	uint64 testData;
 	
 
@@ -49,4 +51,7 @@ protected:
 	void setGateEntry(uint8 vector, void* irs, uint8 flags);
 
 };
+
+}
+
 #endif
