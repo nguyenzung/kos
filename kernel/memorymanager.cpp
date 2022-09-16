@@ -12,11 +12,12 @@ MemoryManager::MemoryManager() {
     static_assert(sizeof(MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
-    Printer::print("HeapBase: ", 10);
-    Printer::printAddress((uint64)kernelHeapBase);
-    Printer::print(" StackBase: ", 12);
-    Printer::printlnAddress((uint64)kernelStackBase);
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(10);
+    // Printer::print("HeapBase: ", 10);
+    // Printer::printAddress((uint64)kernelHeapBase);
+    // Printer::print(" StackBase: ", 12);
+    // Printer::printlnAddress((uint64)kernelStackBase);
+    first = (MemoryEntry*) this->makeFirstMemoryEntry(1000);
+    Printer::printlnNumber((uint64)first);
     MemoryManager::setInstance(this);
 }
 
@@ -29,7 +30,7 @@ MemoryEntry* MemoryManager::find(uint16 size) {
     while (current->next)
     {
         MemoryEntry *next = current->next;
-        if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next) {
+        if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next) {            
             return current;
         }
         current = next;
@@ -46,7 +47,7 @@ void* MemoryManager::malloc(uint16 size) {
 void* MemoryManager::free(void *ptr) {
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *prev = this->first;
-    MemoryEntry * current = prev->next;
+    MemoryEntry *current = prev->next;
     while(current) {
         if (current == ptr) {
             prev->next = current->next;
@@ -59,7 +60,27 @@ void* MemoryManager::free(void *ptr) {
 }
 
 void* MemoryManager::reserve(void* ptr, uint16 size) {
-    
+    ptr = ptr - MEMORY_ENTRY_SIZE;
+    MemoryEntry *current = this->first;
+    while(current) {
+        // Printer::println("W", 1);
+        if (current->next) {
+            if(current < ptr && ptr < current->next) {
+                if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+                    this->makeMemoryEntryAt(ptr, current, size);
+                    return ptr + MEMORY_ENTRY_SIZE;
+                } else {
+                    return 0;
+                }
+            } 
+        }else {
+            if ((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) {
+                this->makeMemoryEntryAt(ptr , current, size);
+                return ptr + MEMORY_ENTRY_SIZE;
+            }
+        }
+        current = current->next;
+    }
     return 0;
 }
 
@@ -70,20 +91,32 @@ void* MemoryManager::makeFirstMemoryEntry(uint16 size) {
     return entry;
 }
 
-void* MemoryManager::makeMemoryEntry(void* prevAddress, uint16 size) {
-    MemoryEntry *prev = (MemoryEntry*)prevAddress;
-    MemoryEntry *entry;
-    void* entryAddress = prevAddress + MEMORY_ENTRY_SIZE + (prev->size);
-    entry = (MemoryEntry*)entryAddress;
+void* MemoryManager::makeMemoryEntry(void* ptrPrev, uint16 size) {
+    MemoryEntry *prev = (MemoryEntry*)ptrPrev;
+    void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
+    return this->makeMemoryEntryAt(ptr, ptrPrev, size);
+}
+
+void* MemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size) {
+    MemoryEntry *prev = (MemoryEntry*)ptrPrev;
+    MemoryEntry *entry = (MemoryEntry*)ptr;
     entry->size = size;
     entry->next = prev->next;
     prev->next = entry;
-    return entry;
+    return ptr;
+}
+
+void* memreg(void* ptr, uint16 size) {
+    return MemoryManager::getInstance()->reserve(ptr, size);
+}
+
+void memunreg(void *ptr) {
+    MemoryManager::getInstance()->free(ptr);
 }
 
 void* malloc(size_t size) {
-    void *ptr = MemoryManager::getInstance()->malloc(size);
-    return ptr;
+    // void *ptr = MemoryManager::getInstance()->malloc(size);
+    return MemoryManager::getInstance()->malloc(size);
 }
 
 void free(void* ptr){
@@ -91,13 +124,13 @@ void free(void* ptr){
 }
 
 void* operator new(size_t size) {
-    void *ptr = MemoryManager::getInstance()->malloc(size);
-    return ptr;
+    // void *ptr = MemoryManager::getInstance()->malloc(size);
+    return MemoryManager::getInstance()->malloc(size);
 }
 
 void* operator new[](size_t size) {
-    void *ptr = MemoryManager::getInstance()->malloc(size);
-    return ptr;
+    // void *ptr = MemoryManager::getInstance()->malloc(size);
+    return MemoryManager::getInstance()->malloc(size);
 }
 
 void operator delete(void* ptr) {

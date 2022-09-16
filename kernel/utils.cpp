@@ -9,7 +9,6 @@ char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len){
         }else{
             message[len-1] = (r + 55);
         }
-        
         len--;
     }
     message[len-1]=48;

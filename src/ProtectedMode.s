@@ -66,7 +66,7 @@ setupMemoryPaging:
     mov ecx, LV2_PAGE_ROW                 
 	mov esi, lv2_page_address
 .set_l2_entry:
-	or ebx, 0x11
+	or ebx, 0b11
     mov DWORD [esi], ebx         
     add ebx, 0x1000              
     add esi, 8                   
@@ -77,7 +77,7 @@ setupMemoryPaging:
     mov ecx, LV1_PAGE_TOTAL_ROW                 
 	mov esi, lv1_page_address
 .set_l1_entry:
-	or ebx, 0x11
+	or ebx, 0b11
     mov DWORD [esi], ebx         
     add ebx, 0x1000              
     add esi, 8                   
