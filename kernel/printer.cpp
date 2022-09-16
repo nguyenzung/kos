@@ -1,9 +1,11 @@
-#include "printer.h"
-#include "utils.h"
+#include <kernel/printer.h>
+#include <kernel/utils.h>
 
 #define ADDRESS_LENGTH 18
 #define SCREEN_WITH 80
 #define SCREEN_HIEGHT 25
+
+using namespace kernel;
 
 uint8 Printer::x = 0;
 uint8 Printer::y = 0;

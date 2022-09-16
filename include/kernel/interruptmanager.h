@@ -1,9 +1,9 @@
 #ifndef INTERRUPT_MANAGER
 #define INTERRUPT_MANAGER
 
-#include "utils.h"
-#include "type.h"
-#include "driver/keyboard.h"
+#include <kernel/utils.h>
+#include <kernel/type.h>
+#include <driver/keyboard.h>
 
 namespace kernel {
 

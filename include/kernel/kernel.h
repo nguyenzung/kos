@@ -2,9 +2,10 @@
 #define KERNEL
 
 
-#include "interruptmanager.h"
-#include "devicemanager.h"
-#include "memorymanager.h"
+#include <kernel/interruptmanager.h>
+#include <kernel/devicemanager.h>
+#include <kernel/memorymanager.h>
+
 namespace kernel {
 
 class Kernel {

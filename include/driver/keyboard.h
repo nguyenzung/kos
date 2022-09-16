@@ -1,10 +1,14 @@
 #ifndef KEYBOARD
 #define KEYBOARD
 
-#include "kernel/utils.h"
-#include "kernel/type.h"
-#include "kernel/basedriver.h"
-#include "kernel/interrupthandler.h"
+#include <kernel/utils.h>
+#include <kernel/type.h>
+#include <kernel/basedriver.h>
+#include <kernel/interrupthandler.h>
+
+using namespace kernel;
+
+namespace driver {
 
 class Keyboard : public kernel::BaseDriver {
 protected:
@@ -23,5 +27,5 @@ public:
     void onTranslateScanCode(uint8 code);
     void onKeyDown(char c);
 };
-
+}
 #endif

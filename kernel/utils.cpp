@@ -1,4 +1,6 @@
-#include "utils.h"
+#include <kernel/utils.h>
+
+using namespace kernel;
 
 char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len){
     while (value > 0) {

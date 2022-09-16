@@ -1,9 +1,9 @@
-#include "interruptmanager.h"
-#include "printer.h"
-#include "iocommand.h"
-#include "utils.h"
+#include <kernel/interruptmanager.h>
+#include <kernel/printer.h>
+#include <kernel/iocommand.h>
+#include <kernel/utils.h>
 
-#include "kernel.h"
+#include <kernel/kernel.h>
 
 using namespace kernel;
 

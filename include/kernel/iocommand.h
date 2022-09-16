@@ -1,7 +1,7 @@
 #ifndef IO_COMMAND
 #define IO_COMMAND
 
-#include "type.h"
+#include <kernel/type.h>
 
 namespace kernel {
 

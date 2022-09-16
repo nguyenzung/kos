@@ -1,10 +1,11 @@
-#include "driver/keyboard.h"
-#include "kernel/iocommand.h"
-#include "kernel/printer.h"
+#include <driver/keyboard.h>
+#include <kernel/iocommand.h>
+#include <kernel/printer.h>
 
 // IMPLE_MODULE_INSTANCE(Keyboard)
 
 using namespace kernel;
+using namespace driver;
 
 Keyboard::Keyboard()
     :BaseDriver()

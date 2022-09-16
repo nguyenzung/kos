@@ -1,7 +1,9 @@
 #ifndef PRINTER
 #define PRINTER
 
-#include "type.h"
+#include <kernel/type.h>
+
+namespace kernel {
 
 class Printer {
     static uint8 x;
@@ -17,4 +19,5 @@ public:
     static void clearScreen();
 };
 
+}
 #endif

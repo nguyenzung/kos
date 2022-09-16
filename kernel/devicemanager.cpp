@@ -1,5 +1,5 @@
-#include "devicemanager.h"
-#include "printer.h"
+#include <kernel/devicemanager.h>
+#include <kernel/printer.h>
 
 using namespace kernel;
 

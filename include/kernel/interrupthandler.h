@@ -1,7 +1,7 @@
 #ifndef INTERRUPT_HANDLER
 #define INTERRUPT_HANDLER
 
-#include "type.h"
+#include <kernel/type.h>
 
 namespace kernel {
 

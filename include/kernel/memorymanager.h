@@ -1,8 +1,10 @@
 #ifndef MEMORY_MANAGER
 #define MEMORY_MANAGER
 
-#include "type.h"
-#include "utils.h"
+#include <kernel/type.h>
+#include <kernel/utils.h>
+
+namespace kernel {
 
 #define MEMORY_ENTRY_SIZE 10
 typedef struct MemoryEntry {
@@ -31,18 +33,20 @@ protected:
     void* makeMemoryEntry(void* ptrPrev, uint16 size);
     void* makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size);
 };
+}
 
-void* memreg(void* ptr, uint16 size);
+
+void* memreg(void* ptr, kernel::uint16 size);
 void memunreg(void *ptr);
 
-void* malloc(size_t);
+void* malloc(kernel::size_t size);
 void free(void* ptr);
 
-void* operator new(size_t size);
+void* operator new(kernel::size_t size);
 void operator delete(void* ptr);
-void operator delete(void* ptr, size_t size);
+void operator delete(void* ptr, kernel::size_t size);
 
-void* operator new[](size_t size);
+void* operator new[](kernel::size_t size);
 void operator delete[](void* ptr);
 
 #endif

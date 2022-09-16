@@ -1,5 +1,5 @@
-#include "basedriver.h"
-#include "memorymanager.h"
+#include <kernel/basedriver.h>
+#include <kernel/memorymanager.h>
 
 using namespace kernel;
 

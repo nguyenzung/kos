@@ -1,8 +1,8 @@
-#include "kernel.h"
-#include "type.h"
-#include "printer.h"
-#include "driver/vga.h"
-#include "utils.h"
+#include <kernel/kernel.h>
+#include <kernel/type.h>
+#include <kernel/printer.h>
+#include <driver/vga.h>
+#include <kernel/utils.h>
 
 using namespace kernel;
 

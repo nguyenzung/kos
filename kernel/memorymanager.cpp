@@ -1,10 +1,12 @@
-#include "memorymanager.h"
-#include "printer.h"
+#include <kernel/memorymanager.h>
+#include <kernel/printer.h>
 
 extern void* heapBase;
 extern void* stackBase;
 extern void* protected_start_bss;
 extern void* protected_end_bss;
+
+using namespace kernel;
 
 IMPLE_MODULE_INSTANCE(MemoryManager)
 
@@ -17,7 +19,7 @@ MemoryManager::~MemoryManager() {
 }
 
 void MemoryManager::initialize() {
-    static_assert(sizeof(MemoryEntry) == MEMORY_ENTRY_SIZE);
+    static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
     first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);

@@ -1,9 +1,9 @@
 #ifndef DEVICE_MANAGER
 #define DEVICE_MANAGER
 
-#include "basedriver.h"
-#include "type.h"
-#include "driver/keyboard.h"
+#include <kernel/basedriver.h>
+#include <kernel/type.h>
+#include <driver/keyboard.h>
 
 
 namespace kernel {
@@ -11,7 +11,7 @@ namespace kernel {
 class DeviceManager {
 protected:
     BaseDriver* drivers[256];
-    Keyboard keyboard;
+    driver::Keyboard keyboard;
 public:
     DeviceManager();
     ~DeviceManager();
