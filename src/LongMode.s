@@ -28,7 +28,7 @@ isrStub_%+%1:
     cld
     call _ZN16InterruptManager11getInstanceEv
     mov rdi, rax
-    mov rsi, %1
+    mov rsi, (0x20 + %1)
     call _ZN16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
@@ -40,22 +40,23 @@ isrStub_%+%1:
     cld
     call _ZN16InterruptManager11getInstanceEv
     mov rdi, rax
-    mov rsi, %1
+    mov rsi, (0x20 + %1)
     call _ZN16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
 %endmacro
 
 section .text
+bits 64
+
 global startLongMode
 global __cxa_pure_virtual
-; extern callConstructors;
 ; extern stack_base
 extern GDT64.Data
 extern main
 extern _ZN16InterruptManager15exceptionHandleEm ; exceptionHandler
 extern _ZN16InterruptManager11getInstanceEv ; getInterruptHandler
-bits 64
+extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 %assign i 0 
 %rep    32 
 global isrStub_%+i
@@ -77,7 +78,6 @@ startLongMode:
     mov fs, rax
     mov gs, rax
     mov rsp, stack_base
-    ; call callConstructors;
     mov rdi, 0xB8000             
     mov rax, 0x1F201F201F201F20 
     mov ecx, 500                
@@ -91,10 +91,6 @@ startLongMode:
     mov rsi, [heapBase]
     mov qword [rsi], 0x23456789
     call main
-debug:
-    call isrStub_0
-    jmp $
-
 
 IRS_NO_ERR_STUB 0
 IRS_NO_ERR_STUB 1

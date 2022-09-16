@@ -39,7 +39,7 @@ public:
 
 	DEF_MODULE_INSTANCE(InterruptManager)
 
-    void setup();
+    void initialize();
 	void* getIDTAddress();
 
 	void exceptionHandle(uint64 vector);

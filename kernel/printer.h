@@ -6,6 +6,7 @@
 class Printer {
     static uint8 x;
     static uint8 y;
+    static uint8 z;
 public:
     static void print(char *message, uint8 length);
     static void println(char *message, uint8 length);

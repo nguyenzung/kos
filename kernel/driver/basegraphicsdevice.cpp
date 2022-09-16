@@ -1,5 +1,9 @@
 #include "basegraphicsdevice.h"
 
-BaseGraphicsDevice::BaseGraphicsDevice() {
+BaseGraphicsDevice::BaseGraphicsDevice():BaseDriver() {
 
+}
+
+BaseGraphicsDevice::~BaseGraphicsDevice() {
+    
 }

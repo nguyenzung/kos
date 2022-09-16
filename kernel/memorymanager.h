@@ -19,9 +19,11 @@ public:
     MemoryManager();
     ~MemoryManager();
 
+    void initialize();
+
     void* malloc(uint16 size);
     void* free(void *ptr);
-    void* reserve(void* ptr, uint16 size);  // reserve for drivers, modules
+    void* reserve(void* ptr, uint16 size);  // reserve memory for drivers, modules
 
 protected:
     MemoryEntry* find(uint16 size);    // return the address of the entry such that will point to the creating entry
@@ -38,6 +40,7 @@ void free(void* ptr);
 
 void* operator new(size_t size);
 void operator delete(void* ptr);
+void operator delete(void* ptr, size_t size);
 
 void* operator new[](size_t size);
 void operator delete[](void* ptr);

@@ -9,20 +9,19 @@ extern void* protected_end_bss;
 IMPLE_MODULE_INSTANCE(MemoryManager)
 
 MemoryManager::MemoryManager() {
-    static_assert(sizeof(MemoryEntry) == MEMORY_ENTRY_SIZE);
-    kernelHeapBase = heapBase;
-    kernelStackBase =  stackBase;
-    // Printer::print("HeapBase: ", 10);
-    // Printer::printAddress((uint64)kernelHeapBase);
-    // Printer::print(" StackBase: ", 12);
-    // Printer::printlnAddress((uint64)kernelStackBase);
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(1000);
-    Printer::printlnNumber((uint64)first);
-    MemoryManager::setInstance(this);
+    
 }
 
 MemoryManager::~MemoryManager() {
 
+}
+
+void MemoryManager::initialize() {
+    static_assert(sizeof(MemoryEntry) == MEMORY_ENTRY_SIZE);
+    kernelHeapBase = heapBase;
+    kernelStackBase =  stackBase;
+    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
+    MemoryManager::setInstance(this);
 }
 
 MemoryEntry* MemoryManager::find(uint16 size) {
@@ -136,6 +135,11 @@ void* operator new[](size_t size) {
 void operator delete(void* ptr) {
     MemoryManager::getInstance()->free(ptr);
 }
+
+void operator delete(void* ptr, size_t) {
+    MemoryManager::getInstance()->free(ptr);
+}
+
 void operator delete[](void* ptr) {
     MemoryManager::getInstance()->free(ptr);
 }
