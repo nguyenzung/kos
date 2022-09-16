@@ -6,8 +6,11 @@
 
 using namespace kernel;
 
-Keyboard::Keyboard() {
+Keyboard::Keyboard()
+    :BaseDriver()
+{
     // Keyboard::setInstance(this);
+    vector = 33;
 }
 
 Keyboard::~Keyboard() {
@@ -92,7 +95,7 @@ void Keyboard::onTranslateScanCode(uint8 code) {
             }
         }
     }else {
-        Printer::printAddress(code);
+        // Printer::printAddress(code);
     }
 }
 

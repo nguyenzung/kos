@@ -17,10 +17,10 @@ void DeviceManager::initialize() {
 }
 
 void DeviceManager::registerDevice(BaseDriver *driver) {
-    this->drivers[33] = driver;
+    this->drivers[driver->getVector()] = driver;
 }
 
 void DeviceManager::handleInterrupt(uint8 vector) {
-    Printer::printlnNumber(vector);
-    this->drivers[33]->handleInterrupt();
+    // Printer::printlnNumber(vector);
+    this->drivers[vector]->handleInterrupt();
 }
