@@ -6,6 +6,7 @@
 namespace driver {
 
 class Timer : public kernel::BaseDriver {
+
 public:
     Timer();
     ~Timer();
@@ -13,6 +14,8 @@ public:
     void active();
     void deactive();
     void handleInterrupt();
+
+    // void set
 };
 }
 #endif

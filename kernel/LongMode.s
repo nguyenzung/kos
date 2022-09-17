@@ -52,7 +52,7 @@ bits 64
 global startLongMode
 global __cxa_pure_virtual
 ; extern stack_base
-extern GDT64.Data
+extern GDT64Data
 extern main
 extern _ZN6kernel16InterruptManager15exceptionHandleEm ; exceptionHandler
 extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
@@ -71,7 +71,7 @@ startLongMode:
     cli               
     ; sti
     ; mov rax, rip
-    mov rax, GDT64.Data
+    mov rax, 0
     mov ss, rax
     mov ds, rax
     mov es, rax

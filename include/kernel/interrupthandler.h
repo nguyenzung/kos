@@ -6,6 +6,7 @@
 namespace kernel {
 
 class InterruptHandler {
+
 protected:
     uint8 vector;
 

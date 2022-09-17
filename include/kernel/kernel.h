@@ -5,6 +5,7 @@
 #include <kernel/interruptmanager.h>
 #include <kernel/devicemanager.h>
 #include <kernel/memorymanager.h>
+#include <driver/timer.h>
 
 namespace kernel {
 
@@ -13,7 +14,7 @@ class Kernel {
     DeviceManager deviceManager;
     InterruptManager interruptManager;
     static Kernel* instance;
-    
+
 public:
     Kernel();
     ~Kernel();

@@ -113,7 +113,8 @@ endBoot64:
 section .rodata
 global GDT64
 global GDT64Code
-global GDT64.Data
+global GDT64Data
+global GDT64TSS
 global GDTPTR
 ; Access bits
 PRESENT		equ 1 << 7
@@ -163,9 +164,11 @@ global protected_end_bss
 	finish_lv2_message 			db "[Finish Level 2 ROW]",7
 	enable_paging_message 		db "[Enable Paging]",7
 	debug						db "[DEBUG]", 7
-	GDT64Code					dq  GDT64.Code
-	protected_start_bss			dq  lv4_page_address
-	protected_end_bss			dq  end_page_address
+	GDT64Code					dq GDT64.Code
+	GDT64Data					dq GDT64.Data
+	GDT64TSS					dq GDT64.TSS
+	protected_start_bss			dq lv4_page_address
+	protected_end_bss			dq end_page_address
 
 section .bss
 	align 4096
