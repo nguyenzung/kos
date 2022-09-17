@@ -26,6 +26,7 @@ void Kernel::startKernel() {
     memoryManager.initialize();
     deviceManager.initialize();
     interruptManager.initialize();
+    // Printer::printlnNumbers((uint64[]){1, 2, 3, 4, 5}, 5);
 
     // VGA vga;
     // vga.setupVideoMode();

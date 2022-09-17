@@ -12,9 +12,8 @@ class Kernel {
     MemoryManager memoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
-
     static Kernel* instance;
-
+    
 public:
     Kernel();
     ~Kernel();

@@ -20,10 +20,10 @@ void DeviceManager::initialize() {
     
 }
 
-void DeviceManager::registerDevice(BaseDriver *driver) {
-    this->drivers[driver->getVector()] = driver;
+void DeviceManager::registerDevice(InterruptHandler *handler) {
+    this->handlers[handler->getVector()] = handler;
 }
 
 void DeviceManager::handleInterrupt(uint8 vector) {
-    this->drivers[vector]->handleInterrupt();
+    this->handlers[vector]->handleInterrupt();
 }

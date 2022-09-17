@@ -2,7 +2,8 @@
 
 using namespace kernel;
 
-char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len){
+char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len)
+{
     while (value > 0) {
         uint8 r = value & 0xf;
         value = value >> 4;
@@ -17,10 +18,23 @@ char* Utils::convertIntToHexString(uint64 value, char* message, uint8 len){
     return message;
 }
 
-char* Utils::convertIntToDecString(uint64 value, char* message, uint8 len){
+char* Utils::convertIntToDecString(uint64 value, char* message, uint8 len)
+{
     while (value > 0) {
         uint8 r = value % 10;
         value = value / 10;
+        message[len-1] = (r + 48);
+        len--;
+    }
+    message[len-1]=48;
+    return message;
+}
+
+char* Utils::convertIntToBinString(uint64 value, char* message, uint8 len)
+{
+    while (value > 0) {
+        uint8 r = value & 0b1;
+        value = value >> 1;
         message[len-1] = (r + 48);
         len--;
     }

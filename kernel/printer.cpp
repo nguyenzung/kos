@@ -10,7 +10,8 @@ using namespace kernel;
 uint8 Printer::x = 0;
 uint8 Printer::y = 0;
 
-void Printer::print(char *message, uint8 len) {
+void Printer::print(char *message, uint8 len)
+{
     unsigned char *VideoMapAddress = (unsigned char*) 0xb8000 + y * SCREEN_WITH * 2 + x * 2;
     for (int i = 0; i < len; i++) {
         VideoMapAddress[i * 2] = message[i];
@@ -24,13 +25,15 @@ void Printer::print(char *message, uint8 len) {
     }
 }
 
-void Printer::println(char *message, uint8 len) {
+void Printer::println(char *message, uint8 len) 
+{
     Printer::print(message, len);
     y++;
     x = 0;
 }
 
-char* buildMessage(uint64 address, char *message, uint8 length, char* (*fun_ptr)(uint64, char*, uint8)) {
+char* buildMessage(uint64 address, char *message, uint8 length, char* (*fun_ptr)(uint64, char*, uint8))
+{
     for (int i = 0; i < ADDRESS_LENGTH - 1; i++) {
         message[i] = ' ';
     }
@@ -47,28 +50,55 @@ char* buildMessage(uint64 address, char *message, uint8 length, char* (*fun_ptr)
     return pMessage;
 }
 
-void Printer::printAddress(uint64 address) {
+void Printer::printAddress(uint64 address)
+{
     char message[ADDRESS_LENGTH];
     char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToHexString);
     Printer::print(pMessage, ADDRESS_LENGTH - (pMessage - message));
 }
 
-void Printer::printlnAddress(uint64 address) {
+void Printer::printlnAddress(uint64 address)
+{
     char message[ADDRESS_LENGTH];
     char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToHexString);
     Printer::println(pMessage, ADDRESS_LENGTH - (pMessage - message));
 }
 
-void Printer::printNumber(uint64 address) {
+void Printer::printNumber(uint64 address)
+{
     char message[ADDRESS_LENGTH];
     char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToDecString);
     Printer::print(pMessage, ADDRESS_LENGTH - (pMessage - message));
 }
 
-void Printer::printlnNumber(uint64 address) {
+void Printer::printlnNumber(uint64 address)
+{
     char message[ADDRESS_LENGTH];
     char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToDecString);
     Printer::println(pMessage, ADDRESS_LENGTH - (pMessage - message));
+}
+
+void Printer::println()
+{
+    Printer::println(" ", 1);
+}
+
+void Printer::printlnNumbers(uint64 *numbers, uint8 size) 
+{
+    for (uint8 i = 0; i < size; i++) {
+        Printer::print(" ", 1);
+        Printer::printNumber(numbers[i]);
+    }
+    Printer::println();
+}
+
+void Printer::printlnAddresses(uint64 *numbers, uint8 size)
+{
+    for (uint8 i = 0; i < size; i++) {
+        Printer::print(" ", 1);
+        Printer::printAddress(numbers[i]);
+    }
+    Printer::println();
 }
 
 void Printer::clearScreen() {
