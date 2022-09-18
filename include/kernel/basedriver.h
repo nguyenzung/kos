@@ -2,7 +2,8 @@
 #define BASE_DRIVER
 
 #include <kernel/interrupthandler.h>
-namespace kernel {
+namespace kernel 
+{
 
 class BaseDriver : public InterruptHandler
 {

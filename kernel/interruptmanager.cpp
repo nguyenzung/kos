@@ -127,10 +127,7 @@ void InterruptManager::setupIDT() {
     for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
-    PIC_remap();
-    // IRQ_clear_mask(8);
-    // IRQ_clear_mask(8 + OFFSET);
-    
+    PIC_remap();    
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");
     asm ("sti");

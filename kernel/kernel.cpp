@@ -3,6 +3,8 @@
 #include <kernel/printer.h>
 #include <driver/vga.h>
 #include <kernel/utils.h>
+#include <kernel/kernelobject.h>
+#include <datastructure/list.h>
 
 using namespace kernel;
 
@@ -15,7 +17,6 @@ Kernel::Kernel()
 
 Kernel::~Kernel() 
 {
-
 }
 
 Kernel* Kernel::getInstance() {

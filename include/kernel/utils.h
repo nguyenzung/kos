@@ -3,7 +3,8 @@
 
 #include <kernel/type.h>
 
-namespace kernel {
+namespace kernel
+{
 
 #define ASM_CMD(reg) "movq %%" #reg ", %0;" 
 #define READ_CPU(reg, variable) asm (ASM_CMD(reg) :"=m"(variable)::);   
@@ -23,7 +24,8 @@ ClassName* ClassName::getInstance() {               \
     return ClassName::instance;                     \
 }                                                   
 
-class Utils{
+class Utils
+{
 public:
     static char* convertIntToHexString(uint64 value, char* message, uint8 len);
     static char* convertIntToDecString(uint64 value, char* message, uint8 len);

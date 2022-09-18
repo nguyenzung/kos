@@ -5,11 +5,13 @@
 #include <kernel/type.h>
 #include <driver/keyboard.h>
 
-namespace kernel {
+namespace kernel 
+{
 
 #define OFFSET 0x20
 
-typedef struct {
+typedef struct 
+{
 	uint16    isr_low;      
 	uint16    kernel_cs;    
 	uint8	  ist;          
@@ -20,12 +22,14 @@ typedef struct {
 } __attribute__((packed)) GateEntry;
 
 
-typedef struct {
+typedef struct 
+{
 	uint16	limit;
 	uint64	base;
 } __attribute__((packed)) IDTR;
 
-class InterruptManager {
+class InterruptManager 
+{
 protected:
     GateEntry idt[256];
 	IDTR idtr;

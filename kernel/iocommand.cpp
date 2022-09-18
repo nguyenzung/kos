@@ -4,13 +4,13 @@ using namespace kernel;
 
 void outb(uint16 port, uint8 value)
 {
-    asm ("outb %0, %1" : : "a" (value), "Nd" (port));
+    asm ("outb %0, %1" : : "r" (value), "Nd" (port));
 }
 
 uint8 inb(uint16 port)
 {
     uint8 result;
-    asm ("inb %1, %0" : "=a" (result) : "Nd" (port));
+    asm ("inb %1, %0" : "=r" (result) : "Nd" (port));
     return result;
 }
 

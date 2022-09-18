@@ -23,5 +23,5 @@ void Timer::deactive() {
 }
 
 void Timer::handleInterrupt() {
-    Printer::println(" Timer INT ", 11);
+    // Printer::println(" Timer INT ", 11);
 }

@@ -3,9 +3,11 @@
 
 #include <kernel/type.h>
 
-namespace kernel {
+namespace kernel 
+{
 
-class InterruptHandler {
+class InterruptHandler 
+{
 
 protected:
     uint8 vector;

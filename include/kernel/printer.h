@@ -3,9 +3,11 @@
 
 #include <kernel/type.h>
 
-namespace kernel {
+namespace kernel 
+{
 
-class Printer {
+class Printer 
+{
     static uint8 x;
     static uint8 y;
     static uint8 z;

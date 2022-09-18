@@ -31,6 +31,7 @@ isrStub_%+%1:
     mov rsi, (%1 + 0x20)
     call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
+    ; call switchTask
     iretq
 %endmacro
 ; if writing for 64-bit, use iretq instead
@@ -71,6 +72,7 @@ startLongMode:
     cli               
     ; sti
     ; mov rax, rip
+    ; push rip
     mov rax, 0
     mov ss, rax
     mov ds, rax

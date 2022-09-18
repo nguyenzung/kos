@@ -4,15 +4,18 @@
 #include <kernel/type.h>
 #include <kernel/utils.h>
 
-namespace kernel {
+namespace kernel 
+{
 
 #define MEMORY_ENTRY_SIZE 10
-typedef struct MemoryEntry {
+typedef struct MemoryEntry 
+{
     MemoryEntry *next;
     uint16 size;
 } __attribute__((packed)) MemoryEntry;
 
-class MemoryManager {
+class MemoryManager 
+{
     void* kernelHeapBase;
     void* kernelStackBase;
     MemoryEntry *first;

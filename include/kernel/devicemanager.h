@@ -6,9 +6,11 @@
 #include <driver/keyboard.h>
 #include <driver/timer.h>
 
-namespace kernel {
+namespace kernel 
+{
 
-class DeviceManager {
+class DeviceManager 
+{
 protected:
     InterruptHandler* handlers[256];
     driver::Keyboard keyboard;

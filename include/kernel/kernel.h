@@ -7,9 +7,11 @@
 #include <kernel/memorymanager.h>
 #include <driver/timer.h>
 
-namespace kernel {
+namespace kernel 
+{
 
-class Kernel {
+class Kernel 
+{
     MemoryManager memoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
@@ -27,7 +29,6 @@ public:
     MemoryManager* getMemoryManager();
     DeviceManager* getDeviceManager();
     InterruptManager *getInterruptManager();
-
 };
 
 }
