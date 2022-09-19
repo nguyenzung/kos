@@ -19,11 +19,15 @@ Kernel::~Kernel()
 {
 }
 
-Kernel* Kernel::getInstance() {
+Kernel* Kernel::getInstance()
+{
     return Kernel::instance;
 }
 
-void Kernel::startKernel() {
+void Kernel::startKernel()
+{
+
+    // Printer::printlnNumber(testAsm);
 
     heapMemoryManager.initialize();
     deviceManager.initialize();
@@ -42,39 +46,47 @@ void Kernel::startKernel() {
     list.addNode(no4);
     list.addNode(no5);
 
-    for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
-    {
-         Printer::printNumber((uint64)it);
-        Printer::println();
-    }
+    // for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
+    // {
+    //     Printer::printNumber((uint64)it);
+    //     Printer::println();
+    // }
     list.removeNodeByAddress(no1);
     delete no1;
     list.addNodeAfter(no5, new ds::Node((kernel::KernelObject*)6));
     // Printer::printlnNumber((uint64)(new ds::Node((kernel::KernelObject*)6)));
-    Printer::println();
+    // Printer::println();
     
-    for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
-    {
-         Printer::printNumber((uint64)it);
-        Printer::println();
-    }
-   
+    // for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
+    // {
+    //     Printer::printNumber((uint64)it);
+    //     Printer::println();
+    // }
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
 }
 
-void Kernel::hlt() {
+void Kernel::hlt()
+{
+    uint64 testAsm = 12;
+    // uint64 testAsm1 = 13;
+    asm("movq %%rsp, %0":"=m"(testAsm)::);
+    Printer::printlnNumber(testAsm);
     asm ("_cpp_stop:; hlt; jmp _cpp_stop;");
 }
 
-HeapMemoryManager* Kernel::getHeapMemoryManager() {
+HeapMemoryManager* Kernel::getHeapMemoryManager() 
+{
     return &this->heapMemoryManager;
 }
 
-DeviceManager* Kernel::getDeviceManager() {
+DeviceManager* Kernel::getDeviceManager() 
+{
     return &this->deviceManager;
 }
-InterruptManager* Kernel::getInterruptManager() {
+
+InterruptManager* Kernel::getInterruptManager() 
+{
     return &this->interruptManager;
 }

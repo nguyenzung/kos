@@ -23,6 +23,7 @@ void HeapMemoryManager::initialize() {
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
     first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
+    Printer::printlnNumber((uint64)kernelStackBase);
     HeapMemoryManager::setInstance(this);
 }
 

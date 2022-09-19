@@ -182,3 +182,8 @@ Node* List::next()
         return 0;
     }
 }
+
+Node* List::getCurrent()
+{
+    return this->current;
+}

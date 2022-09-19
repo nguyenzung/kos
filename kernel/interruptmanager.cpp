@@ -28,6 +28,7 @@ using namespace kernel;
 
 extern uint16 GDT64Code;
 extern void* isrStubTable[];
+extern void* isrTimerHandler;
 
 // static void testPageFault() {
 //     uint64 a = 12;
@@ -91,7 +92,7 @@ void IRQ_clear_mask(unsigned char IRQline)
 
 InterruptManager::InterruptManager()
 {
-    InterruptManager::setInstance(this);
+    InterruptManager::instance = this;
 }
 
 InterruptManager::~InterruptManager()
@@ -113,7 +114,6 @@ void* InterruptManager::getIDTAddress()
 
 void InterruptManager::exceptionHandle(uint64 vector)
 {
-    // // Printer::printlnAddress(testData);
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
     if (vector - OFFSET <= 8)
     {
@@ -132,6 +132,7 @@ void InterruptManager::setupIDT()
     for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
+    this->setGateEntry(0x20, &isrTimerHandler, 0x8E);
     PIC_remap();
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");

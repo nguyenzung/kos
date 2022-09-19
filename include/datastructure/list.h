@@ -48,6 +48,7 @@ public:
     Node* begin();
     Node* end();
     Node* next();
+    Node* getCurrent();
 };
 
 }

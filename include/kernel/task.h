@@ -8,12 +8,14 @@ using namespace kernel;
 
 typedef int (*mainFuntion)(int argc, char**argv);
 
+class Process;
 class Task : public KernelObject
 {
 public:
+    Process *process;
     uint16 taskID;
 
-protected:
+public:
     uint64 rax;
     uint64 rbx;
     uint64 rcx;
@@ -31,7 +33,7 @@ protected:
     uint64 r14;
     uint64 r15;
 
-    uint64 rip;
+    uint64 rip; // We can load from stack instead of access directly
     
     void* pageAddress;
     void* codeSegment;
@@ -42,7 +44,8 @@ public:
     Task(mainFuntion entryPoint);
     ~Task();
 
-    void save();
+    void initialize(uint64 rbp);
+    void save(void *address);
     void load();
 };
 
