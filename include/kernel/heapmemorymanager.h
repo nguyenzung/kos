@@ -14,15 +14,15 @@ typedef struct MemoryEntry
     uint16 size;
 } __attribute__((packed)) MemoryEntry;
 
-class MemoryManager 
+class HeapMemoryManager 
 {
     void* kernelHeapBase;
     void* kernelStackBase;
     MemoryEntry *first;
-    DEF_MODULE_INSTANCE(MemoryManager)
+    DEF_MODULE_INSTANCE(HeapMemoryManager)
 public:
-    MemoryManager();
-    ~MemoryManager();
+    HeapMemoryManager();
+    ~HeapMemoryManager();
 
     void initialize();
 

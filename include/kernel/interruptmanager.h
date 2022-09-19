@@ -34,8 +34,6 @@ protected:
     GateEntry idt[256];
 	IDTR idtr;
 	// Keyboard keyboard;
-	uint64 testData;
-	
 
 public:
     InterruptManager();

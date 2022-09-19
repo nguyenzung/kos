@@ -16,8 +16,7 @@ void DeviceManager::initialize() {
     keyboard.active();
     timer.active();
     this->registerDevice(&timer);
-    this->registerDevice(&keyboard);
-    
+    this->registerDevice(&keyboard);   
 }
 
 void DeviceManager::registerDevice(InterruptHandler *handler) {

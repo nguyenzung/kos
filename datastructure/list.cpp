@@ -4,7 +4,7 @@
 
 using namespace ds;
 
-Node::Node(kernel::KernelObject *value):value(value)
+Node::Node(kernel::KernelObject *value):value(value), next(0), prev(0)
 {
 }
 
@@ -24,6 +24,10 @@ void Node::addPrev(Node *node)
 void Node::removePrev()
 {
     this->prev = 0;
+    if (this->prev)
+    {
+        this->prev->next = 0;
+    }
 }
 
 void Node::addNext(Node *node)
@@ -38,6 +42,10 @@ void Node::addNext(Node *node)
 void Node::removeNext()
 {
     this->next = 0;
+    if (this->next)
+    {
+        this->next->prev = 0;
+    }
 }
 
 
@@ -58,6 +66,28 @@ void List::addNode(Node *node)
     } else {
         this->last->addNext(node);
         this->last = node;
+    }
+    ++this->size;
+}
+
+void List::addNodeAfter(Node *prevNode, Node* node)
+{
+    if (!node)
+    {
+        return;
+    }
+    if(!prevNode)
+    {
+        node->addNext(this->first);
+        this->first = node;
+    }else{
+        Node *next = prevNode->next;
+        prevNode->addNext(node);
+        node->addNext(next);
+        if(prevNode == this->last)
+        {
+            this->last = node;
+        }
     }
     ++this->size;
 }
@@ -130,13 +160,25 @@ bool List::removeNodeByValue(kernel::KernelObject *kernelObject)
     return false;
 }
 
-void List::travel()
+Node* List::begin()
 {
-    Node *curr = this->first;
-    while (curr)
+    this->current = this->first;
+    return this->current;
+}
+
+Node* List::end()
+{
+    return this->last ? this->last->next : this->last;
+}
+
+Node* List::next()
+{
+    if (this->current && this->current->next)
     {
-        kernel::Printer::printlnNumber((kernel::uint64)curr->value);
-        curr = curr->next;
+        this->current = this->current->next;
+        return this->current;
+    } else 
+    {
+        return 0;
     }
-    
 }

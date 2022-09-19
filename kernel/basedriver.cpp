@@ -1,5 +1,5 @@
 #include <kernel/basedriver.h>
-#include <kernel/memorymanager.h>
+#include <kernel/heapmemorymanager.h>
 
 using namespace kernel;
 

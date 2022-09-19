@@ -74,7 +74,8 @@ void PIC_remap()
 	// outb(PIC2_DATA, a2);
 }
 
-void IRQ_clear_mask(unsigned char IRQline) {
+void IRQ_clear_mask(unsigned char IRQline)
+{
     uint16 port;
     uint8 value;
  
@@ -88,30 +89,33 @@ void IRQ_clear_mask(unsigned char IRQline) {
     outb(port, value);        
 }
 
-InterruptManager::InterruptManager() {
-    testData=0x123454321;
+InterruptManager::InterruptManager()
+{
     InterruptManager::setInstance(this);
 }
 
-InterruptManager::~InterruptManager(){
+InterruptManager::~InterruptManager()
+{
 
 }
-
 
 IMPLE_MODULE_INSTANCE(InterruptManager)
 
-void InterruptManager::initialize() {
+void InterruptManager::initialize()
+{
     this->setupIDT();
 }
 
-void* InterruptManager::getIDTAddress() {
+void* InterruptManager::getIDTAddress()
+{
     return this->idt;
 }
 
-void InterruptManager::exceptionHandle(uint64 vector) {
+void InterruptManager::exceptionHandle(uint64 vector)
+{
     // // Printer::printlnAddress(testData);
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
-    if (vector - OFFSET <= 8) 
+    if (vector - OFFSET <= 8)
     {
         outb(0xA0, 0x20);
     }
@@ -120,14 +124,15 @@ void InterruptManager::exceptionHandle(uint64 vector) {
    
 }
 
-void InterruptManager::setupIDT() {
+void InterruptManager::setupIDT()
+{
     idtr.base = (uint64)&idt[0];
     idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
  
     for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
-    PIC_remap();    
+    PIC_remap();
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");
     asm ("sti");
@@ -137,7 +142,8 @@ void InterruptManager::setupIDT() {
     // Printer::printAddress(123);
 }
 
-void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags) {
+void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags)
+{
     GateEntry* entry    = &idt[vector];
     entry->isr_low      = (uint64)isr & 0xFFFF;
     entry->kernel_cs    = GDT64Code;

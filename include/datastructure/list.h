@@ -26,6 +26,12 @@ public:
 class List
 {
 public:
+
+    class Iterator
+    {
+
+    };
+
     kernel::uint16 size;
     Node *first;
     Node *last;
@@ -35,10 +41,13 @@ public:
     ~List();
 
     void addNode(Node *node);
+    void addNodeAfter(Node *prevNode, Node* node);  // user need to make sure prevNode in the list
     bool removeNodeByAddress(Node *node);
     bool removeNodeByValue(kernel::KernelObject *kernelObject);
 
-    void travel();
+    Node* begin();
+    Node* end();
+    Node* next();
 };
 
 }

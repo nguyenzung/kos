@@ -1,10 +1,9 @@
 #ifndef KERNEL
 #define KERNEL
 
-
 #include <kernel/interruptmanager.h>
 #include <kernel/devicemanager.h>
-#include <kernel/memorymanager.h>
+#include <kernel/heapmemorymanager.h>
 #include <driver/timer.h>
 
 namespace kernel 
@@ -12,7 +11,7 @@ namespace kernel
 
 class Kernel 
 {
-    MemoryManager memoryManager;
+    HeapMemoryManager heapMemoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
     static Kernel* instance;
@@ -26,7 +25,7 @@ public:
     void startKernel();
     void hlt();
 
-    MemoryManager* getMemoryManager();
+    HeapMemoryManager* getHeapMemoryManager();
     DeviceManager* getDeviceManager();
     InterruptManager *getInterruptManager();
 };

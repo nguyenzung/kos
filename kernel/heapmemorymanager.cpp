@@ -1,4 +1,4 @@
-#include <kernel/memorymanager.h>
+#include <kernel/heapmemorymanager.h>
 #include <kernel/printer.h>
 
 extern void* heapBase;
@@ -8,25 +8,25 @@ extern void* protected_end_bss;
 
 using namespace kernel;
 
-IMPLE_MODULE_INSTANCE(MemoryManager)
+IMPLE_MODULE_INSTANCE(HeapMemoryManager)
 
-MemoryManager::MemoryManager() {
+HeapMemoryManager::HeapMemoryManager() {
     
 }
 
-MemoryManager::~MemoryManager() {
+HeapMemoryManager::~HeapMemoryManager() {
 
 }
 
-void MemoryManager::initialize() {
+void HeapMemoryManager::initialize() {
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
     first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
-    MemoryManager::setInstance(this);
+    HeapMemoryManager::setInstance(this);
 }
 
-MemoryEntry* MemoryManager::find(uint16 size) {
+MemoryEntry* HeapMemoryManager::find(uint16 size) {
     MemoryEntry *current = this->first;
     while (current->next)
     {
@@ -39,13 +39,13 @@ MemoryEntry* MemoryManager::find(uint16 size) {
     return current;
 }
 
-void* MemoryManager::malloc(uint16 size) {
+void* HeapMemoryManager::malloc(uint16 size) {
     MemoryEntry* prev = this->find(size);
     void* ptr = this->makeMemoryEntry(prev, size);
     return ptr + MEMORY_ENTRY_SIZE;
 }
 
-void* MemoryManager::free(void *ptr) {
+void* HeapMemoryManager::free(void *ptr) {
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *prev = this->first;
     MemoryEntry *current = prev->next;
@@ -60,7 +60,7 @@ void* MemoryManager::free(void *ptr) {
     return 0;
 }
 
-void* MemoryManager::reserve(void* ptr, uint16 size) {
+void* HeapMemoryManager::reserve(void* ptr, uint16 size) {
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *current = this->first;
     while(current) {
@@ -85,20 +85,20 @@ void* MemoryManager::reserve(void* ptr, uint16 size) {
     return 0;
 }
 
-void* MemoryManager::makeFirstMemoryEntry(uint16 size) {
+void* HeapMemoryManager::makeFirstMemoryEntry(uint16 size) {
     MemoryEntry *entry = (MemoryEntry*)this->kernelHeapBase;
     entry->size = size;
     entry->next = 0;
     return entry;
 }
 
-void* MemoryManager::makeMemoryEntry(void* ptrPrev, uint16 size) {
+void* HeapMemoryManager::makeMemoryEntry(void* ptrPrev, uint16 size) {
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
     return this->makeMemoryEntryAt(ptr, ptrPrev, size);
 }
 
-void* MemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size) {
+void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size) {
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     MemoryEntry *entry = (MemoryEntry*)ptr;
     entry->size = size;
@@ -108,40 +108,40 @@ void* MemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size) {
 }
 
 void* memreg(void* ptr, uint16 size) {
-    return MemoryManager::getInstance()->reserve(ptr, size);
+    return HeapMemoryManager::getInstance()->reserve(ptr, size);
 }
 
 void memunreg(void *ptr) {
-    MemoryManager::getInstance()->free(ptr);
+    HeapMemoryManager::getInstance()->free(ptr);
 }
 
 void* malloc(size_t size) {
     // void *ptr = MemoryManager::getInstance()->malloc(size);
-    return MemoryManager::getInstance()->malloc(size);
+    return HeapMemoryManager::getInstance()->malloc(size);
 }
 
 void free(void* ptr){
-    MemoryManager::getInstance()->free(ptr);
+    HeapMemoryManager::getInstance()->free(ptr);
 }
 
 void* operator new(size_t size) {
     // void *ptr = MemoryManager::getInstance()->malloc(size);
-    return MemoryManager::getInstance()->malloc(size);
+    return HeapMemoryManager::getInstance()->malloc(size);
 }
 
 void* operator new[](size_t size) {
     // void *ptr = MemoryManager::getInstance()->malloc(size);
-    return MemoryManager::getInstance()->malloc(size);
+    return HeapMemoryManager::getInstance()->malloc(size);
 }
 
 void operator delete(void* ptr) {
-    MemoryManager::getInstance()->free(ptr);
+    HeapMemoryManager::getInstance()->free(ptr);
 }
 
 void operator delete(void* ptr, size_t) {
-    MemoryManager::getInstance()->free(ptr);
+    HeapMemoryManager::getInstance()->free(ptr);
 }
 
 void operator delete[](void* ptr) {
-    MemoryManager::getInstance()->free(ptr);
+    HeapMemoryManager::getInstance()->free(ptr);
 }
