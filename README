@@ -9,10 +9,10 @@ How to run:
 Timeline:
 
 1. Enter Long mode: check CPU support, setup Memory mapping, setup GDT
-2. Create interrupt handler. Using PCI. I have plan to move to APCI later.
+2. Create interrupt handler. Using PIC. I have plan to move to APIC later.
 3. Create debug functions: print, printNumber, printAddress. 
 4. Some simple drivers: Timer, Keyboard, Video Graphics
 5. Create DynamicMemory module. Now we use operator: new, delete, new[], delete[]
 6. Add datastructure: list. We need to add more data structure like: tree, hashtable...
-7. Support multithreading.
+7. Support multithreading. Schedule tasks
 8. ...
