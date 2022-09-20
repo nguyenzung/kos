@@ -1,12 +1,29 @@
-A simple 64 bits Operating System for x64. Just for fun.
+# A simple 64 bits Operating System for x64
+
+Just for fun.
 
 I use C++ and Assembly to develop the OS. I use g++ and Nasm for compiler tools
 
-How to run:
-1. Setup cross-compile tools: g++, ld for x64
-2. Run with VM: make demo
+## Dependencies
 
-Timeline:
+- Any `gcc` toolchain that support x64.
+- `make`
+- `nasm`
+- `grub`
+- `xorriso` - For making iso file used by `grub-mkrescure`.
+- `qemu` - Using `qemu-system-x86_64` for testing.
+
+Make sure all dependencies were installed, and you good to go.
+
+## How to run:
+
+Build the source code with `make` or `make all` or just `make demo`.
+If the build is succeded without error you would see a qemu windows like this:
+![](2022-09-20-12-29-03.png)
+
+Type `multiboot2 /boot/kernel.bin` to run the kernel.
+
+## Timeline:
 
 1. Enter Long mode: check CPU support, setup Memory mapping, setup GDT
 2. Create interrupt handler. Using PIC. I have plan to move to APIC later.
