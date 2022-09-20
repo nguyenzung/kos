@@ -14,13 +14,28 @@
 #define	VGA_AC_INDEX		0x3C0
 #define	VGA_AC_WRITE		0x3C0
 
-IMPLE_MODULE_INSTANCE(VGA)
+IMPL_MODULE_INSTANCE(VGA)
 
 using namespace kernel;
 
 VGA::VGA()
 {
     VGA::setInstance(this);
+}
+
+void VGA::active()
+{
+
+}
+
+void VGA::deactive()
+{
+
+}
+
+void VGA::handleInterrupt()
+{
+    
 }
             
 void VGA::setupVideoMode()

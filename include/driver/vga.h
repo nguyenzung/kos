@@ -33,6 +33,11 @@ protected:
     DEF_MODULE_INSTANCE(VGA)
 public:
     VGA();
+
+    void active();
+    void deactive();
+    void handleInterrupt();
+
     void setupVideoMode() override;
     void drawPixel(uint32 x, uint32 y, VGAColor colorIndex);
     void drawPixel(uint32 x, uint32 y,  uint8 r, uint8 g, uint8 b) override;
