@@ -27,7 +27,7 @@ info: $(ASM_SOURCE_FILES)
 all: kernel.iso
 kernel.iso: $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) kernel.ld
 	$(LD) -n  -o $(BUILD_DIR)/kernel.bin -T kernel.ld $(CPP_OBJ_FILES) $(ASM_OBJ_FILES) -nostdlib && \
-	cp $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/iso/boot && \
+	cp $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/iso/boot/ && \
 	grub-mkrescue /usr/lib/grub/i386-pc -o $(BUILD_DIR)/kernel.iso $(BUILD_DIR)/iso
 	@echo $(shell ls -lia build/iso/boot/kernel.bin)
 
