@@ -14,6 +14,7 @@ CXXFLAGS += -fno-stack-protector
 CXXFLAGS += -fno-exceptions 
 CXXFLAGS += -fno-rtti  
 CXXFLAGS += -nostdlib
+CXXFLAGS += -MMD
 
 ASFLAGS = -felf64 
 
@@ -82,3 +83,5 @@ demo: $(TARGET)
 	qemu-system-x86_64 -s -cdrom $<
 test:
 	@echo $(OBJS)
+	
+-include $(OBJS:%.o=%.d)
