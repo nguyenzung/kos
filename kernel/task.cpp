@@ -1,8 +1,16 @@
 #include <kernel/task.h>
+#include <kernel/printer.h>
 
-Task::Task(mainFuntion entryPoint)
+Task::Task()
 {
-    this->entryPoint = entryPoint;
+
+}
+
+Task::Task(mainFunction entryPoint, int argc, char **argv)
+{
+    this->context.entryPoint = entryPoint;
+    this->argc = argc;
+    this->argv = argv;
 }
 
 Task::~Task()
@@ -11,19 +19,21 @@ Task::~Task()
 
 void Task::initialize(uint64 rbp)
 {
-    this->rbp = rbp;
-    this->rsp = rbp;
+    this->context.rbp = rbp;
+    this->context.rsp = rbp;
 }
 
-void Task::save(void *address)
+void Task::save(uint64 *address)
 {
-    asm("":"=m"(this->rax)::);
-    asm("":"=m"(this->rbx)::);
-    asm("":"=m"(this->rcx)::);
-    asm("":"=m"(this->rdx)::);
+    this->context.save(address);
 }
 
-void Task::load()
+void Task::load(uint64 *address)
 {
 
+}
+
+void Task::run()
+{
+    
 }

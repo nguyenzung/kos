@@ -5,7 +5,7 @@
 #include <kernel/utils.h>
 #include <datastructure/list.h>
 
-#define TASK_STACK_SIZE 1 << 20  // 1MB for stack size
+#define TASK_STACK_SIZE (1 << 20)  // 1MB for stack size
 
 namespace kernel 
 {
@@ -22,9 +22,10 @@ public:
 
     DEF_MODULE_INSTANCE(TaskManager);
 
-    Task* makeTask(mainFuntion entryPoint);
-    void active();
-    void save(void *address);
+    Task* makeTask(mainFunction entryPoint, int argc, char** argv);
+    void initialize();
+    void save(uint64 *address);
+    void load(uint64 *address);
 
 protected:
    /*

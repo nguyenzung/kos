@@ -15,7 +15,7 @@ namespace kernel
     static void setInstance(ClassName *instance);   \
     static ClassName* getInstance();
 
-#define IMPLE_MODULE_INSTANCE(ClassName)            \
+#define IMPL_MODULE_INSTANCE(ClassName)            \
 ClassName* ClassName::instance = nullptr;           \
 void ClassName::setInstance(ClassName *instance) {  \
     ClassName::instance = instance;                 \

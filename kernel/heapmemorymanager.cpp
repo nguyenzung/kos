@@ -3,12 +3,10 @@
 
 extern void* heapBase;
 extern void* stackBase;
-extern void* protected_start_bss;
-extern void* protected_end_bss;
 
 using namespace kernel;
 
-IMPLE_MODULE_INSTANCE(HeapMemoryManager)
+IMPL_MODULE_INSTANCE(HeapMemoryManager)
 
 HeapMemoryManager::HeapMemoryManager() {
     
@@ -23,7 +21,8 @@ void HeapMemoryManager::initialize() {
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
     first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
-    Printer::printlnNumber((uint64)kernelStackBase);
+    Printer::printlnAddress((uint64)kernelHeapBase);
+    Printer::printlnAddress((uint64)kernelStackBase);
     HeapMemoryManager::setInstance(this);
 }
 

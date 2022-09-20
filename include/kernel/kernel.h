@@ -4,16 +4,20 @@
 #include <kernel/interruptmanager.h>
 #include <kernel/devicemanager.h>
 #include <kernel/heapmemorymanager.h>
+#include <kernel/taskmanager.h>
+#include <kernel/context.h>
 #include <driver/timer.h>
 
 namespace kernel 
 {
 
-class Kernel 
+class Kernel : public Context
 {
     HeapMemoryManager heapMemoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
+    TaskManager taskManager;
+
     static Kernel* instance;
 
 public:

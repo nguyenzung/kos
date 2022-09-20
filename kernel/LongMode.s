@@ -1,24 +1,35 @@
 %macro PUSH_REGISTERS 0
     push rax
+    push rbx
     push rcx 
     push rdx
+    push rsi
+    push rdi
     push r8
     push r9
     push r10
     push r11
-    push rsi
-    push rdi
+    push r12
+    push r13
+    push r14
+    push r15
+    
 %endmacro
 
 %macro POP_REGISTERS 0
-    pop rdi
-    pop rsi
+    pop r15
+    pop r14
+    pop r13
+    pop r12
     pop r11
     pop r10
     pop r9
     pop r8
+    pop rdi
+    pop rsi
     pop rdx
     pop rcx
+    pop rbx
     pop rax
 %endmacro
 
@@ -61,7 +72,10 @@ extern _ZN6kernel16InterruptManager15exceptionHandleEm ; exceptionHandler
 extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
 extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 extern _ZN6kernel11TaskManager11getInstanceEv
-extern _ZN6kernel11TaskManager4saveEPv
+extern _ZN6kernel11TaskManager4saveEPm
+extern _ZN6kernel6Kernel11getInstanceEv ; get kernel instance
+extern _ZN6kernel7Context4saveEPm   ; context save
+extern _ZN6kernel7Context4loadEPm   ; context load
 %assign i 0 
 %rep    32 
 global isrStub_%+i
@@ -83,7 +97,7 @@ startLongMode:
     mov es, rax
     mov fs, rax
     mov gs, rax
-    mov rbp, stack_base
+    ; mov rbp, stack_base
     mov rsp, stack_base
     mov rdi, 0xB8000             
     mov rax, 0x1F201F201F201F20 
@@ -101,17 +115,30 @@ startLongMode:
 
 isrTimerHandler:
     ; call switchTask
+    ; push 0x123456
     PUSH_REGISTERS
+    cld
     mov rsi, rsp
-    add rsi, 104
+    add rsi, (14 * 8 + 32)
+    mov [stackIndex], rsi
+    
+    ; handle in kernel main thread
+    ; save task context
+    ; load kernel context
+
     call _ZN6kernel11TaskManager11getInstanceEv
     mov rdi, rax
-    call _ZN6kernel11TaskManager4saveEPv
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager4saveEPm
+    
     cld
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, 0x20
     call _ZN6kernel16InterruptManager15exceptionHandleEm
+
+    
+
     POP_REGISTERS
     iretq
 
@@ -153,6 +180,7 @@ global isrStubTable
 global stackBase
 global stackSize
 global heapBase
+    stackIndex dq 0
 isrStubTable:
     dq 0
 %assign i 0 

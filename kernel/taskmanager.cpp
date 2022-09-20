@@ -4,7 +4,7 @@
 
 extern void* stackBase;
 
-IMPLE_MODULE_INSTANCE(TaskManager)
+IMPL_MODULE_INSTANCE(TaskManager)
 
 TaskManager::TaskManager()
 {
@@ -15,31 +15,48 @@ TaskManager::~TaskManager()
 {
 }
 
-Task* TaskManager::makeTask(mainFuntion entryPoint)
+Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
 {
     ds::Node* prevNode = this->findTaskPosition();
-    Task *newTask = new Task(entryPoint);
+    Task *newTask = new Task(entryPoint, argc, argv);
     if (prevNode)
     {
         Task *prevTask = (Task*)prevNode->value;
-        newTask->rbp = prevTask->rbp + TASK_STACK_SIZE;
+        newTask->context.rbp = prevTask->context.rbp + TASK_STACK_SIZE;
     } else
     {
-        newTask->rbp = (uint64)stackBase + TASK_STACK_SIZE;
+        newTask->initialize((uint64)stackBase + TASK_STACK_SIZE);
     }
     list.addNodeAfter(prevNode,new ds::Node(newTask));
+    if (list.getCurrent() == 0)
+    {
+        list.begin();
+    }
     return newTask;
 }
 
-void TaskManager::active()
+void TaskManager::initialize()
 {
-
 }
 
-void TaskManager::save(void *address)
+void TaskManager::save(uint64 *address)
+{ 
+    ds::Node *node = this->list.getCurrent();
+    if (node)
+    {
+        Task *task = (Task*)node->value;
+        task->save(address);
+    }
+}
+
+void TaskManager::load(uint64 *address)
 {
-    Printer::print(" SAVE ", 6);
-    Printer::printlnNumber((uint64)address);
+    ds::Node *node = this->list.next();
+    if (node)
+    {
+        Task *task = (Task*)node->value;
+        task->load(address);
+    }
 }
 
 ds::Node* TaskManager::findTaskPosition()
@@ -52,7 +69,7 @@ ds::Node* TaskManager::findTaskPosition()
         {
             Task *currentTask = (Task*)currentNode->value;
             Task* nextTask = (Task*)nextNode->value;
-            if (nextTask->rbp - currentTask->rbp >= TASK_STACK_SIZE * 2)
+            if (nextTask->context.rbp - currentTask->context.rbp >= TASK_STACK_SIZE * 2)
             {
                 return currentNode;
             }

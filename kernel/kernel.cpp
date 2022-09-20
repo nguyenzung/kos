@@ -5,12 +5,17 @@
 #include <kernel/utils.h>
 #include <kernel/kernelobject.h>
 #include <datastructure/list.h>
+#include <tasks/counter.h>
 
 using namespace kernel;
 
+extern void* heapBase;
+extern void* stackBase;
+
 Kernel* Kernel::instance = 0;
 
-Kernel::Kernel() 
+Kernel::Kernel()
+    :Context()
 {
     Kernel::instance = this;
 }
@@ -26,42 +31,26 @@ Kernel* Kernel::getInstance()
 
 void Kernel::startKernel()
 {
-
     // Printer::printlnNumber(testAsm);
+    this->rbp = (uint64)stackBase;
 
     heapMemoryManager.initialize();
     deviceManager.initialize();
+    taskManager.initialize();
     interruptManager.initialize();
 
-    ds::Node *no1 = new ds::Node((kernel::KernelObject*)1);
-    ds::Node *no2 = new ds::Node((kernel::KernelObject*)2);
-    ds::Node *no3 = new ds::Node((kernel::KernelObject*)3);
-    ds::Node *no4 = new ds::Node((kernel::KernelObject*)4);
-    ds::Node *no5 = new ds::Node((kernel::KernelObject*)5);
+    // this->rbp = ;
 
-    ds::List list;
-    list.addNode(no1);
-    list.addNode(no2);
-    list.addNode(no3);
-    list.addNode(no4);
-    list.addNode(no5);
+    char *argv[]= {"counter"};
+    Task *task1 = taskManager.makeTask(&counter, 1, argv);
+    Task *task2 = taskManager.makeTask(&counter, 1, argv);
+    Task *task3 = taskManager.makeTask(&counter, 1, argv);
+    Printer::println(" OK ", 4);
+    Printer::printlnAddress(task1->context.rbp);
+    Printer::printlnAddress(task2->context.rbp);
+    Printer::printlnAddress(task3->context.rbp);
 
-    // for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
-    // {
-    //     Printer::printNumber((uint64)it);
-    //     Printer::println();
-    // }
-    list.removeNodeByAddress(no1);
-    delete no1;
-    list.addNodeAfter(no5, new ds::Node((kernel::KernelObject*)6));
-    // Printer::printlnNumber((uint64)(new ds::Node((kernel::KernelObject*)6)));
-    // Printer::println();
-    
-    // for(ds::Node *it = list.begin(); it != list.end(); it = list.next())
-    // {
-    //     Printer::printNumber((uint64)it);
-    //     Printer::println();
-    // }
+    // taskManager.switchTask();
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
@@ -70,9 +59,9 @@ void Kernel::startKernel()
 void Kernel::hlt()
 {
     uint64 testAsm = 12;
-    // uint64 testAsm1 = 13;
     asm("movq %%rsp, %0":"=m"(testAsm)::);
-    Printer::printlnNumber(testAsm);
+    Printer::print(" HTL ", 5);
+    Printer::printlnAddress(testAsm);
     asm ("_cpp_stop:; hlt; jmp _cpp_stop;");
 }
 

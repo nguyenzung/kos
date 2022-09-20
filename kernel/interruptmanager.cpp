@@ -93,6 +93,8 @@ void IRQ_clear_mask(unsigned char IRQline)
 InterruptManager::InterruptManager()
 {
     InterruptManager::instance = this;
+    // Printer::print(" INT ", 5);
+    // Printer::printlnAddress(uint64(this));
 }
 
 InterruptManager::~InterruptManager()
@@ -100,7 +102,7 @@ InterruptManager::~InterruptManager()
 
 }
 
-IMPLE_MODULE_INSTANCE(InterruptManager)
+IMPL_MODULE_INSTANCE(InterruptManager)
 
 void InterruptManager::initialize()
 {
@@ -112,6 +114,7 @@ void* InterruptManager::getIDTAddress()
     return this->idt;
 }
 
+// This function need to be called in Kernel main thread
 void InterruptManager::exceptionHandle(uint64 vector)
 {
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
