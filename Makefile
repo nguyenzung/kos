@@ -20,13 +20,29 @@ ASFLAGS = -felf64
 LDFLAGS = -T kernel.ld -nostdlib -n  
 LDFLAGS += -Map=$(MAP)
 
+#TODO: Separate these file by a makefile each directory
+OBJS += $(BUILD_DIR)/driver/vga.o
+OBJS += $(BUILD_DIR)/driver/timer.o
+OBJS += $(BUILD_DIR)/driver/keyboard.o
+OBJS += $(BUILD_DIR)/driver/basegraphicsdevice.o
+OBJS += $(BUILD_DIR)/kernel/utils.o
+OBJS += $(BUILD_DIR)/kernel/main.o
+OBJS += $(BUILD_DIR)/kernel/basedriver.o
+OBJS += $(BUILD_DIR)/kernel/devicemanager.o
+OBJS += $(BUILD_DIR)/kernel/kernel.o
+OBJS += $(BUILD_DIR)/kernel/interruptmanager.o
+OBJS += $(BUILD_DIR)/kernel/printer.o
+OBJS += $(BUILD_DIR)/kernel/iocommand.o
+OBJS += $(BUILD_DIR)/kernel/interrupthandler.o
+OBJS += $(BUILD_DIR)/kernel/taskmanager.o
+OBJS += $(BUILD_DIR)/kernel/heapmemorymanager.o
+OBJS += $(BUILD_DIR)/kernel/kernelobject.o
+OBJS += $(BUILD_DIR)/kernel/task.o
+OBJS += $(BUILD_DIR)/datastructure/list.o
+OBJS += $(BUILD_DIR)/kernel/utils86.o
+OBJS += $(BUILD_DIR)/kernel/ProtectedMode.o
+OBJS += $(BUILD_DIR)/kernel/LongMode.o
 
-# CPP_HEAD_FILES := $(shell find . -name *.h)
-CPP_SOURCE_FILES := $(shell find . -name *.cpp)
-CPP_OBJ_FILES := $(patsubst ./%.cpp, $(BUILD_DIR)/%.o, $(CPP_SOURCE_FILES))
-
-ASM_SOURCE_FILES := $(shell find . -name *.s)
-ASM_OBJ_FILES := $(patsubst ./%.s, $(BUILD_DIR)/%.o, $(ASM_SOURCE_FILES))
 
 .PHONY: all clean info demo
 
@@ -35,7 +51,7 @@ all: $(TARGET) $(BUILD_DIR)/kernel.lss
 info: $(ASM_SOURCE_FILES)
 	@echo $(ASM_SOURCE_FILES)
 
-$(BUILD_DIR)/kernel.bin: $(ASM_OBJ_FILES) $(CPP_OBJ_FILES)
+$(BUILD_DIR)/kernel.bin: $(OBJS)
 	@mkdir -pv $(dir $@)
 	$(LD) -o $@ $(LDFLAGS) $^
 
@@ -44,12 +60,12 @@ $(TARGET): $(BUILD_DIR)/kernel.bin
 	cp $< $(BUILD_DIR)/iso/boot/ 
 	grub-mkrescue /usr/lib/grub/i386-pc/ -o $@ $(BUILD_DIR)/iso/
 
-$(ASM_OBJ_FILES): $(BUILD_DIR)/%.o : %.s
+$(BUILD_DIR)/%.o : %.s
 	@mkdir -pv $(dir $@)
 	@echo $@ $<
 	$(AS) $(ASFLAGS) $< -o $@
 
-$(CPP_OBJ_FILES): $(BUILD_DIR)/%.o : %.cpp 
+$(BUILD_DIR)/%.o : %.cpp 
 	@mkdir -pv $(dir $@)
 	@echo $@ $<
 	$(CXX) $(CXXFLAGS)  -c $< -o $@
@@ -60,7 +76,9 @@ $(LSS): $(BUILD_DIR)/kernel.bin
 	@objdump -S $< > $@
 
 clean:
-	rm -rf $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(BUILD_DIR)/kernel.bin $(TARGET) build/ 
+	rm -rf $(OBJS) $(BUILD_DIR)/kernel.bin $(TARGET) build/ 
 
 demo: $(TARGET)
 	qemu-system-x86_64 -s -cdrom $<
+test:
+	@echo $(OBJS)
