@@ -1,4 +1,7 @@
 TARGET	= disk.iso
+BUILD_DIR	= build
+MAP	= $(BUILD_DIR)/kernel.map
+LSS	= $(BUILD_DIR)/kernel.lss
 
 CXX ?= x86_64-linux-gnu-g++
 LD 	?= ld
@@ -15,8 +18,8 @@ CXXFLAGS += -nostdlib
 ASFLAGS = -felf64 
 
 LDFLAGS = -T kernel.ld -nostdlib -n  
+LDFLAGS += -Map=$(MAP)
 
-BUILD_DIR=build
 
 # CPP_HEAD_FILES := $(shell find . -name *.h)
 CPP_SOURCE_FILES := $(shell find . -name *.cpp)
@@ -27,7 +30,7 @@ ASM_OBJ_FILES := $(patsubst ./%.s, $(BUILD_DIR)/%.o, $(ASM_SOURCE_FILES))
 
 .PHONY: all clean info demo
 
-all: $(TARGET) 
+all: $(TARGET) $(BUILD_DIR)/kernel.lss
 
 info: $(ASM_SOURCE_FILES)
 	@echo $(ASM_SOURCE_FILES)
@@ -50,6 +53,11 @@ $(CPP_OBJ_FILES): $(BUILD_DIR)/%.o : %.cpp
 	@mkdir -pv $(dir $@)
 	@echo $@ $<
 	$(CXX) $(CXXFLAGS)  -c $< -o $@
+
+$(LSS): $(BUILD_DIR)/kernel.bin
+	@echo Creating .lss ...
+	@mkdir -pv $(dir $@)
+	@objdump -S $< > $@
 
 clean:
 	rm -rf $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(BUILD_DIR)/kernel.bin $(TARGET) build/ 
