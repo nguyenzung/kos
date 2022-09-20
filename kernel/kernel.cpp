@@ -51,9 +51,9 @@ void Kernel::startKernel()
     Printer::printlnAddress(task3->context.rbp);
 
     // taskManager.switchTask();
-    // VGA vga;
-    // vga.setupVideoMode();
-    // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
+    VGA vga;
+    vga.setupVideoMode();
+    vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
 }
 
 void Kernel::hlt()

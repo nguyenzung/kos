@@ -61,15 +61,15 @@ void VGA::setupVideoMode()
     };
     //  misc
     uint8 *data = g_320x200x256;
-    outb(VGA_MISC, *data) ;
-    data++;
+    outb(VGA_MISC, *(data++)) ;
+    // data++;
     
     // sequencer
     for(uint8 i = 0; i < 5; i++)
     {
         outb(VGA_SEQ_INDEX, i);
-        outb(VGA_SEQ_DATA, *data);
-        data++;
+        outb(VGA_SEQ_DATA, *(data++));
+        // data++;
     }
     
     // cathode ray tube controller
@@ -84,16 +84,16 @@ void VGA::setupVideoMode()
     for(uint8 i = 0; i < 25; i++)
     {
         outb(VGA_CRTC_INDEX, i);
-        outb(VGA_CRTC_DATA, *data);
-        data++;
+        outb(VGA_CRTC_DATA, *(data++));
+        // data++;
     }
     
     // graphics controller
     for(uint8 i = 0; i < 9; i++)
     {
         outb(VGA_GC_INDEX, i);
-        outb(VGA_GC_DATA, *data);
-        data++;
+        outb(VGA_GC_DATA, *(data++));
+        // data++;
     }
     
     // attribute controller
@@ -101,8 +101,8 @@ void VGA::setupVideoMode()
     {
         inb(VGA_INSTAT_READ);
         outb(VGA_AC_INDEX, i);
-        outb(VGA_AC_WRITE, *data);
-        data++;
+        outb(VGA_AC_WRITE, *(data++));
+        // data++;
     }
     inb(VGA_INSTAT_READ);
     outb(VGA_AC_INDEX, 0x20);    
