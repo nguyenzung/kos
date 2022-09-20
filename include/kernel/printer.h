@@ -18,6 +18,7 @@ public:
     static void printlnAddress(uint64 address);
     static void printNumber(uint64 address);
     static void printlnNumber(uint64 address);
+    static void print();
     static void println();
     static void printlnNumbers(uint64 *numbers, uint8 size);
     static void printlnAddresses(uint64 *numbers, uint8 size);

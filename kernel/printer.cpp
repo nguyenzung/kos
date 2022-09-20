@@ -78,6 +78,11 @@ void Printer::printlnNumber(uint64 address)
     Printer::println(pMessage, ADDRESS_LENGTH - (pMessage - message));
 }
 
+void Printer::print()
+{
+    Printer::print(" ", 1);
+}
+
 void Printer::println()
 {
     Printer::println(" ", 1);
