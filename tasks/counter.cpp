@@ -15,10 +15,6 @@ int counter(int argc, char** argv)
         
         kernel::Printer::print(" Counter ", 9);
         kernel::Printer::printNumber(argc);
-        while (true)
-        {
-            /* code */
-        }
         
         // asm("hlt");
     }

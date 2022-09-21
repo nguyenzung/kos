@@ -8,7 +8,7 @@ Task::Task()
 
 Task::Task(mainFunction entryPoint, int argc, char **argv)
 {
-    this->context.entryPoint = entryPoint;
+    this->context.rip = (uint64)entryPoint;
     this->argc = argc;
     this->argv = argv;
 }
@@ -30,7 +30,7 @@ void Task::save(uint64 *address)
 
 void Task::load(uint64 *address)
 {
-
+    this->context.load(address);
 }
 
 void Task::run()

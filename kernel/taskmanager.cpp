@@ -22,10 +22,10 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     if (prevNode)
     {
         Task *prevTask = (Task*)prevNode->value;
-        newTask->context.rbp = prevTask->context.rbp + TASK_STACK_SIZE;
+        newTask->initialize(prevTask->context.rbp + TASK_STACK_SIZE);
     } else
     {
-        newTask->initialize((uint64)stackBase + TASK_STACK_SIZE);
+        newTask->initialize((uint64)stackBase);
     }
     list.addNodeAfter(prevNode,new ds::Node(newTask));
     if (list.getCurrent() == 0)
@@ -37,10 +37,11 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
 
 void TaskManager::initialize()
 {
+    this->list.begin();
 }
 
 void TaskManager::save(uint64 *address)
-{ 
+{
     ds::Node *node = this->list.getCurrent();
     if (node)
     {
@@ -51,12 +52,23 @@ void TaskManager::save(uint64 *address)
 
 void TaskManager::load(uint64 *address)
 {
+    Printer::println("TM LOAD", 8);
+    
+    
     ds::Node *node = this->list.next();
-    if (node)
+    if (!node)
     {
-        Task *task = (Task*)node->value;
-        task->load(address);
+        node = this->list.begin();
+        Printer::println("NULL", 4);
     }
+
+    Task *task = (Task*)node->value;
+   
+    task->load(address);
+    //  while (true)
+    // {
+    //     /* code */
+    // }
 }
 
 ds::Node* TaskManager::findTaskPosition()

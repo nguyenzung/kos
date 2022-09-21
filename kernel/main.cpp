@@ -3,6 +3,7 @@
 
 int main() {
     kernel::Kernel kernel;
-    kernel.startKernel();
-    kernel.hlt();
+    kernel.initialize();
+    kernel.start();
+    kernel::Kernel::hlt(1, 0);    
 }

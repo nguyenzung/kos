@@ -26,8 +26,9 @@ public:
 
     static Kernel* getInstance();
 
-    void startKernel();
-    void hlt();
+    void initialize();
+    void start();
+    static int hlt(int argc, char**argv);
 
     HeapMemoryManager* getHeapMemoryManager();
     DeviceManager* getDeviceManager();

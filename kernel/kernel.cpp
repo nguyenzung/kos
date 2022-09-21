@@ -29,40 +29,46 @@ Kernel* Kernel::getInstance()
     return Kernel::instance;
 }
 
-void Kernel::startKernel()
+void Kernel::initialize()
 {
-    // Printer::printlnNumber(testAsm);
+    Printer::printlnNumber((uint64)(Kernel::getInstance));
     this->rbp = (uint64)stackBase;
 
     heapMemoryManager.initialize();
     deviceManager.initialize();
-    taskManager.initialize();
-    interruptManager.initialize();
+    
 
     // this->rbp = ;
 
     char *argv[]= {"counter"};
-    Task *task1 = taskManager.makeTask(&counter, 1, argv);
-    Task *task2 = taskManager.makeTask(&counter, 1, argv);
-    Task *task3 = taskManager.makeTask(&counter, 1, argv);
+    Task *mainTask = taskManager.makeTask(&Kernel::hlt, 1, 0);
+    // Task *task1 = taskManager.makeTask(&counter, 1, argv);
     Printer::println(" OK ", 4);
-    Printer::printlnAddress(task1->context.rbp);
-    Printer::printlnAddress(task2->context.rbp);
-    Printer::printlnAddress(task3->context.rbp);
+    Printer::printlnAddress(mainTask->context.rbp);
+    // Printer::printlnAddress(task1->context.rbp);
 
+    taskManager.initialize();
+    interruptManager.initialize();
+    // asm ("sti");
     // taskManager.switchTask();
-    VGA vga;
-    vga.setupVideoMode();
-    vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
+    // VGA vga;
+    // vga.setupVideoMode();
+    // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
 }
 
-void Kernel::hlt()
+void Kernel::start()
 {
-    uint64 testAsm = 12;
-    asm("movq %%rsp, %0":"=m"(testAsm)::);
-    Printer::print(" HTL ", 5);
-    Printer::printlnAddress(testAsm);
-    asm ("_cpp_stop:; hlt; jmp _cpp_stop;");
+    asm ("sti");
+    asm("int $0x81");
+    Printer::println("Bad news", 8);
+}
+
+int Kernel::hlt(int argc, char **argv)
+{
+    Printer::println("Good news", 9);
+    asm("_cpp_stop:");
+    asm("hlt");
+    asm("jmp _cpp_stop");
 }
 
 HeapMemoryManager* Kernel::getHeapMemoryManager() 

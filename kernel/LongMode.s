@@ -13,7 +13,6 @@
     push r13
     push r14
     push r15
-    
 %endmacro
 
 %macro POP_REGISTERS 0
@@ -33,8 +32,6 @@
     pop rax
 %endmacro
 
-
-
 %macro IRS_ERR_STUB 1
 isrStub_%+%1:
     PUSH_REGISTERS
@@ -45,7 +42,7 @@ isrStub_%+%1:
     call _ZN6kernel16InterruptManager15exceptionHandleEm
     POP_REGISTERS
     iretq
-%endmacro
+%endmacro 
 ; if writing for 64-bit, use iretq instead
 %macro IRS_NO_ERR_STUB 1
 isrStub_%+%1:
@@ -64,6 +61,7 @@ bits 64
 
 global startLongMode
 global __cxa_pure_virtual
+global isrStartMultithreading
 global isrTimerHandler
 ; extern stack_base
 extern GDT64Data
@@ -73,11 +71,12 @@ extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
 extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 extern _ZN6kernel11TaskManager11getInstanceEv
 extern _ZN6kernel11TaskManager4saveEPm
+extern _ZN6kernel11TaskManager4loadEPm
 extern _ZN6kernel6Kernel11getInstanceEv ; get kernel instance
-extern _ZN6kernel7Context4saveEPm   ; context save
-extern _ZN6kernel7Context4loadEPm   ; context load
-%assign i 0 
-%rep    32 
+; extern _ZN6kernel7Context4saveEPm   ; context save
+; extern _ZN6kernel7Context4loadEPm   ; context load
+%assign i 0
+%rep    32
 global isrStub_%+i
 %assign i i+1
 %endrep
@@ -101,7 +100,7 @@ startLongMode:
     mov rsp, stack_base
     mov rdi, 0xB8000             
     mov rax, 0x1F201F201F201F20 
-    mov ecx, 500                
+    mov ecx, 500
     rep stosq
     ; mov rax, isrStub_0
     ; cmp rax, [isrStubTable]
@@ -113,6 +112,25 @@ startLongMode:
     mov qword [rsi], 0x23456789
     call main
 
+; enable by using interrupt 0x10 + OFFSET
+isrStartMultithreading:
+    PUSH_REGISTERS
+    cld
+    mov rsi, rsp
+    add rsi, (14 * 8 + 32)
+    mov [stackIndex], rsi
+    call _ZN6kernel11TaskManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager4saveEPm
+    call _ZN6kernel11TaskManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager4loadEPm
+
+    POP_REGISTERS
+    iretq
+
 isrTimerHandler:
     ; call switchTask
     ; push 0x123456
@@ -121,24 +139,20 @@ isrTimerHandler:
     mov rsi, rsp
     add rsi, (14 * 8 + 32)
     mov [stackIndex], rsi
-    
     ; handle in kernel main thread
     ; save task context
     ; load kernel context
 
-    call _ZN6kernel11TaskManager11getInstanceEv
-    mov rdi, rax
-    mov rsi, [stackIndex]
-    call _ZN6kernel11TaskManager4saveEPm
+    ; call _ZN6kernel11TaskManager11getInstanceEv
+    ; mov rdi, rax
+    ; mov rsi, [stackIndex]
+    ; call _ZN6kernel11TaskManager4saveEPm
     
     cld
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, 0x20
     call _ZN6kernel16InterruptManager15exceptionHandleEm
-
-    
-
     POP_REGISTERS
     iretq
 

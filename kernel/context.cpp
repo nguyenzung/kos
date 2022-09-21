@@ -1,11 +1,11 @@
 #include <kernel/context.h>
 #include <kernel/printer.h>
+#include <kernel/kernel.h>
 
 using namespace kernel;
 
 Context::Context()
 {
-
 }
 
 Context::Context(uint64 rbp, uint64 rsp, mainFunction entryPoint)
@@ -17,18 +17,14 @@ Context::Context(uint64 rbp, uint64 rsp, mainFunction entryPoint)
 
 Context::~Context()
 {
-
 }
 
 void Context::initialize()
 {
-
 }
 
 void Context::save(uint64* address)
 {
-    // Printer::print(" SAVE ", 6);
-    // Printer::printlnAddress((uint64)address);
     this->ss = *(address--);
     this->rsp= *(address--);
     this->flags = *(address--);
@@ -49,23 +45,68 @@ void Context::save(uint64* address)
     this->r14 = *(address--);
     this->r15 = *(address--);
 
-    // Printer::printAddress(this->ss);
-    // Printer::print();
-    // Printer::printAddress(this->rsp);
-    // Printer::print();
-    // Printer::printAddress(this->flags);
-    // Printer::print();
-    // Printer::printAddress(this->cs);
-    // Printer::print();
-    // Printer::printAddress(this->rip);
+    Printer::printAddress(this->ss);
+    Printer::print();
+    Printer::printAddress(this->rsp);
+    Printer::print();
+    Printer::printAddress(this->flags);
+    Printer::print();
+    Printer::printAddress(this->cs);
+    Printer::print();
+    Printer::printAddress(this->rip);
+    Printer::print();
+    Printer::printAddress(this->rax);
+    Printer::print();
+    Printer::printAddress(this->rbx);
+    Printer::print();
+    Printer::printAddress(this->rcx);
+    Printer::print();
+    Printer::printAddress(this->rdx);
+    Printer::print();
+    Printer::printAddress(this->rsi);
+    Printer::print();
+    Printer::printAddress(this->rdi);
+
+    Printer::println();
 }
 
 void Context::load(uint64 *address)
 {
+    Printer::print(" LOAD ", 6);
+    Printer::printAddress(this->ss);
+    Printer::print();
+    Printer::printAddress(this->rsp);
+    Printer::print();
+    Printer::printAddress(this->flags);
+    Printer::print();
+    Printer::printAddress(this->cs);
+    Printer::print();
+    Printer::printAddress(this->rip);
+    Printer::print();
+    Printer::printAddress(this->rax);
+    Printer::print();
+    Printer::printAddress(this->rbx);
+    Printer::print();
+    Printer::printAddress(this->rcx);
+    Printer::print();
+    Printer::printAddress(this->rdx);
+    Printer::print();
+    Printer::printAddress(this->rsi);
+    Printer::print();
+    Printer::printAddress(this->rdi);
+
+    Printer::println();
+    // while (true)
+    // {
+    //     /* code */
+    // }
+    
+
     *(address--) = this->ss;
     *(address--) = this->rsp;
     *(address--) = this->flags;
     *(address--) = this->cs;
+    // *(address--) = (uint64)&kernel::Kernel::hlt;
     *(address--) = this->rip;
     *(address--) = this->rax;
     *(address--) = this->rbx;
