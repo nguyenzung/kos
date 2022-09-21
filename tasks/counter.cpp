@@ -3,7 +3,6 @@
 
 int counter(int argc, char** argv)
 {
-    kernel::Printer::println("counter", 7);
     asm("sti");
     while (true)
     {
@@ -22,9 +21,8 @@ int counter(int argc, char** argv)
     return 0;
 }
 
-int counter1(int argc, char** argv)
+int ask(int argc, char** argv)
 {
-    kernel::Printer::println("counter", 7);
     asm("sti");
     while (true)
     {

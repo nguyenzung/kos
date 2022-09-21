@@ -9,8 +9,8 @@ Task::Task()
 Task::Task(mainFunction entryPoint, int argc, char **argv)
 {
     this->context.rip = (uint64)entryPoint;
-    this->argc = argc;
-    this->argv = argv;
+    this->context.argc = argc;
+    this->context.argv = argv;
 }
 
 Task::~Task()

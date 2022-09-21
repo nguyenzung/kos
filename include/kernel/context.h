@@ -36,9 +36,12 @@ public:
     uint64 rbp; // Immutable
 
     void* pageAddress;
-    void* codeSegment;
-    void* dataSegment;
+    uint16 codeSegmentOffset;
+    uint16 dataSegmentOffset;
+    
     mainFunction entryPoint;
+    int argc;
+    char **argv;
 
     Context();
     Context(uint64 rbp, uint64 rsp, mainFunction entryPoint);

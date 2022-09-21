@@ -15,7 +15,6 @@ extern void* stackBase;
 Kernel* Kernel::instance = 0;
 
 Kernel::Kernel()
-    :Context()
 {
     Kernel::instance = this;
 }
@@ -31,16 +30,22 @@ Kernel* Kernel::getInstance()
 
 void Kernel::initialize()
 {
-    Printer::printlnNumber((uint64)(Kernel::getInstance));
-    this->rbp = (uint64)stackBase;
-
     heapMemoryManager.initialize();
     deviceManager.initialize();
 
-    char *argv[]= {"counter"};
+    char **argv= new char*[1];
+    argv[0] = new char[4];
+    argv[0][0] = 'm';
+    argv[0][1] = 'a';
+    argv[0][2] = 'i';
+    argv[0][3] = 'n';
+    // delete argv[0];
+    // delete argv;
+
     Task *mainTask = taskManager.makeTask(0, 1, 0);
-    Task *task1 = taskManager.makeTask(&counter, 1, argv);
-    Task *task2 = taskManager.makeTask(&counter1, 1, argv);
+    Task *task1 = taskManager.makeTask(&counter, 11, argv);
+    Task *task2 = taskManager.makeTask(&ask, 12, argv);
+    Printer::println(argv[0], 4);
     Printer::println(" OK ", 4);
     Printer::printlnAddress(mainTask->context.rbp);
     Printer::printlnAddress(task1->context.rbp);
@@ -55,8 +60,8 @@ void Kernel::initialize()
 
 void Kernel::start()
 {
-    asm ("sti");
     asm("int $0x81");
+    asm ("sti");
     Printer::println("Bad news", 8);
 }
 

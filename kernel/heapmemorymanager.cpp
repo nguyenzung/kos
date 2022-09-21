@@ -21,7 +21,9 @@ void HeapMemoryManager::initialize() {
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
     first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
+    Printer::print(" Kernel Heap:            ", 25);
     Printer::printlnAddress((uint64)kernelHeapBase);
+    Printer::print(" Kernel Main Stack Base: ", 25);
     Printer::printlnAddress((uint64)kernelStackBase);
     HeapMemoryManager::setInstance(this);
 }

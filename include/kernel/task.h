@@ -14,8 +14,7 @@ class Task : public KernelObject
 public:
     Process*    process;
     uint16      taskID;
-    int         argc;
-    char**      argv;
+
 public:
     Context context;
 

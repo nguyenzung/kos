@@ -2,6 +2,6 @@
 #define COUNTER
 
 int counter(int argc, char **argv);
-int counter1(int argc, char **argv);
+int ask(int argc, char **argv);
 
 #endif

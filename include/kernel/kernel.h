@@ -11,7 +11,7 @@
 namespace kernel 
 {
 
-class Kernel : public Context
+class Kernel
 {
     HeapMemoryManager heapMemoryManager;
     DeviceManager deviceManager;

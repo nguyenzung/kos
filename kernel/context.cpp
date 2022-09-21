@@ -23,6 +23,8 @@ Context::~Context()
 
 void Context::initialize()
 {
+    this->rdi = argc;
+    this->rsi = (uint64)argv;
 }
 
 void Context::save(uint64* address)
