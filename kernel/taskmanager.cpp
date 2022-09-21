@@ -52,24 +52,34 @@ void TaskManager::save(uint64 *address)
 
 void TaskManager::load(uint64 *address)
 {
-    Printer::println("TM LOAD", 8);
-    
-    
     ds::Node *node = this->list.next();
     if (!node)
     {
         node = this->list.begin();
-        Printer::println("NULL", 4);
+        // Printer::println("TaskManager :NULL", 18);
+    }else{
+        // Printer::println("TaskManager :OK", 16);
     }
+    Task *task = (Task*)node->value;
+    task->load(address);
+}
 
+void TaskManager::saveMainKernel(uint64 *address)
+{
+    ds::Node *node = this->list.first;
+    Task *task = (Task*)node->value;
+    task->save(address);
+
+}
+
+void TaskManager::loadMainKernel(uint64 *address)
+{    
+    ds::Node *node = this->list.first;
     Task *task = (Task*)node->value;
    
     task->load(address);
-    //  while (true)
-    // {
-    //     /* code */
-    // }
 }
+
 
 ds::Node* TaskManager::findTaskPosition()
 {

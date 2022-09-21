@@ -36,21 +36,18 @@ void Kernel::initialize()
 
     heapMemoryManager.initialize();
     deviceManager.initialize();
-    
-
-    // this->rbp = ;
 
     char *argv[]= {"counter"};
-    Task *mainTask = taskManager.makeTask(&Kernel::hlt, 1, 0);
-    // Task *task1 = taskManager.makeTask(&counter, 1, argv);
+    Task *mainTask = taskManager.makeTask(0, 1, 0);
+    Task *task1 = taskManager.makeTask(&counter, 1, argv);
+    Task *task2 = taskManager.makeTask(&counter1, 1, argv);
     Printer::println(" OK ", 4);
     Printer::printlnAddress(mainTask->context.rbp);
-    // Printer::printlnAddress(task1->context.rbp);
+    Printer::printlnAddress(task1->context.rbp);
 
     taskManager.initialize();
     interruptManager.initialize();
-    // asm ("sti");
-    // taskManager.switchTask();
+
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
@@ -65,7 +62,7 @@ void Kernel::start()
 
 int Kernel::hlt(int argc, char **argv)
 {
-    Printer::println("Good news", 9);
+    
     asm("_cpp_stop:");
     asm("hlt");
     asm("jmp _cpp_stop");
@@ -84,4 +81,9 @@ DeviceManager* Kernel::getDeviceManager()
 InterruptManager* Kernel::getInterruptManager() 
 {
     return &this->interruptManager;
+}
+
+void debug()
+{
+    Printer::println(" [DEBUG]", 8);
 }

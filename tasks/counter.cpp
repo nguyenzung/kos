@@ -3,11 +3,13 @@
 
 int counter(int argc, char** argv)
 {
+    kernel::Printer::println("counter", 7);
+    asm("sti");
     while (true)
     {
-        for (int i = 0; i < 2000; i++)
+        for (int i = 0; i < 20000; i++)
         {
-            for(int j = 0; j < 2000; j++)
+            for(int j = 0; j < 5000; j++)
             {
 
             }
@@ -16,7 +18,27 @@ int counter(int argc, char** argv)
         kernel::Printer::print(" Counter ", 9);
         kernel::Printer::printNumber(argc);
         
-        // asm("hlt");
+    }
+    return 0;
+}
+
+int counter1(int argc, char** argv)
+{
+    kernel::Printer::println("counter", 7);
+    asm("sti");
+    while (true)
+    {
+        for (int i = 0; i < 20000; i++)
+        {
+            for(int j = 0; j < 5000; j++)
+            {
+
+            }
+        }
+        
+        kernel::Printer::print(" Ask ", 6);
+        kernel::Printer::printNumber(argc);
+        
     }
     return 0;
 }

@@ -21,6 +21,7 @@ void Task::initialize(uint64 rbp)
 {
     this->context.rbp = rbp;
     this->context.rsp = rbp;
+    this->context.initialize();
 }
 
 void Task::save(uint64 *address)

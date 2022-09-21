@@ -66,12 +66,15 @@ global isrTimerHandler
 ; extern stack_base
 extern GDT64Data
 extern main
+extern printMessage
 extern _ZN6kernel16InterruptManager15exceptionHandleEm ; exceptionHandler
 extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
 extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 extern _ZN6kernel11TaskManager11getInstanceEv
 extern _ZN6kernel11TaskManager4saveEPm
 extern _ZN6kernel11TaskManager4loadEPm
+extern _ZN6kernel11TaskManager14saveMainKernelEPm
+extern _ZN6kernel11TaskManager14loadMainKernelEPm
 extern _ZN6kernel6Kernel11getInstanceEv ; get kernel instance
 ; extern _ZN6kernel7Context4saveEPm   ; context save
 ; extern _ZN6kernel7Context4loadEPm   ; context load
@@ -119,40 +122,64 @@ isrStartMultithreading:
     mov rsi, rsp
     add rsi, (14 * 8 + 32)
     mov [stackIndex], rsi
+    ; save main context
     call _ZN6kernel11TaskManager11getInstanceEv
     mov rdi, rax
     mov rsi, [stackIndex]
-    call _ZN6kernel11TaskManager4saveEPm
-    call _ZN6kernel11TaskManager11getInstanceEv
-    mov rdi, rax
-    mov rsi, [stackIndex]
-    call _ZN6kernel11TaskManager4loadEPm
+    call _ZN6kernel11TaskManager14saveMainKernelEPm
+    
 
+    ; handle interrupt
+    call _ZN6kernel16InterruptManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, 0x20
+    call _ZN6kernel16InterruptManager15exceptionHandleEm
+
+    ; load main context
+    call _ZN6kernel11TaskManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager14loadMainKernelEPm
+    ; jmp $
     POP_REGISTERS
+    ; jmp $
     iretq
 
 isrTimerHandler:
     ; call switchTask
     ; push 0x123456
     PUSH_REGISTERS
-    cld
+    
     mov rsi, rsp
     add rsi, (14 * 8 + 32)
     mov [stackIndex], rsi
     ; handle in kernel main thread
     ; save task context
     ; load kernel context
-
-    ; call _ZN6kernel11TaskManager11getInstanceEv
-    ; mov rdi, rax
-    ; mov rsi, [stackIndex]
-    ; call _ZN6kernel11TaskManager4saveEPm
-    
     cld
+
+    ; mov rsi, interrupt_handler_msg
+    ; call printMessage
+
+    ; save task context
+    call _ZN6kernel11TaskManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager4saveEPm
+
+    ; process interrupt in mainthread
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, 0x20
     call _ZN6kernel16InterruptManager15exceptionHandleEm
+
+
+    ; schedule new task
+    call _ZN6kernel11TaskManager11getInstanceEv
+    mov rdi, rax
+    mov rsi, [stackIndex]
+    call _ZN6kernel11TaskManager4loadEPm
+
     POP_REGISTERS
     iretq
 
@@ -202,10 +229,10 @@ isrStubTable:
     dq isrStub_%+i
 %assign i i+1 
 %endrep
-    stackBase dq stack_base
-    heapBase  dq heap_base
-    stackSize dq stack_size
-;
+    stackBase               dq stack_base
+    heapBase                dq heap_base
+    stackSize               dq stack_size
+    interrupt_handler_msg   db "[Enable Paging]",7
 
 section .bss
 global stack_base
