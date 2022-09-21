@@ -17,8 +17,8 @@ Make sure all dependencies were installed, and you good to go.
 
 ## How to run:
 
-Build the source code with `make` or `make all` or run the os on Qemu with `make demo`.
-
+Build the source code with `make` or `make all` or run the os on Qemu with `make demo`. You will see the OS screen
+![](./assets/img/os.png)
 
 ## Timeline:
 
