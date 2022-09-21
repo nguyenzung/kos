@@ -17,11 +17,8 @@ Make sure all dependencies were installed, and you good to go.
 
 ## How to run:
 
-Build the source code with `make` or `make all` or just `make demo`.
-If the build is succeded without error you would see a qemu windows like this:
-![](./assets/img/2022-09-20-12-29-03.png)
+Build the source code with `make` or `make all` or run the os on Qemu with `make demo`.
 
-Type `multiboot2 /boot/kernel.bin` to run the kernel.
 
 ## Timeline:
 
