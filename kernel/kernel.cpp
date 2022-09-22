@@ -45,8 +45,13 @@ void Kernel::initialize()
     Task *mainTask = taskManager.makeTask(0, 1, 0);
     Task *task1 = taskManager.makeTask(&counter, 11, argv);
     Task *task2 = taskManager.makeTask(&ask, 12, argv);
-    // Printer::println(argv[0], 4);
+    Printer::println(argv[0], 4);
+    //Printer::println(" OK ", 4);
     // Printer::println(" OK ", 4);
+    char address[] = "vietnam";
+    Printer::printf("integer %d \n address %p \n string %s \n", 2022,
+                    mainTask->context.rbp, address);
+
     Printer::printlnAddress(mainTask->context.rbp);
     Printer::printlnAddress(task1->context.rbp);
 
