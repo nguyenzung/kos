@@ -10,13 +10,9 @@ using namespace kernel;
 uint8 Printer::x = 0;
 uint8 Printer::y = 0;
 
-void Printer::print(char *message, uint8 len)
-{
-    unsigned char *VideoMapAddress = (unsigned char*) 0xb8000 + y * SCREEN_WITH * 2 + x * 2;
-    for (int i = 0; i < len; i++) {
-        VideoMapAddress[i * 2] = message[i];
-        VideoMapAddress[i * 2 + 1] = 0x2f;
-    }
+void Printer::printfHelper(int i, const char *format) { print(format + i); }
+
+void Printer::updatePointer(int len) {
     if (x + len > SCREEN_WITH) {
         x = x + len - SCREEN_WITH;
         y++;
@@ -25,8 +21,36 @@ void Printer::print(char *message, uint8 len)
     }
 }
 
-void Printer::println(char *message, uint8 len) 
-{
+void Printer::putc(char c, int i, void (*ptr)(int)) {
+    unsigned char *VideoMapAddress =
+        (unsigned char *)0xb8000 + y * SCREEN_WITH * 2 + x * 2;
+
+    switch (c) {
+    case '\n':
+        println();
+        break;
+    default:
+        VideoMapAddress[i * 2] = c;
+        VideoMapAddress[i * 2 + 1] = 0x2f;
+        if (ptr != nullptr)
+            ptr(1);
+        break;
+    }
+}
+
+void Printer::print(const char *message, uint8 len) {
+    if (len == 0) {
+        while (message[len] != '\0')
+            len++;
+    }
+
+    for (int i = 0; i < len; i++)
+        putc(message[i], i, nullptr);
+
+    updatePointer(len);
+}
+
+void Printer::println(char *message, uint8 len) {
     Printer::print(message, len);
     y++;
     x = 0;
