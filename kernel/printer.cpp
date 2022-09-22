@@ -10,7 +10,7 @@ using namespace kernel;
 uint8 Printer::x = 0;
 uint8 Printer::y = 0;
 
-void Printer::printfHelper(int i, const char *format) { print(format + i); }
+void Printer::printfHelper(int i, const char *format) { print((char*)format + i); }
 
 void Printer::updatePointer(int len) {
     if (x + len > SCREEN_WITH) {
@@ -38,7 +38,7 @@ void Printer::putc(char c, int i, void (*ptr)(int)) {
     }
 }
 
-void Printer::print(const char *message, uint8 len) {
+void Printer::print(char *message, uint8 len) {
     if (len == 0) {
         while (message[len] != '\0')
             len++;

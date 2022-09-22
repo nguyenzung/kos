@@ -48,7 +48,7 @@ void Kernel::initialize()
     Printer::println(argv[0], 4);
     //Printer::println(" OK ", 4);
     // Printer::println(" OK ", 4);
-    char address[] = "vietnam";
+    char address[] = "vietnam\0";
     printf("integer %d \n address %p \n string %s \n", 2022,
                     mainTask->context.rbp, address);
 

@@ -3,7 +3,7 @@
 
 #include <kernel/type.h>
 #include <kernel/utils.h>
-#include <type_traits>
+// #include <type_traits>
 
 namespace kernel {
 class Printer {
@@ -28,7 +28,7 @@ class Printer {
      * print a character
      */
     static void putc(char c, int i = 0, void (*ptr)(int) = updatePointer);
-    static void print(const char *message, uint8 length = 0);
+    static void print(char *message, uint8 length = 0);
     static void println(char *message, uint8 length);
     static void printAddress(uint64 address);
     static void printlnAddress(uint64 address);
@@ -59,22 +59,14 @@ void Printer::printfHelper(int i, const char *format, T first, Args... args) {
         if (format[i] == '%' && format[i + 1] != '\0') {
             switch (format[i + 1]) {
             case 'd':
-                if constexpr (std::is_integral<T>::value) {
-                    Utils::convertIntToDecString(first, tmp, 10);
-                    print(tmp, 10);
-                }
+                Utils::convertIntToDecString((uint64)first, tmp, 10);
+                Printer::print(tmp, 10);
                 break;
             case 'p':
-                if constexpr (std::is_integral<T>::value) {
-                    printAddress(first);
-                }
+                Printer::printAddress((uint64)first);
                 break;
             case 's':
-                if constexpr (std::is_same_v<std::remove_const_t<T>, char *> ||
-                              std::is_same_v<std::remove_const_t<T>,
-                                             const char *>) {
-                    print(first);
-                }
+                Printer::print((char*)first);
                 break;
             default:
                 break;
