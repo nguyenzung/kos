@@ -8,6 +8,7 @@ IMPL_MODULE_INSTANCE(TaskManager)
 
 TaskManager::TaskManager()
 {
+    saveCounter = 0;
     TaskManager::instance = this;
 }
 
@@ -42,42 +43,55 @@ void TaskManager::initialize()
 
 void TaskManager::save(uint64 *address)
 {
-    ds::Node *node = this->list.getCurrent();
-    if (node)
+    if(this->saveCounter == 0)
     {
-        Task *task = (Task*)node->value;
-        task->save(address);
+        ds::Node *node = this->list.getCurrent();
+        if (node)
+        {
+            Task *task = (Task*)node->value;
+            task->save(address);
+        }
     }
+    this->saveCounter++;
 }
 
 void TaskManager::load(uint64 *address)
 {
-    ds::Node *node = this->list.next();
-    if (!node)
+    this->saveCounter--;
+    if(this->saveCounter == 0)
     {
-        node = this->list.begin();
-        // Printer::println("TaskManager :NULL", 18);
-    }else{
-        // Printer::println("TaskManager :OK", 16);
+        ds::Node *node = this->list.next();
+        if (!node)
+        {
+            node = this->list.begin();
+        }else{
+        }
+        Task *task = (Task*)node->value;
+        task->load(address);
     }
-    Task *task = (Task*)node->value;
-    task->load(address);
 }
 
 void TaskManager::saveMainKernel(uint64 *address)
 {
-    ds::Node *node = this->list.first;
-    Task *task = (Task*)node->value;
-    task->save(address);
-
+    if(this->saveCounter == 0)
+    {
+        ds::Node *node = this->list.first;
+        Task *task = (Task*)node->value;
+        task->save(address);
+    }
+    this->saveCounter++;
+    
 }
 
 void TaskManager::loadMainKernel(uint64 *address)
 {    
-    ds::Node *node = this->list.first;
-    Task *task = (Task*)node->value;
-   
-    task->load(address);
+    this->saveCounter--;
+    if(this->saveCounter == 0)
+    {
+        ds::Node *node = this->list.first;
+        Task *task = (Task*)node->value;
+        task->load(address);
+    }
 }
 
 

@@ -17,6 +17,8 @@ protected:
 
 public:
 
+    uint64 saveCounter;
+
     TaskManager();
     ~TaskManager();
 

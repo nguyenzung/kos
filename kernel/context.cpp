@@ -13,7 +13,6 @@ Context::Context(uint64 rbp, uint64 rsp, mainFunction entryPoint)
 {
     this->rbp = rbp;
     this->rsp = rsp;
-    this->cs = 0x08;
     this->rip = (uint64)entryPoint;
 }
 
@@ -23,6 +22,7 @@ Context::~Context()
 
 void Context::initialize()
 {
+    this->cs = 0x08;
     this->rdi = argc;
     this->rsi = (uint64)argv;
 }
@@ -76,34 +76,10 @@ void Context::save(uint64* address)
 
 void Context::load(uint64 *address)
 {
-    // Printer::printAddress(this->ss);
-    // Printer::print();
-    // Printer::printAddress(this->rsp);
-    // Printer::print();
-    // Printer::printAddress(this->flags);
-    // Printer::print();
-    // Printer::printAddress(this->cs);
-    // Printer::print();
-    // Printer::printAddress(this->rip);
-    // Printer::print();
-    // Printer::printAddress(this->rax);
-    // Printer::print();
-    // Printer::printAddress(this->rbx);
-    // Printer::print();
-    // Printer::printAddress(this->rcx);
-    // Printer::print();
-    // Printer::printAddress(this->rdx);
-    // Printer::print();
-    // Printer::printAddress(this->rsi);
-    // Printer::print();
-    // Printer::printAddress(this->rdi);
-
     *(address--) = this->ss;
-    // *(address--) = 4207030;
     *(address--) = this->rsp;
     *(address--) = this->flags;
-    *(address--) = 8;
-    // *(address--) = (uint64)&counter;
+    *(address--) = this->cs;
     *(address--) = this->rip;
     *(address--) = this->rax;
     *(address--) = this->rbx;

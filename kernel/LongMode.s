@@ -153,10 +153,6 @@ isrTimerHandler:
     mov rsi, rsp
     add rsi, (14 * 8 + 32)
     mov [stackIndex], rsi
-    ; handle in kernel main thread
-    ; save task context
-    ; load kernel context
-    cld
 
     ; mov rsi, interrupt_handler_msg
     ; call printMessage

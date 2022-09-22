@@ -45,8 +45,8 @@ void Kernel::initialize()
     Task *mainTask = taskManager.makeTask(0, 1, 0);
     Task *task1 = taskManager.makeTask(&counter, 11, argv);
     Task *task2 = taskManager.makeTask(&ask, 12, argv);
-    Printer::println(argv[0], 4);
-    Printer::println(" OK ", 4);
+    // Printer::println(argv[0], 4);
+    // Printer::println(" OK ", 4);
     Printer::printlnAddress(mainTask->context.rbp);
     Printer::printlnAddress(task1->context.rbp);
 
@@ -67,7 +67,7 @@ void Kernel::start()
 
 int Kernel::hlt(int argc, char **argv)
 {
-    
+    Printer::println("Good news", 8);
     asm("_cpp_stop:");
     asm("hlt");
     asm("jmp _cpp_stop");
