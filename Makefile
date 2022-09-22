@@ -13,6 +13,7 @@ CXXFLAGS += -fno-stack-protector
 CXXFLAGS += -fno-exceptions 
 CXXFLAGS += -fno-rtti  
 CXXFLAGS += -nostdlib
+CXXFLAGS += -std=gnu++17
 CXXFLAGS += -MMD
 
 ASFLAGS = -felf64 

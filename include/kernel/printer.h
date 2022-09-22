@@ -94,4 +94,10 @@ void Printer::printf(const char *format, Args... args) {
 }
 
 } // namespace kernel
+
+template <typename... Args>
+void printf(const char *format, Args... args) {
+    kernel::Printer::printf(format, args...);
+}
+
 #endif

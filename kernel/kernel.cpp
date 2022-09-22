@@ -4,7 +4,7 @@
 #include <driver/vga.h>
 #include <kernel/utils.h>
 #include <kernel/kernelobject.h>
-#include <datastructure/list.h>
+#include <stdlib/list.h>
 #include <tasks/counter.h>
 
 using namespace kernel;
@@ -49,7 +49,7 @@ void Kernel::initialize()
     //Printer::println(" OK ", 4);
     // Printer::println(" OK ", 4);
     char address[] = "vietnam";
-    Printer::printf("integer %d \n address %p \n string %s \n", 2022,
+    printf("integer %d \n address %p \n string %s \n", 2022,
                     mainTask->context.rbp, address);
 
     Printer::printlnAddress(mainTask->context.rbp);

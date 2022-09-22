@@ -3,7 +3,7 @@
 
 #include <kernel/task.h>
 #include <kernel/utils.h>
-#include <datastructure/list.h>
+#include <stdlib/list.h>
 
 #define TASK_STACK_SIZE (1 << 20)  // 1MB for stack size
 
