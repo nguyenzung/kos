@@ -191,5 +191,3 @@ section .bss
 	LV2_PAGE_TABLE_NUM 	equ 1
 	LV1_PAGE_TABLE_NUM 	equ LV2_PAGE_ROW
 	
-
-

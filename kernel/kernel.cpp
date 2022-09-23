@@ -5,6 +5,7 @@
 #include <kernel/utils.h>
 #include <kernel/kernelobject.h>
 #include <stdlib/list.h>
+#include <stdlib/string.h>
 #include <tasks/counter.h>
 
 using namespace kernel;
@@ -48,12 +49,13 @@ void Kernel::initialize()
     Printer::println(argv[0], 4);
     //Printer::println(" OK ", 4);
     // Printer::println(" OK ", 4);
-    char address[] = "vietnam\0";
-    printf("integer %d \n address %p \n string %s \n", 2022,
-                    mainTask->context.rbp, address);
+    char address[] = "    vietnam \0";
+    printf("string %s %d %p \n\0", address, 12, 0xaaaa);
+    memmove(address, address + 4, 10);
+    printf("string %s \n\0", address);
 
     Printer::printlnAddress(mainTask->context.rbp);
-    Printer::printlnAddress(task1->context.rbp);
+    // Printer::printlnAddress(task1->context.rbp);
 
     taskManager.initialize();
     interruptManager.initialize();
@@ -67,7 +69,6 @@ void Kernel::start()
 {
     asm("int $0x81");
     asm ("sti");
-    Printer::println("Bad news", 8);
 }
 
 int Kernel::hlt(int argc, char **argv)

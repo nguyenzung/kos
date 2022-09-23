@@ -1,9 +1,11 @@
 #include <kernel/printer.h>
 #include <kernel/utils.h>
+#include <stdlib/string.h>
 
 #define ADDRESS_LENGTH 18
 #define SCREEN_WITH 80
 #define SCREEN_HIEGHT 25
+#define SCREEN_MAP_MEM 0xb8000 
 
 using namespace kernel;
 
@@ -19,11 +21,16 @@ void Printer::updatePointer(int len) {
     } else {
         x = x + len;
     }
+    if (y == 24)
+    {
+        memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
+        y--;
+    }
 }
 
 void Printer::putc(char c, int i, void (*ptr)(int)) {
     unsigned char *VideoMapAddress =
-        (unsigned char *)0xb8000 + y * SCREEN_WITH * 2 + x * 2;
+        (unsigned char *)SCREEN_MAP_MEM+ y * SCREEN_WITH * 2 + x * 2;
 
     switch (c) {
     case '\n':
@@ -54,6 +61,12 @@ void Printer::println(char *message, uint8 len) {
     Printer::print(message, len);
     y++;
     x = 0;
+
+    if (y == 24)
+    {
+        memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
+        y--;
+    }
 }
 
 char* buildMessage(uint64 address, char *message, uint8 length, char* (*fun_ptr)(uint64, char*, uint8))

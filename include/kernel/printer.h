@@ -53,14 +53,14 @@ class Printer {
 
 template <typename T, typename... Args>
 void Printer::printfHelper(int i, const char *format, T first, Args... args) {
-    char tmp[10] = {0};
+    // char tmp[10] = {0};
 
     for (; format[i] != '\0'; i++) {
         if (format[i] == '%' && format[i + 1] != '\0') {
             switch (format[i + 1]) {
             case 'd':
-                Utils::convertIntToDecString((uint64)first, tmp, 10);
-                Printer::print(tmp, 10);
+                // Utils::convertIntToDecString((uint64)first, tmp, 10);
+                Printer::printNumber((uint64)first);
                 break;
             case 'p':
                 Printer::printAddress((uint64)first);
