@@ -1,5 +1,5 @@
-#ifndef LOCK
-#define LOCK
+#ifndef LOCK_H
+#define LOCK_H
 
 #define DECLARE_LOCK(name) volatile int name ## Locked
 #define LOCK(name) \

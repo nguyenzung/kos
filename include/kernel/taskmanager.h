@@ -13,7 +13,7 @@ namespace kernel
 class TaskManager
 {
 protected:
-    ds::List list;
+    std::List<KernelObject*> list;
 
 public:
 
@@ -35,7 +35,7 @@ protected:
    /*
     *   Find position of new task in the list. Return prev task address
     */
-    ds::Node* findTaskPosition();   
+    std::Node<KernelObject*>* findTaskPosition();   
 };
 
 }

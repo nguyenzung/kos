@@ -3,6 +3,9 @@
 
 using namespace kernel;
 
+namespace std
+{
+
 /*
  *  Support move from right to left
  */
@@ -50,4 +53,6 @@ void* memset(void* des, uint8 c, size_t size)
         bdes[i] = c;
     }
     return 0;
+}
+
 }

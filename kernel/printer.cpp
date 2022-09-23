@@ -23,7 +23,7 @@ void Printer::updatePointer(int len) {
     }
     if (y == 24)
     {
-        memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
+        std::memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
         y--;
     }
 }
@@ -64,7 +64,7 @@ void Printer::println(char *message, uint8 len) {
 
     if (y == 24)
     {
-        memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
+        std::memmove((void*)(SCREEN_MAP_MEM - 160), (void*)SCREEN_MAP_MEM, 160 * 25);
         y--;
     }
 }

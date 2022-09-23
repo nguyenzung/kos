@@ -1,5 +1,6 @@
 #include <kernel/taskmanager.h>
 #include <kernel/kernel.h>
+#include <kernel/kernelobject.h>
 #include <kernel/printer.h>
 
 extern void* stackBase;
@@ -18,7 +19,7 @@ TaskManager::~TaskManager()
 
 Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
 {
-    ds::Node* prevNode = this->findTaskPosition();
+    std::Node<KernelObject*>* prevNode = this->findTaskPosition();
     Task *newTask = new Task(entryPoint, argc, argv);
     if (prevNode)
     {
@@ -28,7 +29,7 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     {
         newTask->initialize((uint64)stackBase);
     }
-    list.addNodeAfter(prevNode,new ds::Node(newTask));
+    list.addNodeAfter(prevNode,new std::Node<KernelObject*>(newTask));
     if (list.getCurrent() == 0)
     {
         list.begin();
@@ -45,7 +46,7 @@ void TaskManager::save(uint64 *address)
 {
     if(this->saveCounter == 0)
     {
-        ds::Node *node = this->list.getCurrent();
+        std::Node<KernelObject*> *node = this->list.getCurrent();
         if (node)
         {
             Task *task = (Task*)node->value;
@@ -60,7 +61,7 @@ void TaskManager::load(uint64 *address)
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
-        ds::Node *node = this->list.next();
+        std::Node<KernelObject*> *node = this->list.next();
         if (!node)
         {
             node = this->list.begin();
@@ -75,7 +76,7 @@ void TaskManager::saveMainKernel(uint64 *address)
 {
     if(this->saveCounter == 0)
     {
-        ds::Node *node = this->list.first;
+        std::Node<KernelObject*> *node = this->list.first;
         Task *task = (Task*)node->value;
         task->save(address);
     }
@@ -88,19 +89,19 @@ void TaskManager::loadMainKernel(uint64 *address)
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
-        ds::Node *node = this->list.first;
+        std::Node<KernelObject*> *node = this->list.first;
         Task *task = (Task*)node->value;
         task->load(address);
     }
 }
 
 
-ds::Node* TaskManager::findTaskPosition()
+std::Node<KernelObject*>* TaskManager::findTaskPosition()
 {
-    ds::Node *currentNode = list.begin();
+    std::Node<KernelObject*> *currentNode = list.begin();
     if (currentNode)
     {
-        ds::Node *nextNode = list.next();
+        std::Node<KernelObject*> *nextNode = list.next();
         while (nextNode)
         {
             Task *currentTask = (Task*)currentNode->value;

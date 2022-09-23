@@ -6,6 +6,7 @@
 #include <kernel/kernelobject.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
+#include <stdlib/hashtable.h>
 #include <stdlib/string.h>
 #include <tasks/counter.h>
 
@@ -52,7 +53,7 @@ void Kernel::initialize()
     // Printer::println(" OK ", 4);
     char address[] = "    vietnam \0";
     printf("string %s %d %p \n\0", address, 12, 0xaaaa);
-    memmove(address, address + 4, 10);
+    std::memmove(address, address + 4, 10);
     printf("string %s \n\0", address);
 
     Printer::printlnAddress(mainTask->context.rbp);
@@ -60,6 +61,8 @@ void Kernel::initialize()
 
     taskManager.initialize();
     interruptManager.initialize();
+
+    std::HashTable<uint64, uint64> hashTable();
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);

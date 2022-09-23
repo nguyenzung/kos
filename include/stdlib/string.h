@@ -5,8 +5,10 @@
 
 using namespace kernel;
 
-void* memmove(void* des, void* src, size_t size);
-void* memset(void* des, uint8 c, size_t size);
-
+namespace std
+{
+ void* memmove(void* des, void* src, size_t size);
+ void* memset(void* des, uint8 c, size_t size);
+}
 
 #endif
