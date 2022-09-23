@@ -4,6 +4,7 @@
 #include <driver/vga.h>
 #include <kernel/utils.h>
 #include <kernel/kernelobject.h>
+#include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/string.h>
 #include <tasks/counter.h>
@@ -59,7 +60,6 @@ void Kernel::initialize()
 
     taskManager.initialize();
     interruptManager.initialize();
-
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);

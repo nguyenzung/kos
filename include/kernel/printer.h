@@ -3,6 +3,7 @@
 
 #include <kernel/type.h>
 #include <kernel/utils.h>
+#include <stdlib/lock.h>
 // #include <type_traits>
 
 namespace kernel {
@@ -87,9 +88,16 @@ void Printer::printf(const char *format, Args... args) {
 
 } // namespace kernel
 
+// #ifndef PRINTER_LOCK
+// #define PRINTER_LOCK
+// DECLARE_LOCK(print_lock);
+// #endif
+
 template <typename... Args>
 void printf(const char *format, Args... args) {
+    // LOCK(print_lock);
     kernel::Printer::printf(format, args...);
+    // UNLOCK(print_lock);
 }
 
 #endif

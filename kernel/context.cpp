@@ -24,6 +24,7 @@ void Context::initialize()
 {
     this->cs = 0x08;
     this->rdi = argc;
+    this->flags = (1 << 9);
     this->rsi = (uint64)argv;
 }
 
