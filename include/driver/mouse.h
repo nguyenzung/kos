@@ -11,6 +11,8 @@ namespace driver {
 
 class Mouse : public kernel::BaseDriver {
 private:
+  int xAxis, yAxis, zAxis;
+  int button;
   void waitToWrite();
   void waitToRead();
   bool enableScrollWheel();
@@ -23,7 +25,6 @@ private:
   void setSampleRate(uint8 rate);
 
 protected:
-
 public:
   enum REGISTERS {
     IRQ_NUM = 12,
@@ -48,6 +49,7 @@ public:
   };
 
   enum CODES { MOUSE_OK = 0x00, MOUSE_CMD_OK = 0xFA };
+  enum DATA { SC_DOWN = -1, SC_UP = 1, LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK };
 
   Mouse();
   ~Mouse();
