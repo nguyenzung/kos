@@ -64,7 +64,6 @@ void Mouse::active() {
   if (enableScrollWheel() == false) {
     Printer::printf("couldn't enable scrool wheel\n\0");
   }
-
 }
 
 bool Mouse::enableScrollWheel() {
@@ -111,65 +110,104 @@ void Mouse::deactive() { outb(STATUS_REG, DISABLE_MOUSE); }
 void Mouse::handleInterrupt() {
   // disable interrupt
   asm volatile("cli");
-  int value = inb(0x60);
-  onTranslateCode(value);
   uint8 status = inb(0x64);
   uint8 mouse_byte[3] = {0, 0, 0};
   int i = 0;
+  xAxis = yAxis = zAxis = 0;
+  button = 0;
 
   while (status & 0x01) {
     int mouse_in = inb(0x60);
     // Printer::printf("mouse data %d , i %d\n", mouse_in, i);
     if (status & 0x20)
-      switch (i) {
-      case 3:
-      case 7:
+      switch (i % 4) {
+      case 0:
         mouse_byte[0] = mouse_in;
         break;
-      case 4:
-      case 8:
+      case 1:
         mouse_byte[1] = mouse_in;
         break;
-      case 5:
-      case 9:
+      case 2:
         mouse_byte[2] = mouse_in;
         break;
-      case 6:
-      case 10:
+      case 3:
         if (mouse_byte[0] & 0x80 || mouse_byte[0] & 0x40)
           break;
         if (mouse_in == 15) {
-          Printer::printf(" scroll up %d ", mouse_in);
+          zAxis = SC_DOWN;
           break;
         } else if (mouse_in == 1) {
-          Printer::printf(" scroll down ");
+          zAxis = SC_UP;
           break;
         }
         if ((mouse_byte[0] & 0x20)) {
           mouse_byte[2] = 255 - mouse_byte[2];
-          Printer::printf(" down %d ", mouse_byte[2]);
+          yAxis = -1 * mouse_byte[2];
         } else {
-          Printer::printf(" up %d ", mouse_byte[2]);
+          yAxis = mouse_byte[2];
         }
 
         if (mouse_byte[0] & 0x10) {
           mouse_byte[1] = 255 - mouse_byte[1];
-          Printer::printf(" left %d ", mouse_byte[1]);
+          xAxis = -1 * mouse_byte[1];
         } else {
-          Printer::printf(" right %d ", mouse_byte[1]);
+          xAxis = mouse_byte[1];
         }
 
-        Printer::printf("\n\0");
+        if (mouse_byte[0] & 0x01) {
+          button |= LEFT_CLICK;
+        }
+        if (mouse_byte[0] & 0x02) {
+          button |= RIGHT_CLICK;
+        }
+        if (mouse_byte[0] & 0x04) {
+          button |= MIDDLE_CLICK;
+        }
+
       default:
         break;
       }
     i++;
-    status = inb(0x64);
+    status = inb(STATUS_REG);
   }
+  doNotify();
   // enable interrupt
   asm volatile("sti");
 }
 
+void Mouse::doNotify() {
+  if (zAxis != 0) {
+    if (zAxis > 0)
+      Printer::print("scroll up\n");
+    else
+      Printer::print("scroll down\n");
+  } else if (xAxis || yAxis) {
+    Printer::printf("pointer move : ");
+    if (xAxis > 0)
+      Printer::printf("right [%d] ", xAxis);
+    else if (xAxis < 0)
+      Printer::printf("left [%d] ", -1 * xAxis);
+
+    if (yAxis > 0)
+      Printer::printf("up [%d] ", yAxis);
+    else if (yAxis < 0)
+      Printer::printf("down [%d] ", -1 * yAxis);
+  }
+  switch (button) {
+  case LEFT_CLICK:
+    Printer::printf("left click ");
+    break;
+  case RIGHT_CLICK:
+    Printer::printf("right click ");
+    break;
+  case MIDDLE_CLICK:
+    Printer::printf("middle click ");
+    break;
+  default:
+    break;
+  }
+  Printer::printf("\n");
+}
 void Mouse::onTranslateCode(uint8 code) {}
 
 void Mouse::waitToRead() {
