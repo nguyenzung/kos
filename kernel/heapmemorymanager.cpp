@@ -20,15 +20,16 @@ void HeapMemoryManager::initialize() {
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
-    Printer::print(" Kernel Heap:            ", 25);
-    Printer::printlnAddress((uint64)kernelHeapBase);
-    Printer::print(" Kernel Main Stack Base: ", 25);
-    Printer::printlnAddress((uint64)kernelStackBase);
+    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x100000);
+    // Printer::print(" Kernel Heap:            ", 25);
+    // Printer::printlnAddress((uint64)kernelHeapBase);
+    // Printer::print(" Kernel Main Stack Base: ", 25);
+    // Printer::printlnAddress((uint64)kernelStackBase);
+    printf("Kernel Heap %d Kernel Stack Base %d First allocation %d \n", kernelHeapBase, kernelStackBase, first);
     HeapMemoryManager::setInstance(this);
 }
 
-MemoryEntry* HeapMemoryManager::find(uint16 size) {
+MemoryEntry* HeapMemoryManager::find(uint32 size) {
     MemoryEntry *current = this->first;
     while (current->next)
     {
@@ -41,7 +42,7 @@ MemoryEntry* HeapMemoryManager::find(uint16 size) {
     return current;
 }
 
-void* HeapMemoryManager::malloc(uint16 size) {
+void* HeapMemoryManager::malloc(uint32 size) {
     MemoryEntry* prev = this->find(size);
     void* ptr = this->makeMemoryEntry(prev, size);
     return ptr + MEMORY_ENTRY_SIZE;
@@ -62,7 +63,7 @@ void* HeapMemoryManager::free(void *ptr) {
     return 0;
 }
 
-void* HeapMemoryManager::reserve(void* ptr, uint16 size) {
+void* HeapMemoryManager::reserve(void* ptr, uint32 size) {
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *current = this->first;
     while(current) {
@@ -87,20 +88,20 @@ void* HeapMemoryManager::reserve(void* ptr, uint16 size) {
     return 0;
 }
 
-void* HeapMemoryManager::makeFirstMemoryEntry(uint16 size) {
+void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size) {
     MemoryEntry *entry = (MemoryEntry*)this->kernelHeapBase;
     entry->size = size;
     entry->next = 0;
     return entry;
 }
 
-void* HeapMemoryManager::makeMemoryEntry(void* ptrPrev, uint16 size) {
+void* HeapMemoryManager::makeMemoryEntry(void* ptrPrev, uint32 size) {
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
     return this->makeMemoryEntryAt(ptr, ptrPrev, size);
 }
 
-void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size) {
+void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size) {
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     MemoryEntry *entry = (MemoryEntry*)ptr;
     entry->size = size;
@@ -109,7 +110,7 @@ void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size
     return ptr;
 }
 
-void* memreg(void* ptr, uint16 size) {
+void* memreg(void* ptr, uint32 size) {
     return HeapMemoryManager::getInstance()->reserve(ptr, size);
 }
 

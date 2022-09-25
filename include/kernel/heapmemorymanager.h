@@ -7,11 +7,11 @@
 namespace kernel 
 {
 
-#define MEMORY_ENTRY_SIZE 10
+#define MEMORY_ENTRY_SIZE 12
 typedef struct MemoryEntry 
 {
     MemoryEntry *next;
-    uint16 size;
+    uint32 size;
 } __attribute__((packed)) MemoryEntry;
 
 class HeapMemoryManager 
@@ -26,20 +26,20 @@ public:
 
     void initialize();
 
-    void* malloc(uint16 size);
+    void* malloc(uint32 size);
     void* free(void *ptr);
-    void* reserve(void* ptr, uint16 size);  // reserve memory for drivers, modules
+    void* reserve(void* ptr, uint32 size);  // reserve memory for drivers, modules
 
 protected:
-    MemoryEntry* find(uint16 size);    // return the address of the entry such that will point to the creating entry
-    void* makeFirstMemoryEntry(uint16 size);
-    void* makeMemoryEntry(void* ptrPrev, uint16 size);
-    void* makeMemoryEntryAt(void* ptr, void* ptrPrev, uint16 size);
+    MemoryEntry* find(uint32 size);    // return the address of the entry such that will point to the creating entry
+    void* makeFirstMemoryEntry(uint32 size);
+    void* makeMemoryEntry(void* ptrPrev, uint32 size);
+    void* makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size);
 };
 }
 
 
-void* memreg(void* ptr, kernel::uint16 size);
+void* memreg(void* ptr, kernel::uint32 size);
 void memunreg(void *ptr);
 
 void* malloc(kernel::size_t size);
