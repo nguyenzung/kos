@@ -5,6 +5,7 @@
 #include <kernel/type.h>
 #include <driver/keyboard.h>
 #include <driver/timer.h>
+#include <driver/mouse.h>
 
 namespace kernel 
 {
@@ -15,7 +16,10 @@ protected:
     InterruptHandler* handlers[256];
     driver::Keyboard keyboard;
     driver::Timer timer;
+    driver::Mouse mouse;
 public:
+
+  public:
     DeviceManager();
     ~DeviceManager();
 
