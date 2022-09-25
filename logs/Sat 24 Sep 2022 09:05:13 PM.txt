@@ -1,0 +1,183 @@
+$ make demo
+build/kernel/LongMode.o kernel/LongMode.s
+mkdir: created directory 'build'
+mkdir: created directory 'build/kernel/'
+nasm  -felf64  kernel/LongMode.s -o build/kernel/LongMode.o
+kernel/LongMode.s:113: warning: signed dword immediate exceeds bounds [-w+number-overflow]
+kernel/LongMode.s:113: warning: dword data exceeds bounds [-w+number-overflow]
+build/kernel/utils86.o kernel/utils86.s
+nasm  -felf64  kernel/utils86.s -o build/kernel/utils86.o
+build/kernel/ProtectedMode.o kernel/ProtectedMode.s
+nasm  -felf64  kernel/ProtectedMode.s -o build/kernel/ProtectedMode.o
+build/kernel/interrupthandler.o kernel/interrupthandler.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/interrupthandler.cpp -o build/kernel/interrupthandler.o
+build/kernel/taskmanager.o kernel/taskmanager.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/taskmanager.cpp -o build/kernel/taskmanager.o
+build/kernel/printer.o kernel/printer.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/printer.cpp -o build/kernel/printer.o
+kernel/printer.cpp: In static member function ‘static void kernel::Printer::print()’:
+kernel/printer.cpp:120:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  120 |     Printer::print(" ", 1);
+      |                    ^~~
+kernel/printer.cpp: In static member function ‘static void kernel::Printer::println()’:
+kernel/printer.cpp:125:22: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  125 |     Printer::println(" ", 1);
+      |                      ^~~
+kernel/printer.cpp: In static member function ‘static void kernel::Printer::printlnNumbers(kernel::uint64*, kernel::uint8)’:
+kernel/printer.cpp:131:24: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  131 |         Printer::print(" ", 1);
+      |                        ^~~
+kernel/printer.cpp: In static member function ‘static void kernel::Printer::printlnAddresses(kernel::uint64*, kernel::uint8)’:
+kernel/printer.cpp:140:24: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  140 |         Printer::print(" ", 1);
+      |                        ^~~
+build/kernel/context.o kernel/context.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/context.cpp -o build/kernel/context.o
+build/kernel/process.o kernel/process.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/process.cpp -o build/kernel/process.o
+build/kernel/task.o kernel/task.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/task.cpp -o build/kernel/task.o
+build/kernel/main.o kernel/main.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/main.cpp -o build/kernel/main.o
+build/kernel/basedriver.o kernel/basedriver.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/basedriver.cpp -o build/kernel/basedriver.o
+build/kernel/heapmemorymanager.o kernel/heapmemorymanager.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/heapmemorymanager.cpp -o build/kernel/heapmemorymanager.o
+kernel/heapmemorymanager.cpp: In member function ‘void kernel::HeapMemoryManager::initialize()’:
+kernel/heapmemorymanager.cpp:24:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   24 |     Printer::print(" Kernel Heap:            ", 25);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/heapmemorymanager.cpp:26:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   26 |     Printer::print(" Kernel Main Stack Base: ", 25);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/heapmemorymanager.cpp: In member function ‘void* kernel::HeapMemoryManager::malloc(kernel::uint16)’:
+kernel/heapmemorymanager.cpp:47:16: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   47 |     return ptr + MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp: In member function ‘void* kernel::HeapMemoryManager::free(void*)’:
+kernel/heapmemorymanager.cpp:51:15: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   51 |     ptr = ptr - MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp:57:35: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   57 |             return (void*)current + MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp: In member function ‘void* kernel::HeapMemoryManager::reserve(void*, kernel::uint16)’:
+kernel/heapmemorymanager.cpp:66:15: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   66 |     ptr = ptr - MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp:72:37: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   72 |                 if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+kernel/heapmemorymanager.cpp:72:57: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   72 |                 if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+kernel/heapmemorymanager.cpp:72:89: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   72 |                 if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+      |                                                                                     ~~~~^~~~~~
+kernel/heapmemorymanager.cpp:72:96: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   72 |             if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+
+kernel/heapmemorymanager.cpp:74:32: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   74 |                     return ptr + MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp:80:32: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   80 |             if ((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) {
+kernel/heapmemorymanager.cpp:80:52: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   80 |             if ((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) {
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+kernel/heapmemorymanager.cpp:82:28: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   82 |                 return ptr + MEMORY_ENTRY_SIZE;
+kernel/heapmemorymanager.cpp: In member function ‘void* kernel::HeapMemoryManager::makeMemoryEntry(void*, kernel::uint16)’:
+kernel/heapmemorymanager.cpp:99:25: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   99 |     void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
+kernel/heapmemorymanager.cpp:99:45: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   99 |     void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+build/kernel/kernel.o kernel/kernel.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/kernel.cpp -o build/kernel/kernel.o
+kernel/kernel.cpp: In member function ‘void kernel::Kernel::initialize()’:
+kernel/kernel.cpp:65:45: warning: empty parentheses were disambiguated as a function declaration [-Wvexing-parse]
+   65 |     std::HashTable<uint64, uint64> hashTable();
+      |                                             ^~
+kernel/kernel.cpp: In static member function ‘static int kernel::Kernel::hlt(int, char**)’:
+kernel/kernel.cpp:79:22: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   79 |     Printer::println("Good news", 8);
+      |                      ^~~~~~~~~~~
+kernel/kernel.cpp:83:1: warning: no return statement in function returning non-void [-Wreturn-type]
+   83 | }
+      | ^
+kernel/kernel.cpp: In function ‘void debug()’:
+kernel/kernel.cpp:102:22: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  102 |     Printer::println(" [DEBUG]", 8);
+      |                      ^~~~~~~~~~
+In file included from kernel/kernel.cpp:3:
+./include/kernel/printer.h: In instantiation of ‘static void kernel::Printer::printfHelper(int, const char*, T, Args ...) [with T = int; Args = {int}]’:
+./include/kernel/printer.h:76:25:   required from ‘static void kernel::Printer::printfHelper(int, const char*, T, Args ...) [with T = char*; Args = {int, int}]’
+./include/kernel/printer.h:86:26:   required from ‘static void kernel::Printer::printf(const char*, Args ...) [with Args = {char*, int, int}]’
+./include/kernel/printer.h:99:28:   required from ‘void printf(const char*, Args ...) [with Args = {char*, int, int}]’
+kernel/kernel.cpp:55:11:   required from here
+./include/kernel/printer.h:70:32: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   70 |                 Printer::print((char*)first);
+      |                                ^~~~~~~~~~~~
+./include/kernel/printer.h: In instantiation of ‘static void kernel::Printer::printfHelper(int, const char*, T, Args ...) [with T = int; Args = {}]’:
+./include/kernel/printer.h:76:25:   recursively required from ‘static void kernel::Printer::printfHelper(int, const char*, T, Args ...) [with T = int; Args = {int}]’
+./include/kernel/printer.h:76:25:   required from ‘static void kernel::Printer::printfHelper(int, const char*, T, Args ...) [with T = char*; Args = {int, int}]’
+./include/kernel/printer.h:86:26:   required from ‘static void kernel::Printer::printf(const char*, Args ...) [with Args = {char*, int, int}]’
+./include/kernel/printer.h:99:28:   required from ‘void printf(const char*, Args ...) [with Args = {char*, int, int}]’
+kernel/kernel.cpp:55:11:   required from here
+./include/kernel/printer.h:70:32: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+build/kernel/utils.o kernel/utils.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/utils.cpp -o build/kernel/utils.o
+build/kernel/interruptmanager.o kernel/interruptmanager.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/interruptmanager.cpp -o build/kernel/interruptmanager.o
+build/kernel/iocommand.o kernel/iocommand.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/iocommand.cpp -o build/kernel/iocommand.o
+build/kernel/devicemanager.o kernel/devicemanager.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/devicemanager.cpp -o build/kernel/devicemanager.o
+build/kernel/kernelobject.o kernel/kernelobject.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c kernel/kernelobject.cpp -o build/kernel/kernelobject.o
+build/stdlib/string.o stdlib/string.cpp
+mkdir: created directory 'build/stdlib/'
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c stdlib/string.cpp -o build/stdlib/string.o
+stdlib/string.cpp: In function ‘void* std::memmove(void*, void*, kernel::size_t)’:
+stdlib/string.cpp:24:36: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   24 |         uint8 *bdes = (uint8*)(des + numq * 8);
+      |                                ~~~~^~~~~~~~~~
+stdlib/string.cpp:25:36: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   25 |         uint8 *bsrc = (uint8*)(src + numq * 8);
+      |                                ~~~~^~~~~~~~~~
+stdlib/string.cpp: In function ‘void* std::memset(void*, kernel::uint8, kernel::size_t)’:
+stdlib/string.cpp:50:32: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+   50 |     uint8 *bdes = (uint8*)(des + numq * 8);
+      |                            ~~~~^~~~~~~~~~
+build/driver/basegraphicsdevice.o driver/basegraphicsdevice.cpp
+mkdir: created directory 'build/driver/'
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c driver/basegraphicsdevice.cpp -o build/driver/basegraphicsdevice.o
+build/driver/keyboard.o driver/keyboard.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c driver/keyboard.cpp -o build/driver/keyboard.o
+driver/keyboard.cpp: In member function ‘virtual void driver::Keyboard::handleInterrupt()’:
+driver/keyboard.cpp:36:24: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   36 |         Printer::print(" [] ", 4);
+      |                        ^~~~~~
+driver/keyboard.cpp: In member function ‘void driver::Keyboard::onTranslateScanCode(kernel::uint8)’:
+driver/keyboard.cpp:94:32: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   94 |                 Printer::print("KEY PRESS", 10);
+      |                                ^~~~~~~~~~~
+build/driver/timer.o driver/timer.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c driver/timer.cpp -o build/driver/timer.o
+build/driver/vga.o driver/vga.cpp
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c driver/vga.cpp -o build/driver/vga.o
+driver/vga.cpp: In member function ‘VGAColor VGA::getColorIndex(kernel::uint8, kernel::uint8, kernel::uint8)’:
+driver/vga.cpp:166:1: warning: control reaches end of non-void function [-Wreturn-type]
+  166 | }
+      | ^
+build/tasks/counter.o tasks/counter.cpp
+mkdir: created directory 'build/tasks/'
+g++ -I./include  -fno-stack-protector  -fno-exceptions  -fno-rtti   -nostdlib -MMD  -c tasks/counter.cpp -o build/tasks/counter.o
+tasks/counter.cpp: In function ‘int counter(int, char**)’:
+tasks/counter.cpp:19:34: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   19 |         kernel::Printer::println("Count", 5);
+      |                                  ^~~~~~~
+tasks/counter.cpp: In function ‘int ask(int, char**)’:
+tasks/counter.cpp:38:34: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   38 |         kernel::Printer::println(" Ask ", 5);
+      |                                  ^~~~~~~
+ld -o build/kernel.bin -T kernel.ld -nostdlib -n   -Map=build/kernel.map  build/kernel/interrupthandler.o  build/kernel/taskmanager.o  build/kernel/printer.o  build/kernel/context.o  build/kernel/process.o  build/kernel/task.o  build/kernel/main.o  build/kernel/basedriver.o  build/kernel/heapmemorymanager.o  build/kernel/kernel.o  build/kernel/utils.o  build/kernel/interruptmanager.o  build/kernel/iocommand.o  build/kernel/devicemanager.o  build/kernel/kernelobject.o  build/stdlib/string.o  build/driver/basegraphicsdevice.o  build/driver/keyboard.o  build/driver/timer.o  build/driver/vga.o  build/tasks/counter.o  build/kernel/LongMode.o  build/kernel/utils86.o  build/kernel/ProtectedMode.o && \
+cp build/kernel.bin iso/boot && \
+grub-mkrescue /usr/lib/grub/i386-pc -o build/kos.iso iso
+xorriso 1.5.2 : RockRidge filesystem manipulator, libburnia project.
+
