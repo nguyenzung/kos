@@ -48,12 +48,13 @@ public:
     void initialize();
 	void* getIDTAddress();
 
+	void registerInterrupt(InterruptHandler *handler);
 	void exceptionHandle(uint64 vector);
 
 protected:
 	void setupIDT();
 	void setGateEntry(uint8 vector, void* irs, uint8 flags);
-
+    InterruptHandler* handlers[256];
 };
 
 }

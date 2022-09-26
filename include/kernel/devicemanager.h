@@ -13,21 +13,16 @@ namespace kernel
 class DeviceManager 
 {
 protected:
-    InterruptHandler* handlers[256];
     driver::Keyboard keyboard;
     driver::Timer timer;
     driver::Mouse mouse;
 public:
 
-  public:
     DeviceManager();
     ~DeviceManager();
 
     void initialize();
-
-public:
-    void registerDevice(InterruptHandler *handler);
-    void handleInterrupt(uint8 vector);
+    void registerInterrupt(InterruptHandler *handler);
 };
 
 }

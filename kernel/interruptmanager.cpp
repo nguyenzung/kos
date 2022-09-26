@@ -115,10 +115,14 @@ void* InterruptManager::getIDTAddress()
     return this->idt;
 }
 
+void InterruptManager::registerInterrupt(InterruptHandler *handler) {
+    this->handlers[handler->getVector()] = handler;
+}
+
 // This function need to be called in Kernel main thread
 void InterruptManager::exceptionHandle(uint64 vector)
 {
-    Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
+    this->handlers[vector]->handleInterrupt();
     if (vector - OFFSET <= 8)
     {
         outb(0xA0, 0x20);
