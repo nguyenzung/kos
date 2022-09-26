@@ -59,10 +59,62 @@ template <class T>
 class List
 {
 public:
+    class Iterator
+    {
+    protected:
+        Node<T>* ptr;
+
+    public:
+        Iterator(Node<T> *ptr)
+        {
+            this->ptr = ptr;
+        }
+
+        Iterator& operator = (Node<T>* ptr)
+        {
+            this->ptr = ptr;
+            return *this;
+        }
+
+        Iterator& operator++()
+        {
+            if (ptr)
+            {
+                ptr = ptr->next;
+            }
+            return *this;
+        }
+ 
+        Iterator operator++(int)
+        {
+            Iterator iterator = *this;
+            ++*this;
+            return iterator;
+        }
+ 
+        bool operator!=(const Iterator& iterator)
+        {
+            return ptr != iterator.ptr;
+        }
+        
+        bool operator==(const Iterator& iterator)
+        {
+            return ptr == iterator.ptr;
+        }
+ 
+        int operator*()
+        {
+            return ptr->value;
+        }
+    };
+ 
+
+public:
     kernel::uint16 size;
     Node<T> *first;
     Node<T> *last;
     Node<T> *current;
+    // Iterator it;
 
     List():size(0), first(0), last(0), current(0){}
 
@@ -79,6 +131,12 @@ public:
             this->last = node;
         }
         ++this->size;
+    }
+
+    void add(T value)
+    {
+        Node<T> *node = new Node<T>(value);
+        this->addNode(node);
     }
 
     void addNodeAfter(Node<T> *prevNode, Node<T>* node) // user need to make sure prevNode in the list
@@ -137,7 +195,7 @@ public:
         return false;
     }
 
-    bool removeNodeByValue(T value)
+    Node<T> removeNodeByValue(T value)
     {
         Node<T> *curr = this->first;
         while(curr)
@@ -164,20 +222,20 @@ public:
                     }
                 }
                 --this->size;
-                return true;
+                return curr;
             }
             curr = curr->next;
         }
-        return false;
+        return nullptr;
     }
 
-    Node<T>* begin()
+    Node<T>* getFirst()
     {
         this->current = this->first;
         return this->current;
     }
 
-    Node<T>* end()
+    Node<T>* getLast()
     {
         return this->last ? this->last->next : this->last;
     }
@@ -198,6 +256,23 @@ public:
     {
         return this->current;
     }
+
+    uint16 getSize()
+    {
+        return this->size;
+    }
+
+    Iterator begin()
+    {
+        // this->current = this->first;
+        return Iterator(this->first);
+    }
+ 
+    Iterator end()
+    {
+        return Iterator(0);
+    }
+
 };
 
 }
