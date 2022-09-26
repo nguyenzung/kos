@@ -5,7 +5,7 @@
 
 int counter(int argc, char** argv)
 {
-        printf(" count ");
+        // printf(" count ");
 
     while (true)
     {
@@ -13,7 +13,6 @@ int counter(int argc, char** argv)
         {
             for(int j = 0; j < 10000; j++)
             {
-
             }
         }
         kernel::Printer::println("Count", 5);
@@ -24,15 +23,13 @@ int counter(int argc, char** argv)
 int ask(int argc, char** argv)
 {
     // asm("sti");
-        printf(" ask ");
-
+        // printf(" ask ");
     while (true)
     {
         for(int i = 0; i < 20000; i++)
         {
             for(int j = 0; j < 10000; j++)
             {
-
             }
         }
         kernel::Printer::println(" Ask ", 5);

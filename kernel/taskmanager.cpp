@@ -32,21 +32,21 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     list.addNodeAfter(prevNode,new std::Node<KernelObject*>(newTask));
     if (list.getCurrent() == 0)
     {
-        list.begin();
+        list.getFirst();
     }
     return newTask;
 }
 
 void TaskManager::initialize()
 {
-    this->list.begin();
+    this->list.getFirst();
 }
 
 void TaskManager::save(uint64 *address)
 {
     if(this->saveCounter == 0)
     {
-        std::Node<KernelObject*> *node = this->list.getCurrent();
+        std::Node<KernelObject*> *node = this->list.current;
         if (node)
         {
             Task *task = (Task*)node->value;
@@ -64,7 +64,7 @@ void TaskManager::load(uint64 *address)
         std::Node<KernelObject*> *node = this->list.next();
         if (!node)
         {
-            node = this->list.begin();
+            node = this->list.getFirst();
         }else{
         }
         Task *task = (Task*)node->value;
@@ -98,7 +98,7 @@ void TaskManager::loadMainKernel(uint64 *address)
 
 std::Node<KernelObject*>* TaskManager::findTaskPosition()
 {
-    std::Node<KernelObject*> *currentNode = list.begin();
+    std::Node<KernelObject*> *currentNode = list.first;
     if (currentNode)
     {
         std::Node<KernelObject*> *nextNode = list.next();

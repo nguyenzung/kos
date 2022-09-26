@@ -102,7 +102,7 @@ public:
             return ptr == iterator.ptr;
         }
  
-        int operator*()
+        T operator*()
         {
             return ptr->value;
         }
@@ -195,7 +195,7 @@ public:
         return false;
     }
 
-    Node<T> removeNodeByValue(T value)
+    Node<T>* removeNodeByValue(T value)
     {
         Node<T> *curr = this->first;
         while(curr)

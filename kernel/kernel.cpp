@@ -6,8 +6,9 @@
 #include <kernel/kernelobject.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
-#include <stdlib/hashtable.h>
+#include <stdlib/unorderedmap.h>
 #include <stdlib/string.h>
+#include <stdlib/algorithm.h>
 #include <tasks/counter.h>
 
 using namespace kernel;
@@ -42,27 +43,28 @@ void Kernel::initialize()
     argv[0][1] = 'a';
     argv[0][2] = 'i';
     argv[0][3] = 'n';
-    // delete argv[0];
-    // delete argv;
+    // delete[] argv[0];
+    // delete[] argv;
 
     Task *mainTask = taskManager.makeTask(0, 1, 0);
     Task *task1 = taskManager.makeTask(&counter, 11, argv);
     Task *task2 = taskManager.makeTask(&ask, 12, argv);
+    printf(" [TASK ] mainTask %d task1 %d task2 %d", mainTask, task1, task2);
     Printer::println(argv[0], 4);
-    //Printer::println(" OK ", 4);
-    // Printer::println(" OK ", 4);
-    char address[] = "    vietnam \0";
-    printf("string %s %d %p \n\0", address, 12, 0xaaaa);
-    std::memmove(address, address + 4, 10);
-    printf("string %s \n\0", address);
-
-    Printer::printlnAddress(mainTask->context.rbp);
-    // Printer::printlnAddress(task1->context.rbp);
 
     taskManager.initialize();
     interruptManager.initialize();
 
-    std::HashTable<uint64, uint64> hashTable();
+    std::UnorderedMap<uint64, uint64> map;
+    map.put(1, 1001);
+    map.put(5400, 1002);
+    printf("[MAP CHECK ] %d \n", map.contains(5400));
+    printf("[MAP CHECK ] %d \n", map.contains(1));
+    printf("[MAP GET ] %d \n", map.get(1)->value);
+    map.remove(5400);
+    printf("[MAP CHECK ] %d \n", map.contains(5400));
+    map[23]= 69;
+    printf(" \n [MAP BIND ] %d \n", map[23].key);
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);

@@ -25,13 +25,13 @@ bool Mouse::initializePS2Controler() {
   waitToWrite();
   outb(READ_CONF_REQ, TEST_MOUSE_REQ);
   ret = read();
-  Printer::printf("after bootup config byte is %d\n", ret);
+  // Printer::printf("after bootup config byte is %d\n", ret);
 
   // 4. Self test
   waitToWrite();
   outb(STATUS_REG, TEST_MOUSE_REQ);
   ret = read();
-  Printer::printf("test mouse result %d expect 0x00 \n", ret, MOUSE_OK);
+  // Printer::printf("test mouse result %d expect 0x00 \n", ret, MOUSE_OK);
   // 5. Enable MOUSE
   waitToWrite();
   outb(STATUS_REG, ENABLE_MOUSE);
@@ -42,7 +42,7 @@ bool Mouse::initializePS2Controler() {
   waitToRead();
   ret = read();
   ret |= (1 << INTERRUPT_BIT);
-  Printer::printf(" setting to mouse 0x60 %d\n", ret);
+  // Printer::printf(" setting to mouse 0x60 %d\n", ret);
   waitToWrite();
   outb(STATUS_REG, WRITE_CONF_REQ);
   waitToWrite();
@@ -93,7 +93,7 @@ bool Mouse::enableScrollWheel() {
       // ack
       if (isCmdSuccess(read())) {
         mouseID = read();
-        Printer::printf("mouseID after enable scroll wheeling %d\n", mouseID);
+        // Printer::printf("mouseID after enable scroll wheeling %d\n", mouseID);
       } else {
         Printer::print("failed to query mouseID\n");
       }
@@ -108,8 +108,6 @@ bool Mouse::enableScrollWheel() {
 void Mouse::deactive() { outb(STATUS_REG, DISABLE_MOUSE); }
 
 void Mouse::handleInterrupt() {
-  // disable interrupt
-  asm volatile("cli");
   uint8 status = inb(0x64);
   uint8 mouse_byte[3] = {0, 0, 0};
   int i = 0;
@@ -170,9 +168,7 @@ void Mouse::handleInterrupt() {
     i++;
     status = inb(STATUS_REG);
   }
-  doNotify();
-  // enable interrupt
-  asm volatile("sti");
+  // doNotify();
 }
 
 void Mouse::doNotify() {

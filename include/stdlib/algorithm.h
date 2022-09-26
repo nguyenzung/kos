@@ -1,6 +1,9 @@
 #ifndef ALGORITHM
 #define ALGORITHM
 
+namespace std 
+{
+
 template<class Iterator, class Comparator>
 Iterator find(Iterator first, Iterator end, Comparator comparator)
 {
@@ -17,5 +20,5 @@ Iterator find(Iterator first, Iterator end, Comparator comparator)
     }
     return Iterator(nullptr);
 }
-
+}
 #endif

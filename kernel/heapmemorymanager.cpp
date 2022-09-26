@@ -138,13 +138,16 @@ void* operator new[](size_t size) {
 }
 
 void operator delete(void* ptr) {
-    HeapMemoryManager::getInstance()->free(ptr);
+    void *result = HeapMemoryManager::getInstance()->free(ptr);
+    // printf("\n DEL %p \n", result);
 }
 
 void operator delete(void* ptr, size_t) {
-    HeapMemoryManager::getInstance()->free(ptr);
+    void *result = HeapMemoryManager::getInstance()->free(ptr);
+    // printf("\n DEL %p \n", result);
 }
 
 void operator delete[](void* ptr) {
-    HeapMemoryManager::getInstance()->free(ptr);
+    void *result = HeapMemoryManager::getInstance()->free(ptr);
+    // printf("\n DEL[] %p \n", result);
 }
