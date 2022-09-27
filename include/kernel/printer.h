@@ -7,6 +7,8 @@
 // #include <type_traits>
 
 namespace kernel {
+    
+
 class Printer {
     static uint8 x;
     static uint8 y;
@@ -86,18 +88,20 @@ void Printer::printf(const char *format, Args... args) {
     Printer::printfHelper(0, format, args...);
 }
 
+template <typename... Args>
+void printf(const char *format, Args... args) {
+    static DECLARE_LOCK(print_lock);
+    LOCK(print_lock);
+    kernel::Printer::printf(format, args...);
+    UNLOCK(print_lock);
+}
+
 } // namespace kernel
 
 // #ifndef PRINTER_LOCK
 // #define PRINTER_LOCK
-// DECLARE_LOCK(print_lock);
 // #endif
 
-template <typename... Args>
-void printf(const char *format, Args... args) {
-    // LOCK(print_lock);
-    kernel::Printer::printf(format, args...);
-    // UNLOCK(print_lock);
-}
+
 
 #endif

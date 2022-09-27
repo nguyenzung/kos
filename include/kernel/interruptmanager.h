@@ -21,6 +21,14 @@ typedef struct
 	uint32    reserved;
 } __attribute__((packed)) GateEntry;
 
+typedef struct ExceptionStackFrame {
+	uint64 code;
+    uint64 rip;
+    uint64 cs;
+    uint64 flags;
+    uint64 rsp;
+    uint64 ss;
+} __attribute__((packed)) ExceptionStackFrame;
 
 typedef struct 
 {
@@ -48,7 +56,7 @@ public:
     void initialize();
 	void* getIDTAddress();
 
-	void exceptionHandle(uint64 vector);
+	void handleInterrupt(uint64 vector);
 
 protected:
 	void setupIDT();

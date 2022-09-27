@@ -9,7 +9,6 @@ start_multiboot:
     dd 8
 end_multiboot:
 
-
 section .text
 bits 32
 global start

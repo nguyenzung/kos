@@ -20,11 +20,7 @@ void HeapMemoryManager::initialize() {
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x100000);
-    // Printer::print(" Kernel Heap:            ", 25);
-    // Printer::printlnAddress((uint64)kernelHeapBase);
-    // Printer::print(" Kernel Main Stack Base: ", 25);
-    // Printer::printlnAddress((uint64)kernelStackBase);
+    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
     printf("Kernel Heap %d Kernel Stack Base %d First allocation %d \n", kernelHeapBase, kernelStackBase, first);
     HeapMemoryManager::setInstance(this);
 }

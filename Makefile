@@ -13,6 +13,7 @@ CXXFLAGS = -I./include
 CXXFLAGS += -fno-exceptions 
 CXXFLAGS += -fno-rtti  
 CXXFLAGS += -nostdlib
+CXXFLAGS += -mgeneral-regs-only
 CXXFLAGS += -MMD
 
 ASFLAGS = -felf64 

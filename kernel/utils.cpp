@@ -47,7 +47,7 @@ uint8 Utils::length(char *string) {
         return 0;
     } else {
         uint32 len = 0;
-        while (*string != '\n') {
+        while (*string != '\0') {
             len++;
             ++string;
         }

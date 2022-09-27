@@ -31,21 +31,21 @@ extern void* isrStubTable[];
 extern void* isrTimerHandler;
 extern void* isrStartMultithreading;
 
-// static void testPageFault() {
-//     uint64 a = 12;
-//     uint64 m = 0xffffffff;
-//     uint64 *p = (uint64*)m;
-//     *p = a;
-//     Printer::print("Page Fault", 10);
-// }
+static void testPageFault() {
+    uint64 a = 12;
+    uint64 m = 0xffffffff;
+    uint64 *p = (uint64*)m;
+    *p = a;
+    Printer::print("Page Fault", 10);
+}
 
-// static void testDivZero() {
-//     uint8 a = 12;
-//     uint8 b = 4;
-//     b = b - 4;
-//     uint8 c = a/b;
-//     Printer::print("Page Fault", 10);
-// }
+static void testDivZero() {
+    uint8 a = 12;
+    uint8 b = 4;
+    b = b - 4;
+    uint8 c = a/b;
+    Printer::print("Div Zero", 10);
+}
 
 void PIC_remap()
 {
@@ -116,8 +116,9 @@ void* InterruptManager::getIDTAddress()
 }
 
 // This function need to be called in Kernel main thread
-void InterruptManager::exceptionHandle(uint64 vector)
+void InterruptManager::handleInterrupt(uint64 vector)
 {
+    // printf("\n [HW INT] %d \n", vector);
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
     if (vector - OFFSET <= 8)
     {
@@ -127,11 +128,35 @@ void InterruptManager::exceptionHandle(uint64 vector)
    
 }
 
+__attribute__((interrupt))
+void handleException(ExceptionStackFrame *frame)
+{
+    printf("\n [CPU Exception] \n");
+    while (true)
+    {
+        /* code */
+    }
+    
+    
+    // frame->rip += 4;
+    // while (true)
+    // {
+        // asm("hlt");
+    // }
+    outb(0xA0, 0x20);
+    outb(0x20, 0x20);
+}
+
+
 void InterruptManager::setupIDT()
 {
     idtr.base = (uint64)&idt[0];
     idtr.limit = (uint16)sizeof(GateEntry) * 256 - 1;
- 
+    
+    for (uint8 vector = 0; vector < 32; vector++) {
+        this->setGateEntry(vector, (void*)(&handleException), 0x8E);
+    }
+
     for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }

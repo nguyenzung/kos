@@ -2,6 +2,7 @@
 #include <kernel/kernel.h>
 #include <kernel/kernelobject.h>
 #include <kernel/printer.h>
+#include <stdlib/lock.h>
 
 extern void* stackBase;
 
@@ -118,7 +119,6 @@ int TaskManager::runTask(Task *task)
     while (true)
     {
         asm("hlt");
-        printf("Loop end");
     }
     return 0;
 }

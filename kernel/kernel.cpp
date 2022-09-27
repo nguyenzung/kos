@@ -71,7 +71,7 @@ int Kernel::hlt(int argc, char **argv)
     
     asm("_cpp_stop:");
     asm("hlt");
-    // printf("Kernel waiting");
+    // printf(" Kernel waiting ");
     asm("jmp _cpp_stop");
 }
 

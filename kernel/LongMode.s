@@ -41,7 +41,7 @@ isrStub_%+%1:
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, (%1 + 0x20)
-    call _ZN6kernel16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15handleInterruptEm
     POP_REGISTERS
     iretq
 %endmacro 
@@ -53,7 +53,7 @@ isrStub_%+%1:
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, (%1 + 0x20)
-    call _ZN6kernel16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15handleInterruptEm
     POP_REGISTERS
     iretq
 %endmacro
@@ -69,7 +69,7 @@ global isrTimerHandler
 extern GDT64Data
 extern main
 extern printMessage
-extern _ZN6kernel16InterruptManager15exceptionHandleEm ; exceptionHandler
+extern _ZN6kernel16InterruptManager15handleInterruptEm ; interruptHandler
 extern _ZN6kernel16InterruptManager11getInstanceEv ; getInterrupManagerInstance
 extern _GLOBAL__sub_I__ZN13DeviceManager13deviceManagerE;
 extern _ZN6kernel11TaskManager11getInstanceEv
@@ -134,7 +134,7 @@ isrStartMultithreading:
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, 0x20
-    call _ZN6kernel16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15handleInterruptEm
 
     ; load main context
     call _ZN6kernel11TaskManager11getInstanceEv
@@ -168,7 +168,7 @@ isrTimerHandler:
     call _ZN6kernel16InterruptManager11getInstanceEv
     mov rdi, rax
     mov rsi, 0x20
-    call _ZN6kernel16InterruptManager15exceptionHandleEm
+    call _ZN6kernel16InterruptManager15handleInterruptEm
 
 
     ; schedule new task
