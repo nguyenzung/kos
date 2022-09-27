@@ -15,7 +15,11 @@ public:
     void deactive();
     void handleInterrupt();
 
-    // void set
+    // void set  
+    int get_update_in_progress_flag();
+    unsigned char get_RTC_register(int reg);
+
+    
 };
 }
 #endif
