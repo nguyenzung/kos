@@ -1,8 +1,11 @@
 #ifndef COUNTER
 #define COUNTER
 
-int counter(int argc, char **argv);
-int ask(int argc, char **argv);
-int check();
+class TaskTest {
+public:
+static int count(int argc, char **argv);
+static int ask(int argc, char **argv);
+static int check();
+};
 
 #endif

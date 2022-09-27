@@ -1,38 +1,48 @@
 #include <tasks/counter.h>
 #include <kernel/printer.h>
 #include <kernel/type.h>
+#include <kernel/utils.h>
 #include <stdlib/lock.h>
 
-int counter(int argc, char** argv)
-{
-        // printf(" count ");
+using namespace kernel;
 
-    while (true)
+int TaskTest::count(int argc, char** argv)
+{
+    int i, j, k;
+    uint64 rsp, rbp;
+    READ_CPU(RSP, rsp);
+    printf(" count %d %s %p %p", argc, argv[0], &i, rsp);
+    for (i = 0; i < 10; i++)
     {
-        for(int i = 0; i < 20000; i++)
-        {
-            for(int j = 0; j < 10000; j++)
-            {
-            }
-        }
-        kernel::Printer::println("Count", 5);
+        for (j = 0; j < 3000; j++)
+            for (k = 0; k < 5000; k++)
+            {}
+        READ_CPU(RSP, rsp);
+        READ_CPU(RBP, rbp);
+        printf("[count %d %p %p %p] \n", i, &i, rsp, rbp);
+
     }
+
+    printf("\n[End count]\n");
     return 0;
 }
 
-int ask(int argc, char** argv)
+int TaskTest::ask(int argc, char** argv)
 {
-    // asm("sti");
-        // printf(" ask ");
-    while (true)
+    int i, j, k;
+    uint64 rsp, rbp;
+    READ_CPU(RSP, rsp);
+    printf(" ask %d %s %p %p", argc, argv[0], &i, rsp);
+    
+    for (i = 0; i < 10; i++)
     {
-        for(int i = 0; i < 20000; i++)
-        {
-            for(int j = 0; j < 10000; j++)
-            {
-            }
-        }
-        kernel::Printer::println(" Ask ", 5);
+        for (j = 0; j < 3000; j++)
+            for (k = 0; k < 5000; k++)
+            {}
+        READ_CPU(RSP, rsp);
+        READ_CPU(RBP, rbp);
+        printf("[ask %d %p %p %p] \n", i, &i, rsp, rbp);
     }
-    return 0;
+    printf("\n [End ask] \n");
+    return 1;
 }

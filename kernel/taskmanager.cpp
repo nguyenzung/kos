@@ -7,6 +7,8 @@ extern void* stackBase;
 
 IMPL_MODULE_INSTANCE(TaskManager)
 
+DECLARE_LOCK(taskList);
+
 TaskManager::TaskManager()
 {
     saveCounter = 0;
@@ -19,6 +21,7 @@ TaskManager::~TaskManager()
 
 Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
 {
+    // LOCK(taskList);
     std::Node<KernelObject*>* prevNode = this->findTaskPosition();
     Task *newTask = new Task(entryPoint, argc, argv);
     if (prevNode)
@@ -34,6 +37,7 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     {
         list.getFirst();
     }
+    // UNLOCK(taskList);
     return newTask;
 }
 
@@ -44,6 +48,7 @@ void TaskManager::initialize()
 
 void TaskManager::save(uint64 *address)
 {
+    // LOCK(taskList);
     if(this->saveCounter == 0)
     {
         std::Node<KernelObject*> *node = this->list.current;
@@ -54,10 +59,12 @@ void TaskManager::save(uint64 *address)
         }
     }
     this->saveCounter++;
+    // UNLOCK(taskList);
 }
 
 void TaskManager::load(uint64 *address)
 {
+    // LOCK(taskList);
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
@@ -65,11 +72,11 @@ void TaskManager::load(uint64 *address)
         if (!node)
         {
             node = this->list.getFirst();
-        }else{
         }
         Task *task = (Task*)node->value;
         task->load(address);
     }
+    // UNLOCK(taskList);
 }
 
 void TaskManager::saveMainKernel(uint64 *address)
@@ -95,9 +102,35 @@ void TaskManager::loadMainKernel(uint64 *address)
     }
 }
 
+void TaskManager::removeTask(Task *task)
+{
+    LOCK(taskList);
+    this->list.removeNodeByValue(task);
+    UNLOCK(taskList);
+}
+
+int TaskManager::runTask(Task *task)
+{
+    int result = task->context.entryPoint(task->context.argc, task->context.argv);
+    printf(" Finish task with result %d", result);
+    // while (true)
+    // {
+    //     /* code */
+    // }
+    
+    TaskManager::getInstance()->removeTask(task);
+    while (true)
+    {
+        /* code */
+    }
+    
+    return 0;
+}
+
 
 std::Node<KernelObject*>* TaskManager::findTaskPosition()
 {
+    LOCK(taskList);
     std::Node<KernelObject*> *currentNode = list.first;
     if (currentNode)
     {
@@ -111,8 +144,9 @@ std::Node<KernelObject*>* TaskManager::findTaskPosition()
                 return currentNode;
             }
             currentNode = nextNode;
-            nextNode = list.next();
+            nextNode = this->list.next();
         }
     }
+    UNLOCK(taskList);
     return currentNode;
 }

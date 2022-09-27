@@ -2,8 +2,14 @@
 #include <kernel/printer.h>
 #include <kernel/kernel.h>
 #include <tasks/counter.h>
+#include <kernel/taskmanager.h>
 
 using namespace kernel;
+
+void test()
+{
+    
+}
 
 Context::Context()
 {
@@ -11,9 +17,9 @@ Context::Context()
 
 Context::Context(uint64 rbp, uint64 rsp, mainFunction entryPoint)
 {
-    this->rbp = rbp;
-    this->rsp = rsp;
-    this->rip = (uint64)entryPoint;
+    // this->rbp = rbp;
+    // this->rsp = rsp;
+    // this->rip = (uint64)test;
 }
 
 Context::~Context()
@@ -23,9 +29,13 @@ Context::~Context()
 void Context::initialize()
 {
     this->cs = 0x08;
-    this->rdi = argc;
     this->flags = (1 << 9);
-    this->rsi = (uint64)argv;
+    this->rdi = (uint64) this->task;
+    // Handle 
+
+    // this->rdi = (uint64) this->entryPoint;
+    // this->rsi = this->argc;
+    // this->rdx = (uint64)this->argv;
 }
 
 void Context::save(uint64* address)
@@ -49,6 +59,7 @@ void Context::save(uint64* address)
     this->r13 = *(address--);
     this->r14 = *(address--);
     this->r15 = *(address--);
+    this->rbp = *(address--);
 
     // Printer::printAddress(this->ss);
     // Printer::print();
@@ -96,4 +107,5 @@ void Context::load(uint64 *address)
     *(address--) = this->r13;
     *(address--) = this->r14;
     *(address--) = this->r15;
+    *(address--) = this->rbp;
 }

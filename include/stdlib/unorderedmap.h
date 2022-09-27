@@ -29,13 +29,11 @@ public:
         this->value = value;
     }
     
-
     Pair& operator = (V value)
         {
             this->value = value;
             return *this;
         }
-
 };
 
 template <typename K, typename V>
@@ -80,7 +78,6 @@ public:
             Pair<K, V> *pair = new Pair<K, V>(key, object);
             list->add(pair);
         }
-        
         return index;
     }
 
@@ -109,7 +106,6 @@ public:
             list->add(pair);
             return pair;
         }
-        
     }
 
     /*

@@ -4,12 +4,12 @@ TARGET	= $(BUILD_DIR)/kos.iso
 MAP	= $(BUILD_DIR)/kernel.map
 LSS	= $(BUILD_DIR)/kernel.lss
 
-CXX ?= x86_64-linux-gnu-g++
-LD 	?= x86_64-elf-ld
+CXX = x86_64-linux-gnu-g++
+LD 	= x86_64-elf-ld
 AS 	= nasm # Force use nasm
 
 CXXFLAGS = -I./include 
-CXXFLAGS += -fno-stack-protector 
+# CXXFLAGS += -fno-stack-protector 
 CXXFLAGS += -fno-exceptions 
 CXXFLAGS += -fno-rtti  
 CXXFLAGS += -nostdlib

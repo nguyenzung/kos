@@ -18,7 +18,7 @@ Iterator find(Iterator first, Iterator end, Comparator comparator)
             current = ++current;
         }
     }
-    return Iterator(nullptr);
+    return end;
 }
 }
 #endif

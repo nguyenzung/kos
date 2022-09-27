@@ -13,9 +13,11 @@
     push r13
     push r14
     push r15
+    push rbp
 %endmacro
 
 %macro POP_REGISTERS 0
+    pop rbp
     pop r15
     pop r14
     pop r13
@@ -120,14 +122,13 @@ isrStartMultithreading:
     PUSH_REGISTERS
     cld
     mov rsi, rsp
-    add rsi, (14 * 8 + 32)
+    add rsi, (15 * 8 + 32)
     mov [stackIndex], rsi
     ; save main context
     call _ZN6kernel11TaskManager11getInstanceEv
     mov rdi, rax
     mov rsi, [stackIndex]
     call _ZN6kernel11TaskManager14saveMainKernelEPm
-    
 
     ; handle interrupt
     call _ZN6kernel16InterruptManager11getInstanceEv
@@ -151,7 +152,7 @@ isrTimerHandler:
     PUSH_REGISTERS
     
     mov rsi, rsp
-    add rsi, (14 * 8 + 32)
+    add rsi, (15 * 8 + 32)
     mov [stackIndex], rsi
 
     ; mov rsi, interrupt_handler_msg
@@ -233,6 +234,7 @@ isrStubTable:
 section .bss
 global stack_base
 global heap_base
+; align 4096
 heap_base: 			resb 64*1024*1024
 stack_base:
 stack_size 			equ $ - heap_base
