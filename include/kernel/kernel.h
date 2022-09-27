@@ -7,6 +7,7 @@
 #include <kernel/taskmanager.h>
 #include <kernel/context.h>
 #include <driver/timer.h>
+#include <driver/cmos.h>
 
 namespace kernel 
 {
@@ -18,6 +19,9 @@ class Kernel
     InterruptManager interruptManager;
     TaskManager taskManager;
 
+    driver::CMOS cmos;
+    driver::Timer timer;
+
     static Kernel* instance;
 
 public:
@@ -28,6 +32,8 @@ public:
 
     void initialize();
     void start();
+    void update();
+
     static int hlt(int argc, char**argv);
 
     HeapMemoryManager* getHeapMemoryManager();

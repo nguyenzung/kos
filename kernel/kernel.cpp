@@ -44,15 +44,21 @@ void Kernel::initialize()
     argv[0][2] = 'i';
     argv[0][3] = 'n';
     argv[0][4] = '\0';
-    // delete[] argv[0];
-    // delete[] argv;
-
+    
     Task *mainTask = taskManager.makeTask(0, 1, 0);
     Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
     Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
-
     taskManager.initialize();
     interruptManager.initialize();
+
+    timer.active();
+    cmos.active();
+    deviceManager.registerDevice(&timer);
+
+    cmos.updateDateTime();
+    cmos.updateDateTime();
+
+    // 
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;
@@ -66,12 +72,18 @@ void Kernel::start()
     asm("sti");
 }
 
+void Kernel::update()
+{
+    cmos.updateDateTime();
+}
+
 int Kernel::hlt(int argc, char **argv)
 {
     
     asm("_cpp_stop:");
     asm("hlt");
     // printf(" Kernel waiting ");
+    Kernel::getInstance()->update();
     asm("jmp _cpp_stop");
 }
 

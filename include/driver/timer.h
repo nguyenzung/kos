@@ -2,10 +2,15 @@
 #define TIMER
 
 #include <kernel/basedriver.h>
+#include <kernel/type.h>
 
 namespace driver {
 
-class Timer : public kernel::BaseDriver {
+
+
+class Timer : public kernel::BaseDriver 
+{
+    // DateTime dateTime;
 
 public:
     Timer();
@@ -16,10 +21,8 @@ public:
     void handleInterrupt();
 
     // void set  
-    int get_update_in_progress_flag();
-    unsigned char get_RTC_register(int reg);
-
     
+
 };
 }
 #endif
