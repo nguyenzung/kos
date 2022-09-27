@@ -63,7 +63,7 @@ void Kernel::initialize()
 void Kernel::start()
 {
     asm("int $0x81");
-    asm ("sti");
+    asm("sti");
 }
 
 int Kernel::hlt(int argc, char **argv)

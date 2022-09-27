@@ -88,7 +88,6 @@ void TaskManager::saveMainKernel(uint64 *address)
         task->save(address);
     }
     this->saveCounter++;
-    
 }
 
 void TaskManager::loadMainKernel(uint64 *address)
@@ -112,18 +111,15 @@ void TaskManager::removeTask(Task *task)
 int TaskManager::runTask(Task *task)
 {
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
-    printf(" Finish task with result %d", result);
-    // while (true)
-    // {
-    //     /* code */
-    // }
-    
+    printf(" Finish task with result %d\n", result);
+    asm("cli");
     TaskManager::getInstance()->removeTask(task);
+    asm("sti");
     while (true)
     {
-        /* code */
+        asm("hlt");
+        printf("Loop end");
     }
-    
     return 0;
 }
 
