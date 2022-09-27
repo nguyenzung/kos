@@ -31,6 +31,11 @@ public:
     void saveMainKernel(uint64 *address);
     void loadMainKernel(uint64 *address);
 
+    void removeTask(Task *task);
+
+    // static int runTask(mainFunction entryPoint, int argc, char **argv);
+    static int runTask(Task *task);
+
 protected:
    /*
     *   Find position of new task in the list. Return prev task address

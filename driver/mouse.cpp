@@ -61,7 +61,7 @@ bool Mouse::initializePS2Controler() {
 void Mouse::active() {
   uint8 status;
   initializePS2Controler();
-  if (enableScrollWheel() == false) {
+  if (!enableScrollWheel()) {
     Printer::printf("couldn't enable scrool wheel\n\0");
   }
 }

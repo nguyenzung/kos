@@ -7,7 +7,6 @@
 namespace kernel 
 {
     typedef int (*mainFunction)(int, char**);
-
 class Context
 {
 public:
@@ -33,12 +32,13 @@ public:
     uint64 r14;
     uint64 r15;
 
-    uint64 rbp; // Immutable
-
+    uint64 rbp;
+    uint64 task;
     void* pageAddress;
     uint16 codeSegmentOffset;
     uint16 dataSegmentOffset;
     
+
     mainFunction entryPoint;
     int argc;
     char **argv;

@@ -38,33 +38,23 @@ void Kernel::initialize()
     deviceManager.initialize();
 
     char **argv= new char*[1];
-    argv[0] = new char[4];
+    argv[0] = new char[5];
     argv[0][0] = 'm';
     argv[0][1] = 'a';
     argv[0][2] = 'i';
     argv[0][3] = 'n';
+    argv[0][4] = '\0';
     // delete[] argv[0];
     // delete[] argv;
 
     Task *mainTask = taskManager.makeTask(0, 1, 0);
-    Task *task1 = taskManager.makeTask(&counter, 11, argv);
-    Task *task2 = taskManager.makeTask(&ask, 12, argv);
-    printf(" [TASK ] mainTask %d task1 %d task2 %d", mainTask, task1, task2);
-    Printer::println(argv[0], 4);
+    Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
+    Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
 
     taskManager.initialize();
     interruptManager.initialize();
 
-    std::UnorderedMap<uint64, uint64> map;
-    map.put(1, 1001);
-    map.put(5400, 1002);
-    printf("[MAP CHECK ] %d \n", map.contains(5400));
-    printf("[MAP CHECK ] %d \n", map.contains(1));
-    printf("[MAP GET ] %d \n", map.get(1)->value);
-    map.remove(5400);
-    printf("[MAP CHECK ] %d \n", map.contains(5400));
-    map[23]= 69;
-    printf(" \n [MAP BIND ] %d \n", map[23].key);
+    // uint64 address = &Kernel::initialize;
     // VGA vga;
     // vga.setupVideoMode();
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
@@ -78,9 +68,10 @@ void Kernel::start()
 
 int Kernel::hlt(int argc, char **argv)
 {
-    Printer::println("Good news", 8);
+    
     asm("_cpp_stop:");
     asm("hlt");
+    // printf("Kernel waiting");
     asm("jmp _cpp_stop");
 }
 
