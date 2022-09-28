@@ -131,7 +131,9 @@ void InterruptManager::handleInterrupt(uint64 vector)
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)
 {
-    printf("\n [CPU Exception] \n");
+    uint64 rsp;
+    READ_CPU(RSP, rsp);
+    printf("\n [CPU Exception] %d %d %d %d | %p %p \n", errorCode, frame->rip, frame->cs, frame->ss, rsp, frame);
     while (true)
     {
         /* code */

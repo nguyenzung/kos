@@ -22,7 +22,6 @@ typedef struct
 } __attribute__((packed)) GateEntry;
 
 typedef struct ExceptionStackFrame {
-	uint64 code;
     uint64 rip;
     uint64 cs;
     uint64 flags;

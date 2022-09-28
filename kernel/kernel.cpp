@@ -46,15 +46,16 @@ void Kernel::initialize()
     argv[0][4] = '\0';
     
     Task *mainTask = taskManager.makeTask(0, 1, 0);
-    Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
-    Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
-
+    
     taskManager.initialize();
     interruptManager.initialize();
 
     timer.active();
     cmos.active();
     deviceManager.registerDevice(&timer);
+
+    Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
+    Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
 
 
     cmos.updateDateTime();
