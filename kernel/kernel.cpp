@@ -54,10 +54,12 @@ void Kernel::initialize()
     cmos.active();
     deviceManager.registerDevice(&timer);
 
-    Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
-    Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
+    // Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
+    // Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
+    Task *task3 = taskManager.makeTask(&TaskTest::count, 2010000, argv);
+    Task *task4 = taskManager.makeTask(&TaskTest::ask, 2020000, argv);
 
-
+    cmos.updateDateTime();
     cmos.updateDateTime();
     cmos.updateDateTime();
 
@@ -76,15 +78,16 @@ void Kernel::start()
 void Kernel::update()
 {
     cmos.updateDateTime();
+    static uint64 count = 0;
+    printf("\n [Kernel update] %d \n", count);
+    count++;
 }
 
 int Kernel::hlt(int argc, char **argv)
 {
     
     asm("_cpp_stop:");
-    asm("hlt");
-    // printf(" Kernel waiting ");
-    // Kernel::getInstance()->update();
+    Kernel::getInstance()->update();
     asm("jmp _cpp_stop");
 }
 

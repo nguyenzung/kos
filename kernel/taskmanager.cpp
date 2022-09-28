@@ -65,7 +65,6 @@ void TaskManager::save(uint64 *address)
 
 void TaskManager::load(uint64 *address)
 {
-    // LOCK(taskList);
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
@@ -74,10 +73,12 @@ void TaskManager::load(uint64 *address)
         {
             node = this->list.getFirst();
         }
-        Task *task = (Task*)node->value;
-        task->load(address);
+        if (node)
+        {
+            Task *task = (Task*)node->value;
+            task->load(address);
+        }
     }
-    // UNLOCK(taskList);
 }
 
 void TaskManager::saveMainKernel(uint64 *address)
@@ -111,6 +112,9 @@ void TaskManager::removeTask(Task *task)
 
 int TaskManager::runTask(Task *task)
 {
+    uint64 rsp;
+    READ_CPU(RSP, rsp);
+    printf("\n Start run task %p %d \n", task, rsp);
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
     printf(" Finish task with result %d\n", result);
     asm("cli");
@@ -122,7 +126,6 @@ int TaskManager::runTask(Task *task)
     }
     return 0;
 }
-
 
 std::Node<KernelObject*>* TaskManager::findTaskPosition()
 {

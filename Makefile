@@ -60,4 +60,4 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -s -cdrom $<
+	qemu-system-x86_64 -s -no-reboot -no-shutdown -cdrom $<

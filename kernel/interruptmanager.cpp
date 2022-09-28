@@ -118,33 +118,24 @@ void* InterruptManager::getIDTAddress()
 // This function need to be called in Kernel main thread
 void InterruptManager::handleInterrupt(uint64 vector)
 {
-    // printf("\n [HW INT] %d \n", vector);
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
     if (vector - OFFSET <= 8)
     {
         outb(0xA0, 0x20);
     }
     outb(0x20, 0x20);
-   
 }
 
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)
 {
-    uint64 rsp;
-    READ_CPU(RSP, rsp);
-    printf("\n [CPU Exception] %d %d %d %d | %p %p \n", errorCode, frame->rip, frame->cs, frame->ss, rsp, frame);
+    // printf("\n[EF]\n");
+    printf("\n [CPU Exception] %d %d %d %d %d| %d \n", errorCode, frame->rip, frame->cs, frame->ss, frame->rsp, frame);
     while (true)
     {
         /* code */
     }
     
-    
-    // frame->rip += 4;
-    // while (true)
-    // {
-        // asm("hlt");
-    // }
     outb(0xA0, 0x20);
     outb(0x20, 0x20);
 }

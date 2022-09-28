@@ -245,11 +245,11 @@ public:
         if (this->current && this->current->next)
         {
             this->current = this->current->next;
-            return this->current;
         } else 
         {
-            return 0;
+            this->current = 0;
         }
+        return this->current;
     }
 
     Node<T>* getCurrent()

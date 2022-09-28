@@ -3,23 +3,24 @@
 #include <kernel/type.h>
 #include <kernel/utils.h>
 #include <stdlib/lock.h>
+#include <stdlib/string.h>
 
 using namespace kernel;
 
+extern uint64 counter;
+
 int TaskTest::count(int argc, char** argv)
 {
+    counter = 0;
     int i, j, k;
-    uint64 rsp, rbp;
-    READ_CPU(RSP, rsp);
-    printf(" count %d %s %p %p", argc, argv[0], &i, rsp);
-    for (i = 0; i < 6; i++)
+    printf(" count %d %s %p", argc, argv[0], &i);
+    
+    for (i = 0; i < 10; i++)
     {
         for (j = 0; j < 10000; j++)
             for (k = 0; k < 3000; k++)
             {}
-        READ_CPU(RSP, rsp);
-        READ_CPU(RBP, rbp);
-        printf("[count %d %p %p %p] \n", i, &i, rsp, rbp);
+        printf("[ count %d %p %d] \n", i, &i, counter);
     }
     printf("\n[End count]\n");
     return 0;
@@ -28,18 +29,13 @@ int TaskTest::count(int argc, char** argv)
 int TaskTest::ask(int argc, char** argv)
 {
     int i, j, k;
-    uint64 rsp, rbp;
-    READ_CPU(RSP, rsp);
-    printf(" ask %d %s %p %p", argc, argv[0], &i, rsp);
-    
-    for (i = 0; i < 6; i++)
+    printf(" ask %d %s %p", argc, argv[0], &i);
+    for (i = 0; i < 10; i++)
     {
         for (j = 0; j < 10000; j++)
             for (k = 0; k < 3000; k++)
             {}
-        READ_CPU(RSP, rsp);
-        READ_CPU(RBP, rbp);
-        printf("[ask %d %p %p %p] \n", i, &i, rsp, rbp);
+            printf("[ ask %d %p %d] \n", i, &i, counter);
     }
     printf("\n [End ask] \n");
     return 1;

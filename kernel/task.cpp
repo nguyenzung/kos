@@ -24,7 +24,7 @@ void Task::initialize(uint64 rbp)
 {
     this->context.rbp = rbp;
     this->context.rsp = rbp;
-    printf("\n [Task init] %d %d %p", this->context.rbp, this->context.rsp, this);
+    printf("\n [Task init] %p %p %p %p", this->context.rbp, this->context.rsp, this->context.rip, this);
     this->context.initialize();
 }
 
