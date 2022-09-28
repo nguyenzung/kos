@@ -48,6 +48,7 @@ void Kernel::initialize()
     Task *mainTask = taskManager.makeTask(0, 1, 0);
     Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
     Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
+
     taskManager.initialize();
     interruptManager.initialize();
 
@@ -55,10 +56,9 @@ void Kernel::initialize()
     cmos.active();
     deviceManager.registerDevice(&timer);
 
-    cmos.updateDateTime();
-    cmos.updateDateTime();
 
-    // 
+    cmos.updateDateTime();
+    cmos.updateDateTime();
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;
@@ -83,7 +83,7 @@ int Kernel::hlt(int argc, char **argv)
     asm("_cpp_stop:");
     asm("hlt");
     // printf(" Kernel waiting ");
-    Kernel::getInstance()->update();
+    // Kernel::getInstance()->update();
     asm("jmp _cpp_stop");
 }
 

@@ -129,7 +129,7 @@ void InterruptManager::handleInterrupt(uint64 vector)
 }
 
 __attribute__((interrupt))
-void handleException(ExceptionStackFrame *frame)
+void handleException(ExceptionStackFrame *frame, uint64 errorCode)
 {
     printf("\n [CPU Exception] \n");
     while (true)
