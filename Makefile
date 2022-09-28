@@ -15,10 +15,11 @@ CXXFLAGS += -fno-rtti
 CXXFLAGS += -nostdlib
 CXXFLAGS += -mgeneral-regs-only
 CXXFLAGS += -MMD
+CXXFLAGS += -g -MMD
 
 ASFLAGS = -felf64 
 
-LDFLAGS = -T kernel.ld -nostdlib -n  
+LDFLAGS = -T kernel.ld -nostdlib -n -g
 LDFLAGS += -Map=$(MAP)
 
 
@@ -60,4 +61,4 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -s -no-reboot -no-shutdown -cdrom $<
+	qemu-system-x86_64 -cdrom $<

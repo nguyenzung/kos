@@ -112,11 +112,7 @@ void TaskManager::removeTask(Task *task)
 
 int TaskManager::runTask(Task *task)
 {
-    uint64 rsp;
-    READ_CPU(RSP, rsp);
-    printf("\n Start run task %p %d \n", task, rsp);
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
-    printf(" Finish task with result %d\n", result);
     asm("cli");
     TaskManager::getInstance()->removeTask(task);
     asm("sti");

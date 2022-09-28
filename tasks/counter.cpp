@@ -13,30 +13,30 @@ int TaskTest::count(int argc, char** argv)
 {
     counter = 0;
     int i, j, k;
-    printf(" count %d %s %p", argc, argv[0], &i);
+    // printf(" count %d %s %p", argc, argv[0], &i);
     
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < argc; i++)
     {
-        for (j = 0; j < 10000; j++)
+        for (j = 0; j < 10; j++)
             for (k = 0; k < 3000; k++)
             {}
         printf("[ count %d %p %d] \n", i, &i, counter);
     }
-    printf("\n[End count]\n");
+    // printf("\n[End count]\n");
     return 0;
 }
 
 int TaskTest::ask(int argc, char** argv)
 {
     int i, j, k;
-    printf(" ask %d %s %p", argc, argv[0], &i);
-    for (i = 0; i < 10; i++)
+    // printf(" ask %d %s %p", argc, argv[0], &i);
+    for (i = 0; i < argc; i++)
     {
-        for (j = 0; j < 10000; j++)
+        for (j = 0; j < 10; j++)
             for (k = 0; k < 3000; k++)
             {}
             printf("[ ask %d %p %d] \n", i, &i, counter);
     }
-    printf("\n [End ask] \n");
+    // printf("\n [End ask] \n");
     return 1;
 }

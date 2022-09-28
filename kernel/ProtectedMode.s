@@ -15,6 +15,7 @@ global start
 
 extern printMessage
 extern startLongMode
+
 start:
 	call verifySupportCPUID
 	call verifySupportLongMode

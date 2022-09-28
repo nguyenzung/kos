@@ -77,7 +77,7 @@ void Kernel::start()
 
 void Kernel::update()
 {
-    cmos.updateDateTime();
+    // cmos.updateDateTime();
     static uint64 count = 0;
     printf("\n [Kernel update] %d \n", count);
     count++;
