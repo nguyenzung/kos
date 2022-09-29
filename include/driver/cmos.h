@@ -28,6 +28,7 @@ typedef struct DateTime
         this->day = datetime.day;
         this->month = datetime.month;
         this->year = datetime.year;
+        return *this;
     }
 
     bool operator!=(DateTime &datetime)

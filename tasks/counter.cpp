@@ -11,32 +11,30 @@ extern uint64 counter;
 
 int TaskTest::count(int argc, char** argv)
 {
-    counter = 0;
+    uint64 result = 0;
+    printf("Size of uint64 %d", sizeof(result));
     int i, j, k;
-    // printf(" count %d %s %p", argc, argv[0], &i);
+    printf("\n [Count] %d %s %p", argc, argv[0], &i);
+
     
-    for (i = 0; i < argc; i++)
+    for (i = 0; i <= argc; i++)
     {
-        for (j = 0; j < 10; j++)
-            for (k = 0; k < 3000; k++)
-            {}
-        printf("[ count %d %p %d] \n", i, &i, counter);
+        result += (uint64)i;
     }
-    // printf("\n[End count]\n");
-    return 0;
+    return result;
 }
 
 int TaskTest::ask(int argc, char** argv)
 {
+    uint64 result = 0;
     int i, j, k;
-    // printf(" ask %d %s %p", argc, argv[0], &i);
-    for (i = 0; i < argc; i++)
+    printf("\n [Ask] %d %s %p", argc, argv[0], &i);
+    for (i = 0; i <= argc; i++)
     {
         for (j = 0; j < 10; j++)
-            for (k = 0; k < 3000; k++)
+            for (k = 0; k < 300; k++)
             {}
-            printf("[ ask %d %p %d] \n", i, &i, counter);
+        result += i;
     }
-    // printf("\n [End ask] \n");
-    return 1;
+    return result;
 }

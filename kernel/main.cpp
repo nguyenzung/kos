@@ -4,6 +4,5 @@
 int main() {
     kernel::Kernel kernel;
     kernel.initialize();
-    kernel.start();
-    kernel::Kernel::hlt(1, 0);    
+    kernel::Kernel::start(1, 0);    
 }

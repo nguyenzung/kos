@@ -31,6 +31,8 @@ public:
     uint64 r13;
     uint64 r14;
     uint64 r15;
+    uint64 gs;
+    uint64 fs;
 
     uint64 rbp;
     uint64 task;
@@ -44,12 +46,13 @@ public:
     char **argv;
 
     Context();
-    Context(uint64 rbp, uint64 rsp, mainFunction entryPoint);
     ~Context();
 
     void initialize();
     void save(uint64 *address);
     void load(uint64 *address);
+
+    void info();
 };
 }
 #endif

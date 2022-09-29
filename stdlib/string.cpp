@@ -1,5 +1,6 @@
 #include <stdlib/string.h>
 #include <kernel/printer.h>
+#include <kernel/utils.h>
 
 using namespace kernel;
 
@@ -12,32 +13,31 @@ namespace std
  *  Support move from right to left
  */
 void* memmove(void* des, void* src, size_t size)
-{    
-    asm("cli");
+{        
     size_t numq = size >> 3;
     size_t numb = size & 0b111;
+    uint32 i;
     if (des < src)
     {   
         uint64 *qdes = (uint64*)des;
         uint64 *qsrc = (uint64*)src;
-        for (size_t i = 0; i < numq; ++i)
+        for (i = 0; i < numq; ++i)
         {
             qdes[i] = qsrc[i];
         }
         uint8 *bdes = (uint8*)(des + numq * 8);
         uint8 *bsrc = (uint8*)(src + numq * 8);
-        for (size_t i = 0; i < numb; ++i)
+        for (i = 0; i < numb; ++i)
         {
             bdes[i] = bsrc[i];
         }
     }
-    asm("sti");
     return des;
 }
 
 void* memset(void* des, uint8 c, size_t size)
 {
-    asm("cli");
+    // asm("cli");
     size_t numq = size >> 3;
     uint16 cw = c;
     cw = (cw << 8) | c;
@@ -56,7 +56,7 @@ void* memset(void* des, uint8 c, size_t size)
     {
         bdes[i] = c;
     }
-    asm("sti");
+    // asm("sti");
     return 0;
 }
 

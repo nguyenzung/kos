@@ -110,9 +110,15 @@ void TaskManager::removeTask(Task *task)
     UNLOCK(taskList);
 }
 
+void TaskManager::contextInfo() {
+    Task *task = (Task*)this->list.current->value;
+    task->context.info();
+}
+
 int TaskManager::runTask(Task *task)
 {
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
+    printf("\n Result %d: %d", result, task->context.argc);
     asm("cli");
     TaskManager::getInstance()->removeTask(task);
     asm("sti");

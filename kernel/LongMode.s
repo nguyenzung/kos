@@ -14,9 +14,14 @@
     push r14
     push r15
     push rbp
+    push gs
+    push fs
+
 %endmacro
 
 %macro POP_REGISTERS 0
+    pop fs
+    pop gs
     pop rbp
     pop r15
     pop r14
@@ -117,13 +122,13 @@ startLongMode:
     mov qword [rsi], 0x23456789
     call main
 
-; enable by using interrupt 0x10 + OFFSET
+; enable by using interrupt 0x20 + OFFSET
 isrStartMultithreading:
     PUSH_REGISTERS
-    cld
     mov rsi, rsp
-    add rsi, (15 * 8 + 32)
-    mov [stackIndex], rsi
+    add rsi, (17 * 8 + 32)
+    mov qword [stackIndex], rsi
+
     ; save main context
     call _ZN6kernel11TaskManager11getInstanceEv
     mov rdi, rax
@@ -141,9 +146,7 @@ isrStartMultithreading:
     mov rdi, rax
     mov rsi, [stackIndex]
     call _ZN6kernel11TaskManager14loadMainKernelEPm
-    ; jmp $
     POP_REGISTERS
-    ; jmp $
     iretq
 
 isrTimerHandler:
@@ -152,7 +155,7 @@ isrTimerHandler:
     PUSH_REGISTERS
     
     mov rsi, rsp
-    add rsi, (15 * 8 + 32)
+    add rsi, (17 * 8 + 32)  ; calculate stackframe size
     mov [stackIndex], rsi
 
     ; mov rsi, interrupt_handler_msg

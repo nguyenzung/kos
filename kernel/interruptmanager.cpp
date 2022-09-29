@@ -2,7 +2,7 @@
 #include <kernel/printer.h>
 #include <kernel/iocommand.h>
 #include <kernel/utils.h>
-
+#include <kernel/taskmanager.h>
 #include <kernel/kernel.h>
 
 using namespace kernel;
@@ -129,13 +129,12 @@ void InterruptManager::handleInterrupt(uint64 vector)
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)
 {
-    // printf("\n[EF]\n");
     printf("\n [CPU Exception] %d %d %d %d %d| %d \n", errorCode, frame->rip, frame->cs, frame->ss, frame->rsp, frame);
+    TaskManager::getInstance()->contextInfo();
     while (true)
     {
         /* code */
     }
-    
     outb(0xA0, 0x20);
     outb(0x20, 0x20);
 }

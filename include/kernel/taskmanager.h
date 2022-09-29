@@ -33,6 +33,8 @@ public:
 
     void removeTask(Task *task);
 
+    void contextInfo();
+
     // static int runTask(mainFunction entryPoint, int argc, char **argv);
     static int runTask(Task *task);
 

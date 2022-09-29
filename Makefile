@@ -9,13 +9,14 @@ LD 	= x86_64-elf-ld
 AS 	= nasm # Force use nasm
 
 CXXFLAGS = -I./include 
-# CXXFLAGS += -fno-stack-protector 
-CXXFLAGS += -fno-exceptions 
+CXXFLAGS += -fno-stack-protector 
+CXXFLAGS += -fno-exceptions
 CXXFLAGS += -fno-rtti  
 CXXFLAGS += -nostdlib
 CXXFLAGS += -mgeneral-regs-only
 CXXFLAGS += -MMD
-CXXFLAGS += -g -MMD
+CXXFLAGS += -O0
+CXXFLAGS += -mno-red-zone
 
 ASFLAGS = -felf64 
 
@@ -61,4 +62,4 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -cdrom $<
+	qemu-system-x86_64 -no-reboot -no-shutdown -cdrom $<

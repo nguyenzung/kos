@@ -62,7 +62,7 @@ void Mouse::active() {
   uint8 status;
   initializePS2Controler();
   if (!enableScrollWheel()) {
-    Printer::printf("couldn't enable scrool wheel\n\0");
+    // Printer::printf("couldn't enable scrool wheel\n\0");
   }
 }
 
@@ -95,12 +95,12 @@ bool Mouse::enableScrollWheel() {
         mouseID = read();
         // Printer::printf("mouseID after enable scroll wheeling %d\n", mouseID);
       } else {
-        Printer::print("failed to query mouseID\n");
+        // Printer::print("failed to query mouseID\n");
       }
     } else {
     }
   } else {
-    Printer::printf("mouse ack failed %d\n", mouseID);
+    // Printer::printf("mouse ack failed %d\n", mouseID);
   }
 
   return true;

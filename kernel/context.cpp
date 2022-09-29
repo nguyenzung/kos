@@ -6,20 +6,8 @@
 
 using namespace kernel;
 
-void test()
-{
-    
-}
-
 Context::Context()
 {
-}
-
-Context::Context(uint64 rbp, uint64 rsp, mainFunction entryPoint)
-{
-    // this->rbp = rbp;
-    // this->rsp = rsp;
-    // this->rip = (uint64)test;
 }
 
 Context::~Context()
@@ -31,11 +19,6 @@ void Context::initialize()
     this->cs = 0x08;
     this->flags = (1 << 9);
     this->rdi = (uint64) this->task;
-    // Handle 
-
-    // this->rdi = (uint64) this->entryPoint;
-    // this->rsi = this->argc;
-    // this->rdx = (uint64)this->argv;
 }
 
 void Context::save(uint64* address)
@@ -60,30 +43,8 @@ void Context::save(uint64* address)
     this->r14 = *(address--);
     this->r15 = *(address--);
     this->rbp = *(address--);
-
-    // Printer::printAddress(this->ss);
-    // Printer::print();
-    // Printer::printAddress(this->rsp);
-    // Printer::print();
-    // Printer::printAddress(this->flags);
-    // Printer::print();
-    // Printer::printAddress(this->cs);
-    // Printer::print();
-    // Printer::printAddress(this->rip);
-    // Printer::print();
-    // Printer::printAddress(this->rax);
-    // Printer::print();
-    // Printer::printAddress(this->rbx);
-    // Printer::print();
-    // Printer::printAddress(this->rcx);
-    // Printer::print();
-    // Printer::printAddress(this->rdx);
-    // Printer::print();
-    // Printer::printAddress(this->rsi);
-    // Printer::print();
-    // Printer::printAddress(this->rdi);
-
-    // Printer::println();
+    this->gs = *(address--);
+    this->fs = *(address--);
 }
 
 void Context::load(uint64 *address)
@@ -108,4 +69,12 @@ void Context::load(uint64 *address)
     *(address--) = this->r14;
     *(address--) = this->r15;
     *(address--) = this->rbp;
+    *(address--) = this->gs;
+    *(address--) = this->fs;
+}
+
+void Context::info()
+{
+    printf("\n Info0 %d %d %d %d %d %d %d %d %d %d ", task, rbp, rsp, rax, rbx, rcx, rdi, rsi, rip, flags);
+    printf("\n Info1 %d %d %d %d %d %d %d %d %d %d %d %d", r8, r9, r10, r11, r12, r13, r14, r15, gs, fs, cs, ss);
 }

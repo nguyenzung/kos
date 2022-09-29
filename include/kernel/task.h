@@ -26,7 +26,6 @@ public:
     void initialize(uint64 rbp);
     void save(uint64 *address);
     void load(uint64 *address);
-    void run();
 };
 
 #endif

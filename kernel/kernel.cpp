@@ -45,7 +45,7 @@ void Kernel::initialize()
     argv[0][3] = 'n';
     argv[0][4] = '\0';
     
-    Task *mainTask = taskManager.makeTask(0, 1, 0);
+    Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
     
     taskManager.initialize();
     interruptManager.initialize();
@@ -54,13 +54,11 @@ void Kernel::initialize()
     cmos.active();
     deviceManager.registerDevice(&timer);
 
-    // Task *task1 = taskManager.makeTask(&TaskTest::count, 11, argv);
-    // Task *task2 = taskManager.makeTask(&TaskTest::ask, 12, argv);
-    Task *task3 = taskManager.makeTask(&TaskTest::count, 2010000, argv);
-    Task *task4 = taskManager.makeTask(&TaskTest::ask, 2020000, argv);
+    Task *task1 = taskManager.makeTask(&TaskTest::count, 100000, argv);
+    Task *task2 = taskManager.makeTask(&TaskTest::ask, 200000, argv);
+    Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
+    Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
 
-    cmos.updateDateTime();
-    cmos.updateDateTime();
     cmos.updateDateTime();
 
     // uint64 address = &Kernel::initialize;
@@ -69,23 +67,15 @@ void Kernel::initialize()
     // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
 }
 
-void Kernel::start()
-{
-    asm("int $0x81");
-    asm("sti");
-}
-
 void Kernel::update()
 {
-    // cmos.updateDateTime();
-    static uint64 count = 0;
-    printf("\n [Kernel update] %d \n", count);
-    count++;
+    cmos.updateDateTime();
 }
 
-int Kernel::hlt(int argc, char **argv)
-{
-    
+int Kernel::start(int argc, char **argv)
+{    
+    printf(" HTL ");
+    asm("sti");
     asm("_cpp_stop:");
     Kernel::getInstance()->update();
     asm("jmp _cpp_stop");
