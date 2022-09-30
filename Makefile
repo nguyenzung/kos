@@ -62,4 +62,4 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -no-reboot -no-shutdown -cdrom $<
+	qemu-system-x86_64 -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $<
