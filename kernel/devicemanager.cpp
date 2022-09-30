@@ -5,7 +5,7 @@
 using namespace kernel;
 
 DeviceManager::DeviceManager() {
-    this->initialize();
+    initialize();
 }
 
 DeviceManager::~DeviceManager() {
@@ -17,14 +17,14 @@ void DeviceManager::initialize() {
     // timer.active();
     mouse.active();
     // this->registerDevice(&timer);
-    this->registerDevice(&keyboard);
-    this->registerDevice(&mouse);
+    registerDevice(&keyboard);
+    registerDevice(&mouse);
 }
 
 void DeviceManager::registerDevice(InterruptHandler *handler) {
-    this->handlers[handler->getVector()] = handler;
+    handlers[handler->getVector()] = handler;
 }
 
 void DeviceManager::handleInterrupt(uint8 vector) {
-    this->handlers[vector]->handleInterrupt();
+    handlers[vector]->handleInterrupt();
 }

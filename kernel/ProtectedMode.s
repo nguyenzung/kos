@@ -152,8 +152,8 @@ GDT64:
 GDTPTR		equ GDT64.Pointer
 ; GDT64Code   equ GDT64.Code
 section .data
-global protected_start_bss
-global protected_end_bss
+global pageMapStart
+global pageMapEnd
 	current_lv2_index 			dw 0
 	current_lv1_index 			dw 0
 	support_cpuid_message 		db "[Support CPUID]",7
@@ -167,8 +167,8 @@ global protected_end_bss
 	GDT64Code					dq GDT64.Code
 	GDT64Data					dq GDT64.Data
 	GDT64TSS					dq GDT64.TSS
-	protected_start_bss			dq lv4_page_address
-	protected_end_bss			dq end_page_address
+	pageMapStart				dq lv4_page_address
+	pageMapEnd					dq end_page_address
 
 section .bss
 	align 4096

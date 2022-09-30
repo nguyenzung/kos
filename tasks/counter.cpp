@@ -12,11 +12,8 @@ extern uint64 counter;
 int TaskTest::count(int argc, char** argv)
 {
     uint64 result = 0;
-    printf("Size of uint64 %d", sizeof(result));
     int i, j, k;
     printf("\n [Count] %d %s %p", argc, argv[0], &i);
-
-    
     for (i = 0; i <= argc; i++)
     {
         result += (uint64)i;

@@ -2,7 +2,7 @@
 #define MEMORY_MAPPER
 
 /*
-* PML4E-LongMode
+* PML4-LongMode
 */
 
 typedef struct PageTable

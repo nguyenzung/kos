@@ -17,23 +17,47 @@ namespace std
 template <typename K, typename V>
 class Pair 
 {
-    K key_;
+    K first_;
 
 public:
-    const K &key;
-    V value;
+    const K &first;
+    V second;
 
-    Pair(K key, V value):key(key_)
+    Pair(K key, V value):first(first_)
     {
-        this->key_ = key;
-        this->value = value;
+        this->first_ = key;
+        this->second = value;
     }
     
     Pair& operator = (V value)
-        {
-            this->value = value;
-            return *this;
-        }
+    {
+        this->second = value;
+        return *this;
+    }
+
+    Pair& operator++()
+    {
+        this->second++;
+        return *this;
+    }
+
+    Pair& operator++(int)
+    {
+        ++(*this);
+        return *this;
+    }
+
+    Pair& operator--()
+    {
+        this->second--;
+        return *this;
+    }
+
+    Pair& operator--(int)
+    {
+        --(*this);
+        return *this;
+    }
 };
 
 template <typename K, typename V>
@@ -86,7 +110,7 @@ public:
         uint64 index = this->getIndex(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
-            return key == pair->key;
+            return key == pair->first;
         });
         return it != list->end();
     }
@@ -96,7 +120,7 @@ public:
         uint64 index = this->getIndex(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
-            return key == pair->key;
+            return key == pair->first;
         });
         if (it != list->end())
         {
@@ -111,12 +135,12 @@ public:
     /*
     *   Developer need to make sure the map contains the key before removing
     */
-    void remove(K key)
+    void erase(K key)
     {
         uint64 index = this->getIndex(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
-            return key == pair->key;
+            return key == pair->first;
         });
         if (it != list->end())
         {
@@ -127,10 +151,11 @@ public:
 
     Pair<K,V>& operator[](K key)
     {
-        printf("[Map] %d % d", key);
+        // printf("[Map] %d %d", key);
         Pair<K, V>* pair = this->get(key);
         return *pair;
     }
+
 
 protected:
     uint64 getIndex(K key)

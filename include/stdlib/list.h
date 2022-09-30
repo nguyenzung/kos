@@ -110,7 +110,7 @@ public:
  
 
 public:
-    kernel::uint16 size;
+    kernel::uint64 size;
     Node<T> *first;
     Node<T> *last;
     Node<T> *current;
@@ -257,7 +257,7 @@ public:
         return this->current;
     }
 
-    uint16 getSize()
+    kernel::uint64 getSize()
     {
         return this->size;
     }
