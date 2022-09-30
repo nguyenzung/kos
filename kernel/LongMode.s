@@ -116,7 +116,7 @@ startLongMode:
     ; cmp rax, [isrStubTable]
     ; je debug
     mov rsi, [stackBase]
-    mov qword [rsi], 0x12345678
+    ;mov qword [rsi], 0x12345678
     mov qword [rsi-8], 0x87654321
     mov rsi, [heapBase]
     mov qword [rsi], 0x23456789
