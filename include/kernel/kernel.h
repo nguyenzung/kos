@@ -8,6 +8,7 @@
 #include <kernel/context.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
+#include <driver/serial.h>
 
 namespace kernel 
 {
@@ -21,6 +22,7 @@ class Kernel
 
     driver::CMOS cmos;
     driver::Timer timer;
+    driver::SERIAL serial;
 
     static Kernel* instance;
 
