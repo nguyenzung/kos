@@ -53,6 +53,7 @@ void Kernel::initialize()
     timer.active();
     cmos.active();
     deviceManager.registerDevice(&timer);
+    serial.active();
 
     Task *task1 = taskManager.makeTask(&TaskTest::count, 100000, argv);
     Task *task2 = taskManager.makeTask(&TaskTest::ask, 200000, argv);
@@ -60,6 +61,10 @@ void Kernel::initialize()
     Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
 
     cmos.updateDateTime();
+    
+    char *test_msg = "qweqwenlwe qweqweie12124jf fdfjdfosdf\n";
+    serial.printSerial("SERIAL loging\nKos Logs.\n");
+    serial.printSerial(test_msg);
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;
