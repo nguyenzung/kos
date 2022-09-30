@@ -62,9 +62,7 @@ void Kernel::initialize()
 
     cmos.updateDateTime();
     
-    char *test_msg = "qweqwenlwe qweqweie12124jf fdfjdfosdf\n";
     serial.printSerial("SERIAL loging\nKos Logs.\n");
-    serial.printSerial(test_msg);
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;
@@ -74,12 +72,11 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-    // cmos.updateDateTime();
+    cmos.updateDateTime();
 }
 
 int Kernel::start(int argc, char **argv)
 {    
-    printf(" HTL ");
     asm("sti");
     asm("_cpp_stop:");
     Kernel::getInstance()->update();

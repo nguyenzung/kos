@@ -22,10 +22,9 @@ public:
     void handleInterrupt();
 
     // void set                                                                                                                                       
-  void KhoiTaoSerial();
-  bool buffer_gui_di_co_null_ko();
-  void gui_di(char a);
-  void printSerial(char *msg);
+    bool isBufferNull();
+    void send(char a);
+    void printSerial(char *msg);
 
 };
 

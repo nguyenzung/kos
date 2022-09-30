@@ -28,8 +28,6 @@ public:
     void initialize();
     void save(uint64 *address);
     void load(uint64 *address);
-    void saveMainKernel(uint64 *address);
-    void loadMainKernel(uint64 *address);
 
     void removeTask(Task *task);
 

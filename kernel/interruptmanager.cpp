@@ -29,7 +29,6 @@ using namespace kernel;
 extern uint16 GDT64Code;
 extern void* isrStubTable[];
 extern void* isrTimerHandler;
-extern void* isrStartMultithreading;
 
 static void testPageFault() {
     uint64 a = 12;
@@ -152,7 +151,6 @@ void InterruptManager::setupIDT()
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
     this->setGateEntry(0x20, &isrTimerHandler, 0x8E);
-    this->setGateEntry(0x81, &isrStartMultithreading, 0x8E);
     PIC_remap();
     asm ("lidt %0" : : "m"(idtr));
     // asm("int $10");

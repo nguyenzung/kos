@@ -81,28 +81,6 @@ void TaskManager::load(uint64 *address)
     }
 }
 
-void TaskManager::saveMainKernel(uint64 *address)
-{
-    if(this->saveCounter == 0)
-    {
-        std::Node<KernelObject*> *node = this->list.first;
-        Task *task = (Task*)node->value;
-        task->save(address);
-    }
-    this->saveCounter++;
-}
-
-void TaskManager::loadMainKernel(uint64 *address)
-{    
-    this->saveCounter--;
-    if(this->saveCounter == 0)
-    {
-        std::Node<KernelObject*> *node = this->list.first;
-        Task *task = (Task*)node->value;
-        task->load(address);
-    }
-}
-
 void TaskManager::removeTask(Task *task)
 {
     LOCK(taskList);

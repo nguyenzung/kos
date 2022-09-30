@@ -68,7 +68,6 @@ bits 64
 
 global startLongMode
 global __cxa_pure_virtual
-global isrStartMultithreading
 global isrTimerHandler
 ; extern stack_base
 extern GDT64Data
@@ -121,33 +120,6 @@ startLongMode:
     mov rsi, [heapBase]
     mov qword [rsi], 0x23456789
     call main
-
-; enable by using interrupt 0x20 + OFFSET
-isrStartMultithreading:
-    PUSH_REGISTERS
-    mov rsi, rsp
-    add rsi, (17 * 8 + 32)
-    mov qword [stackIndex], rsi
-
-    ; save main context
-    call _ZN6kernel11TaskManager11getInstanceEv
-    mov rdi, rax
-    mov rsi, [stackIndex]
-    call _ZN6kernel11TaskManager14saveMainKernelEPm
-
-    ; handle interrupt
-    call _ZN6kernel16InterruptManager11getInstanceEv
-    mov rdi, rax
-    mov rsi, 0x20
-    call _ZN6kernel16InterruptManager15handleInterruptEm
-
-    ; load main context
-    call _ZN6kernel11TaskManager11getInstanceEv
-    mov rdi, rax
-    mov rsi, [stackIndex]
-    call _ZN6kernel11TaskManager14loadMainKernelEPm
-    POP_REGISTERS
-    iretq
 
 isrTimerHandler:
     ; call switchTask
