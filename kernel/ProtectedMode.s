@@ -173,21 +173,19 @@ global protected_end_bss
 section .bss
 	align 4096
 	lv4_page_address:	resb PAGE_TABLE_SIZE
-	lv3_page_address: 	resb LV3_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
+	lv3_page_address: 	resb PAGE_TABLE_SIZE
 	lv2_page_address: 	resb LV2_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
-	lv1_page_address: 	resb LV1_PAGE_TABLE_NUM*PAGE_TABLE_SIZE
+	lv1_page_address: 	resb LV1_PAGE_TABLE_NUM*PAGE_TABLE_SIZE*LV2_PAGE_TABLE_NUM
 	end_page_address:	
-	
 
 	PAGE_TABLE_SIZE 	equ 4096
 
 	LV4_PAGE_ROW 		equ 512
 	LV3_PAGE_ROW 		equ 512
-	LV2_PAGE_ROW 		equ 128
+	LV2_PAGE_ROW 		equ 256
 	LV1_PAGE_ROW 		equ 512
 	LV1_PAGE_TOTAL_ROW 	equ LV1_PAGE_ROW * LV2_PAGE_ROW
 
-	LV3_PAGE_TABLE_NUM 	equ 1
-	LV2_PAGE_TABLE_NUM 	equ 1
+	LV2_PAGE_TABLE_NUM 	equ 8
 	LV1_PAGE_TABLE_NUM 	equ LV2_PAGE_ROW
 	

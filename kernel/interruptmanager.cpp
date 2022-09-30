@@ -139,7 +139,6 @@ void handleException(ExceptionStackFrame *frame, uint64 errorCode)
     outb(0x20, 0x20);
 }
 
-
 void InterruptManager::setupIDT()
 {
     idtr.base = (uint64)&idt[0];

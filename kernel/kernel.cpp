@@ -69,7 +69,7 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-    cmos.updateDateTime();
+    // cmos.updateDateTime();
 }
 
 int Kernel::start(int argc, char **argv)

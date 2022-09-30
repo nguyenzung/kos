@@ -1,5 +1,6 @@
 
 #include <kernel/kernel.h>
+#include <kernel/printer.h>
 
 int main() {
     kernel::Kernel kernel;

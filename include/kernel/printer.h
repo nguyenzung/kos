@@ -88,20 +88,15 @@ void Printer::printf(const char *format, Args... args) {
     Printer::printfHelper(0, format, args...);
 }
 
+static DECLARE_LOCK(print_lock);
 template <typename... Args>
 void printf(const char *format, Args... args) {
-    static DECLARE_LOCK(print_lock);
     LOCK(print_lock);
     kernel::Printer::printf(format, args...);
     UNLOCK(print_lock);
 }
 
 } // namespace kernel
-
-// #ifndef PRINTER_LOCK
-// #define PRINTER_LOCK
-// #endif
-
 
 
 #endif
