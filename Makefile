@@ -17,10 +17,11 @@ CXXFLAGS += -mgeneral-regs-only
 CXXFLAGS += -MMD
 CXXFLAGS += -O0
 CXXFLAGS += -mno-red-zone
+CXXFLAGS += -g
 
 ASFLAGS = -felf64 
 
-LDFLAGS = -T kernel.ld -nostdlib -n -g
+LDFLAGS = -T kernel.ld -nostdlib -n
 LDFLAGS += -Map=$(MAP)
 
 
