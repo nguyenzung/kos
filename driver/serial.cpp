@@ -15,8 +15,10 @@ bool SERIAL::isBufferNull() {
 }
 
 void SERIAL::send(char a) {
-   while (!isBufferNull()){}
-   outb(port,a);
+//   while (!isBufferNull()){}
+   int i;
+   for(i = 0; i < 128 && !isBufferNull(); i++){}
+      outb(port,a);
 }
 
 void SERIAL::printSerial(char *msg){
