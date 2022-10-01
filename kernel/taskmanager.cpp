@@ -19,7 +19,8 @@ TaskManager::TaskManager()
 TaskManager::~TaskManager()
 {
 }
-
+/*
+*/
 Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
 {
     // LOCK(taskList);

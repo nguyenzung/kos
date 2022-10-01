@@ -2,15 +2,17 @@
 
 PhysicalMemory::PhysicalMemory()
 {
-    // Temporary hard code
-    totalFrame          = 100010;    
-    minAllocatedIndex   = 100000;
-    nextAllocatedIndex  = minAllocatedIndex;
 }
 
 PhysicalMemory::~PhysicalMemory()
 {
+}
 
+void PhysicalMemory::initialize()
+{
+    totalFrame          = UINT32_MAX;   // Need to calculate
+    minAllocatedIndex   = 30000;       // Need to calculate
+    nextAllocatedIndex  = minAllocatedIndex;
 }
 
 uint32 PhysicalMemory::load()
@@ -21,7 +23,11 @@ uint32 PhysicalMemory::load()
 
 uint32 PhysicalMemory::loadInFreeFrames()
 {
-    // TODO
+    if (freeFrames.size > 0)
+    {
+        uint32 index = freeFrames.removeLast();
+        return load(index);
+    }
     return 0;
 }
 
@@ -31,7 +37,7 @@ uint32 PhysicalMemory::loadByNext()
     {
         if (!frameInfo.contains(nextAllocatedIndex))
         {
-            frameInfo[nextAllocatedIndex] = 1;
+            frameInfo.putNewKey(nextAllocatedIndex, 1);
             nextAllocatedIndex++;
             return (nextAllocatedIndex - 1);
         }
@@ -42,10 +48,8 @@ uint32 PhysicalMemory::loadByNext()
 
 uint32 PhysicalMemory::load(uint32 index)
 {
-    // printf("\n [ %d, %d, %d ]", index, minAllocatedIndex, totalFrame);
-    return  (index >= minAllocatedIndex && index <= totalFrame && frameInfo[index].second < UINT16_MAX) ? ++frameInfo[index].second : 0;
+    return (index >= minAllocatedIndex && index <= totalFrame && frameInfo[index].second < UINT16_MAX) ? frameInfo[index].second++, index : 0;
 }
-
 
 uint8 PhysicalMemory::checkIndex(uint32 index)
 {

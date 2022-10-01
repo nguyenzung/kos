@@ -18,6 +18,7 @@ CXXFLAGS += -MMD
 CXXFLAGS += -O0
 CXXFLAGS += -mno-red-zone
 CXXFLAGS += -g
+CXXFLAGS += -ffreestanding
 
 ASFLAGS = -felf64 
 

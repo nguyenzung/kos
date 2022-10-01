@@ -84,7 +84,8 @@ void Printer::printfHelper(int i, const char *format, T first, Args... args) {
 }
 
 template <typename... Args>
-void Printer::printf(const char *format, Args... args) {
+void Printer::printf(const char *format, Args... args) 
+{
     Printer::printfHelper(0, format, args...);
 }
 
@@ -97,6 +98,7 @@ void printf(const char *format, Args... args) {
     kernel::Printer::printf(format, args...);
     UNLOCK(print_lock);
 }
+
 
 } // namespace kernel
 

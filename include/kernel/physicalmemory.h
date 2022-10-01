@@ -20,6 +20,8 @@ public:
     PhysicalMemory();
     ~PhysicalMemory();
 
+    void initialize();
+
     uint32 load();
     uint32 loadInFreeFrames();
     uint32 loadByNext();

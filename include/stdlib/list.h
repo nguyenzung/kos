@@ -161,7 +161,17 @@ public:
         ++this->size;
     }
 
-    bool removeNodeByAddress(Node<T> *node)
+    /*
+    *   Call when list size > 0
+    */
+    T removeLast()
+    {
+        Node<T> *last = this->last;
+        this->removeNodeByAddress(last);
+        return last->value;
+    }
+
+    Node<T>* removeNodeByAddress(Node<T> *node)
     {
         Node<T> *curr = this->first;
         while(curr)
@@ -188,11 +198,11 @@ public:
                     }
                 }
                 --this->size;
-                return true;
+                return node;
             }
             curr = curr->next;
         }
-        return false;
+        return 0;
     }
 
     Node<T>* removeNodeByValue(T value)

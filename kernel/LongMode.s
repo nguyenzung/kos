@@ -209,7 +209,7 @@ isrStubTable:
 section .bss
 global stack_base
 global heap_base
-; align 4096
+align 4096
 heap_base: 			resb 64*1024*1024
 stack_base:
 stack_size 			equ $ - heap_base

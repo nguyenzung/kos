@@ -7,7 +7,6 @@
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
-#include <kernel/physicalmemory.h>
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
@@ -35,8 +34,11 @@ Kernel* Kernel::getInstance()
 
 void Kernel::initialize()
 {
-    heapMemoryManager.initialize();
+    
     deviceManager.initialize();
+    taskManager.initialize();
+    interruptManager.initialize();
+    physicalMemory.initialize();
 
     char **argv= new char*[1];
     argv[0] = new char[5];
@@ -48,13 +50,14 @@ void Kernel::initialize()
     
     Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
     
-    taskManager.initialize();
-    interruptManager.initialize();
-
+    
     timer.active();
     cmos.active();
-    deviceManager.registerDevice(&timer);
     serial.active();
+
+    deviceManager.registerDevice(&timer);
+    serial.printSerial(" Initialize Kernel \n");
+    
 
     // Task *task1 = taskManager.makeTask(&TaskTest::count, 100000, argv);
     // Task *task2 = taskManager.makeTask(&TaskTest::ask, 200000, argv);
@@ -63,40 +66,24 @@ void Kernel::initialize()
 
     cmos.updateDateTime();
     
-    serial.printSerial("SERIAL loging\nKos Logs.\n");
-
-    std::UnorderedMap<uint64, uint64> info;
-    info[0] = 4;
-    info[5399] = 6;
-    info[5399 * 2] = 9;
-
-    info.erase(5399);
-    ++info[0];
-    info[0]++;
-    printf("\n[Map test] %d ", info.contains(5399));
-    printf("\n[Map test] %d ", info.contains(5399 * 2));
-    printf("\n[Map test] %d %d ", info.contains(0), info[0].second);
-
-    PhysicalMemory physicalMemory;
+    /*
+    *   Stress test: slow need to improve heap allocation algorithm
+    */
     printf("\n i = %d", physicalMemory.minAllocatedIndex);
     uint32 i;
-     printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
-     printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 3));
-     printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
-     printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 2));
+    printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
+    printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 3));
+    printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
+    printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 2));
+    printf("\n Use %d ", physicalMemory.unload(physicalMemory.minAllocatedIndex + 4));
+    printf("\n Use %d ", physicalMemory.unload(physicalMemory.minAllocatedIndex + 2));
     for (i = physicalMemory.minAllocatedIndex; i < physicalMemory.totalFrame - 5; i++)
     {
-        printf("\n Load %d ",physicalMemory.load());
-        
-    }
-    printf("\n Unload %d %d", physicalMemory.unload(physicalMemory.minAllocatedIndex + 5), (physicalMemory.minAllocatedIndex + 5));
-    printf("\n i = %d", i);
-    for (int j = -2; j < 8; j++)
-    {
-        printf("\n Use %d %d", physicalMemory.load(i + j), (i + j));
+        uint32 index = physicalMemory.load();
+        if(i % 1000 ==0)
+            printf("\n Load %d ", index);
     }
 
-    // printf("\n [PM] %d %d", 5, 6);    
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;

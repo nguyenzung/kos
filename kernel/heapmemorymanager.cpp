@@ -9,7 +9,7 @@ using namespace kernel;
 IMPL_MODULE_INSTANCE(HeapMemoryManager)
 
 HeapMemoryManager::HeapMemoryManager() {
-    
+    initialize();
 }
 
 HeapMemoryManager::~HeapMemoryManager() {

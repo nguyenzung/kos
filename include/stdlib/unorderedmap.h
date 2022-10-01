@@ -67,9 +67,9 @@ class UnorderedMap
     List<Pair<K, V>*> **lists;
 
 public:
-    UnorderedMap()
+    UnorderedMap(uint16 numSlot = HASH_TABLE_NUM_SLOT_DEFAULT):numSlot(numSlot)
     {
-        this->numSlot = HASH_TABLE_NUM_SLOT_DEFAULT;
+        // this->numSlot = HASH_TABLE_NUM_SLOT_DEFAULT;
         lists = new List<Pair<K, V>*>*[numSlot];
         for (int i = 0; i < numSlot; i++)
         {
@@ -92,11 +92,11 @@ public:
         uint64 index = this->getIndex(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
-            return key == pair->key;
+            return key == pair->first;
         });
         if (it != list->end())
         {
-            (*it)->value = object;
+            (*it)->second = object;
         } else
         {
             Pair<K, V> *pair = new Pair<K, V>(key, object);
@@ -105,9 +105,20 @@ public:
         return index;
     }
 
+    uint64 putNewKey(K key, V object)
+    {
+        uint64 index = this->getIndex(key);
+        List<Pair<K, V>*> *list = this->lists[index];
+        Pair<K, V> *pair = new Pair<K, V>(key, object);
+        list->add(pair);
+        return index;
+    }
+
+
     bool contains(K key)
     {
         uint64 index = this->getIndex(key);
+        // printf("\n Index %d", index);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
             return key == pair->first;

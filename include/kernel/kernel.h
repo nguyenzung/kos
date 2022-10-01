@@ -6,19 +6,20 @@
 #include <kernel/heapmemorymanager.h>
 #include <kernel/taskmanager.h>
 #include <kernel/context.h>
+#include <kernel/physicalmemory.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
 #include <driver/serial.h>
 
 namespace kernel 
 {
-
 class Kernel
 {
     HeapMemoryManager heapMemoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
     TaskManager taskManager;
+    PhysicalMemory physicalMemory;
 
     driver::CMOS cmos;
     driver::Timer timer;
