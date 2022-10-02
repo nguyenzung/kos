@@ -133,10 +133,12 @@ public:
         ++this->size;
     }
 
-    void add(T value)
+    Node<T>* add(T value)
     {
         Node<T> *node = new Node<T>(value);
-        this->addNode(node);
+        if (node)
+            this->addNode(node);
+        return node;
     }
 
     void addNodeAfter(Node<T> *prevNode, Node<T>* node) // user need to make sure prevNode in the list
