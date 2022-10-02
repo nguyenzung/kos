@@ -14,6 +14,11 @@ uint8 Printer::y = 0;
 
 void Printer::printfHelper(int i, const char *format) { print((char*)format + i); }
 
+int volatile *Printer::getLockInstance() {
+    static DECLARE_LOCK(print_lock);
+    return &print_lockLocked;
+}
+
 void Printer::updatePointer(int len) {
     if (x + len > SCREEN_WITH) {
         x = x + len - SCREEN_WITH;
