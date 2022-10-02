@@ -7,7 +7,7 @@
 #include <stdlib/algorithm.h>
 #include <kernel/printer.h>
 
-#define HASH_TABLE_NUM_SLOT_DEFAULT 5399    // We choose a prime number for the total slots
+#define NUM_SLOT_DEFAULT 5399    // We choose a prime number for the total slots
 
 using namespace kernel;
 
@@ -67,9 +67,8 @@ class UnorderedMap
     List<Pair<K, V>*> **lists;
 
 public:
-    UnorderedMap(uint16 numSlot = HASH_TABLE_NUM_SLOT_DEFAULT):numSlot(numSlot)
+    UnorderedMap(uint16 numSlot = NUM_SLOT_DEFAULT):numSlot(numSlot)
     {
-        // this->numSlot = HASH_TABLE_NUM_SLOT_DEFAULT;
         lists = new List<Pair<K, V>*>*[numSlot];
         for (int i = 0; i < numSlot; i++)
         {
@@ -89,7 +88,7 @@ public:
     
     uint64 put(K key, V object)
     {
-        uint64 index = this->getIndex(key);
+        uint64 index = this->hash(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
             return key == pair->first;
@@ -107,7 +106,7 @@ public:
 
     uint64 putNewKey(K key, V object)
     {
-        uint64 index = this->getIndex(key);
+        uint64 index = this->hash(key);
         List<Pair<K, V>*> *list = this->lists[index];
         Pair<K, V> *pair = new Pair<K, V>(key, object);
         list->add(pair);
@@ -117,7 +116,7 @@ public:
 
     bool contains(K key)
     {
-        uint64 index = this->getIndex(key);
+        uint64 index = this->hash(key);
         // printf("\n Index %d", index);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
@@ -128,7 +127,7 @@ public:
 
     Pair<K, V>* get(K key)
     {
-        uint64 index = this->getIndex(key);
+        uint64 index = this->hash(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
             return key == pair->first;
@@ -148,7 +147,7 @@ public:
     */
     void erase(K key)
     {
-        uint64 index = this->getIndex(key);
+        uint64 index = this->hash(key);
         List<Pair<K, V>*> *list = this->lists[index];
         typename List<Pair<K, V>*>::Iterator it = std::find(list->begin(), list->end(), [key](Pair<K, V>* pair){
             return key == pair->first;
@@ -169,9 +168,15 @@ public:
 
 
 protected:
-    uint64 getIndex(K key)
+    /*
+    *   Using universal hashing
+    */
+    uint64 hash(K key)
     {
-        uint64 index = (uint64) key % HASH_TABLE_NUM_SLOT_DEFAULT;
+        uint64 p = 19997;   // Randomly choose a prime number
+        uint64 a = 8123;    // a < p
+        uint64 b = 10973;   // b < p
+        uint64 index = ((a * (uint64) key + b) % p) % NUM_SLOT_DEFAULT;
         return index;
     }
 };
