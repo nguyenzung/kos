@@ -92,7 +92,7 @@ void Printer::printf(const char *format, Args... args)
 
 template <typename... Args>
 void printf(const char *format, Args... args) {
-    int print_lockLocked = *Printer::getLockInstance();
+    volatile int &print_lockLocked = *Printer::getLockInstance();
 
     LOCK(print_lock);
     kernel::Printer::printf(format, args...);
