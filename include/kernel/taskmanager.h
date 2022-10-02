@@ -5,7 +5,7 @@
 #include <kernel/utils.h>
 #include <stdlib/list.h>
 
-#define TASK_STACK_SIZE (1 << 20)  // 1MB for stack size
+#define TASK_STACK_SIZE (1 << 15)  // 32KB for stack size
 
 namespace kernel 
 {
@@ -16,7 +16,6 @@ protected:
     std::List<KernelObject*> list;
 
 public:
-
     uint64 saveCounter;
 
     TaskManager();
