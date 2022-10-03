@@ -8,6 +8,7 @@
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
 #include <stdlib/map.h>
+#include <stdlib/math.h>
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
@@ -59,35 +60,25 @@ void Kernel::initialize()
     serial.printSerial(" Initialize Kernel \n");
     
 
-    // Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
-    // Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
-    // Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
-    // Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
+    Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
+    Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
+    Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
+    Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
 
     cmos.updateDateTime();
 
     std::Map<uint64, uint64> map;
     printf("\n %p ", map.put(10, 10));
     map.put(13, 13);
-    map.put(7, 7);
-    map.put(12, 12);
-    map.put(8, 8);
+    map.put(15, 15);
+    map.put(16, 16);
+    map.put(18, 18);
     map.put(10, 1000);
-    map.put(3, 3);
+    map.put(23, 23);
     map.preorderTravel();
     map.inorderTravel();
 
-    map.leftRotate();
-    // map.preorderTravel();
-    map.inorderTravel();
-
-    map.rightRotate();
-    // map.preorderTravel();
-    map.inorderTravel();
-
-    map.rightRotate();
-    // map.preorderTravel();
-    map.inorderTravel();
+    printf("\n");
     
     /*
     *   Stress test: slow need to improve heap allocation algorithm

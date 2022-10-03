@@ -2,6 +2,7 @@
 #define AVL_TREE
 
 #include <stdlib/pair.h>
+#include <stdlib/math.h>
 // #include <kernel/type.h>
 #include <kernel/printer.h>
 
@@ -59,6 +60,46 @@ class Map
                 node->parent = this;
         }
 
+        void addParent(TreeNode *parent, TreeNode *old)
+        {
+            if (parent)
+            {
+                TreeNode *parentLeftChild = parent->left;
+                TreeNode *parentRightChild = parent->right;
+                if (parentLeftChild == old)
+                {
+                    parent->addLeft(this);
+                } else {
+                    parent->addRight(this);
+                }
+            } else {
+                this->parent = nullptr;
+            }
+        }
+
+        int updateHeight()
+        {
+            int leftHeight = getLeftHeight();
+            int rightHeight = getRightHeight();
+            // printf("\n %d %d ", leftHeight, rightHeight);
+            height = std::max(leftHeight, rightHeight) + 1;
+        }
+
+        int getBalanceScore()
+        {
+            return getLeftHeight() - getRightHeight();
+        }
+
+        int getRightHeight() 
+        {
+            return right ? right->height : -1;
+        }
+
+        int getLeftHeight()
+        {
+            return left ? left->height : -1;
+        }
+
         int compareKey(K key)
         {
             if (pair->first == key)
@@ -91,8 +132,9 @@ class Map
 
 public:
     TreeNode *root;
+    uint32 size;
 
-    Map<K,V>():root(nullptr){}
+    Map<K,V>():root(nullptr), size(0){}
 
     ~Map<K,V>(){
         if (root)
@@ -108,6 +150,7 @@ public:
         }
         if (!root)
         {
+            ++size;
             root = candidate;
             return root->pair;
         } else {
@@ -115,11 +158,14 @@ public:
         }
     }
 
-    void updateHeightBottomUp(TreeNode *node, int height)
+    void updateHeightBottomUp(TreeNode *node)
     {
-        node->height = height + 1;
-        if (node->parent)
-            updateHeightBottomUp(node->parent, node->height);
+        if (node)
+        {
+            node->updateHeight();
+            if (node->parent)
+                updateHeightBottomUp(node->parent);
+        }
     }
 
     void leftRotate()
@@ -127,9 +173,19 @@ public:
         root = leftRotate(root);
     }
 
+    void leftRightRotate()
+    {
+        root = leftRightRotate(root);
+    }
+
     void rightRotate()
     {
         root = rightRotate(root);
+    }
+
+    void rightLeftRotate()
+    {
+        root = rightLeftRotate(root);
     }
 
     Pair<K,V>* find(K key)
@@ -149,9 +205,33 @@ public:
         preorderTravel(root);
     }
 
+    V min()
+    {        
+        TreeNode *current = root;
+        V result = current->value();
+        while (current->left)
+        {
+            current = current->left;
+            if (result > current->value())
+                result = current->value();
+        }
+        return result;
+    }
+
+    V max()
+    {
+        TreeNode *current = root;
+        V result = current->value();
+        while (current->right)
+        {
+            current = current->right;
+            if (result < current->value())
+                result = current->value();
+        }
+        return result;
+    }
 
 protected:
-
     void inorderTravel(TreeNode *node)
     {
         if (!node)
@@ -162,7 +242,7 @@ protected:
         {
             inorderTravel(node->left);
         }
-        printf(" [%d: %d] ", node->key(), node->value());
+        printf("[%d:%d] ", node->key(), node->value());
         if (node->right)
         {
             inorderTravel(node->right);
@@ -175,7 +255,7 @@ protected:
         {
             return;
         }
-        printf(" [%d: %d ] ", node->key(), node->height);
+        printf("[%d:%d] ", node->key(), node->height);
         if (node->left)
         {
             preorderTravel(node->left);
@@ -186,19 +266,83 @@ protected:
         }
     }
 
+    TreeNode* maintainAVLProperty(TreeNode *node) 
+    {
+        TreeNode *current = node;
+        while (current)
+        {
+            bool isRoot = current == root;
+            int score = current->getBalanceScore();
+            if (score > 1) // Left Heavier
+            {
+                TreeNode *left = current->left;
+                int score_ = left->getBalanceScore();
+                if (score_ >= 0) // Left Left Case
+                {
+                    printf("\nRotate Right");
+                    current = rightRotate(current);
+                } else {    // Left Right Case
+                    printf("\nRotate Left Right");
+                    current = leftRightRotate(current);
+                }
+            } else if (score < -1) // Right heavier
+            {
+                TreeNode *right = current->right;
+                int score_ = right->getBalanceScore();
+                if (score_ <= 0) // Right Right Case
+                {
+                    current = leftRotate(current);
+                    printf("\n Rotate Left %d ", current->value());
+                } else {    // Right Left Case
+                    printf("\n Rotate Right Left");
+                    current = rightLeftRotate(current);
+                }
+            }
+            if (isRoot)
+            {
+                root = current;
+            }
+            current = current->parent;
+            
+        }
+    }
+
     TreeNode* leftRotate(TreeNode *node)
     {
         if (node && node->right)
         {
             TreeNode *parent = node->parent;
             TreeNode *rightNode = node->right;
-            TreeNode *leftRight = rightNode->left;
+            TreeNode *rightLeft = rightNode->left;
+            node->addRight(rightLeft);
             rightNode->addLeft(node);
-            node->addRight(leftRight);
-            rightNode->parent = parent;
+            rightNode->addParent(parent, node);
+            
+            node->updateHeight();
+            updateHeightBottomUp(rightNode);
             return rightNode;
         }
-        return nullptr;
+        return node;
+    }
+
+    TreeNode* leftRightRotate(TreeNode *node)
+    {
+        if (node && node->left)
+        {
+            TreeNode *parent = node->parent;
+            TreeNode *left = node->left;
+            TreeNode *leftRight = left->right;
+            left->addRight(leftRight->left);
+            node->addLeft(leftRight->right);
+            leftRight->addLeft(left);
+            leftRight->addRight(node);
+            leftRight->addParent(parent, node);
+            left->updateHeight();
+            node->updateHeight();
+            updateHeightBottomUp(leftRight);
+            return leftRight;
+        }
+        return node;
     }
 
     TreeNode* rightRotate(TreeNode *node)
@@ -207,13 +351,35 @@ protected:
         {
             TreeNode *parent = node->parent;
             TreeNode *leftNode = node->left;
-            TreeNode *rightLeft = leftNode->right;
+            TreeNode *leftRight = leftNode->right;
             leftNode->addRight(node);
-            node->addLeft(rightLeft);
-            leftNode->parent = parent;
+            node->addLeft(leftRight);
+            leftNode->addParent(parent, node);
+            node->updateHeight();
+            updateHeightBottomUp(leftNode);
             return leftNode;
         }
-        return nullptr;
+        return node;
+    }
+
+    TreeNode* rightLeftRotate(TreeNode *node)
+    {
+        if (node && node->right)
+        {
+            TreeNode *parent = node->parent;
+            TreeNode *right = node->right;
+            TreeNode *rightLeft = right->left;
+            right->addLeft(rightLeft->right);
+            node->addRight(rightLeft->left);
+            rightLeft->addLeft(node);
+            rightLeft->addRight(right);
+            rightLeft->addParent(parent, node);
+            right->updateHeight();
+            node->updateHeight();
+            updateHeightBottomUp(rightLeft);
+            return rightLeft;
+        }
+        return node;
     }
 
     Pair<K, V>* put(TreeNode *candidate, TreeNode *node)
@@ -229,8 +395,10 @@ protected:
         case -1:
             if (node->right == nullptr)
             {
+                ++size;
                 node->addRight(candidate);
-                updateHeightBottomUp(candidate, -1);
+                updateHeightBottomUp(node);
+                maintainAVLProperty(candidate);
                 return candidate->pair;
             }else
             {
@@ -240,8 +408,10 @@ protected:
         case 1:
             if (node->left == nullptr)
             {
+                ++size;
                 node->addLeft(candidate);
-                updateHeightBottomUp(candidate, -1);
+                updateHeightBottomUp(node);
+                maintainAVLProperty(candidate);
                 return candidate->pair;
             }else
             {

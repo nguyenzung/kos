@@ -84,7 +84,6 @@ public:
         return pair;
     }
 
-
     bool contains(K key)
     {
         uint64 index = this->hash(key);

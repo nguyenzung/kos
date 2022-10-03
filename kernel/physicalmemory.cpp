@@ -56,7 +56,6 @@ uint8 PhysicalMemory::checkIndex(uint32 index)
     return frameInfo[index].second;
 }
 
-
 bool PhysicalMemory::unload(uint32 index)
 {
     if(frameInfo.contains(index))
