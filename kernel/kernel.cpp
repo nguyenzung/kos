@@ -68,12 +68,25 @@ void Kernel::initialize()
 
     std::Map<uint64, uint64> map;
     printf("\n %p ", map.put(10, 10));
-    map.put(11, 11);
-    map.put(9, 9);
+    map.put(13, 13);
+    map.put(7, 7);
     map.put(12, 12);
-    map.put(1, 1);
+    map.put(8, 8);
     map.put(10, 1000);
+    map.put(3, 3);
     map.preorderTravel();
+    map.inorderTravel();
+
+    map.leftRotate();
+    // map.preorderTravel();
+    map.inorderTravel();
+
+    map.rightRotate();
+    // map.preorderTravel();
+    map.inorderTravel();
+
+    map.rightRotate();
+    // map.preorderTravel();
     map.inorderTravel();
     
     /*

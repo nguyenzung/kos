@@ -2,7 +2,7 @@
 #define AVL_TREE
 
 #include <stdlib/pair.h>
-#include <kernel/type.h>
+// #include <kernel/type.h>
 #include <kernel/printer.h>
 
 namespace std
@@ -23,14 +23,14 @@ class Map
         TreeNode *parent;
         TreeNode *left;
         TreeNode *right;
-        kernel::uint64 height;
+        int height;
 
         TreeNode(K key, V value)
         {
             pair = makePair(key, value);
             parent = nullptr;
-            left = 0;
-            right = 0;
+            left = nullptr;
+            right = nullptr;
             height = 0;
         }
 
@@ -43,6 +43,20 @@ class Map
         void setValue(V value)
         {
             pair->second = value;
+        }
+
+        void addLeft(TreeNode *node)
+        {
+            this->left = node;
+            if (node)
+                node->parent = this;
+        }
+
+        void addRight(TreeNode *node)
+        {
+            this->right = node;
+            if (node)
+                node->parent = this;
         }
 
         int compareKey(K key)
@@ -101,6 +115,23 @@ public:
         }
     }
 
+    void updateHeightBottomUp(TreeNode *node, int height)
+    {
+        node->height = height + 1;
+        if (node->parent)
+            updateHeightBottomUp(node->parent, node->height);
+    }
+
+    void leftRotate()
+    {
+        root = leftRotate(root);
+    }
+
+    void rightRotate()
+    {
+        root = rightRotate(root);
+    }
+
     Pair<K,V>* find(K key)
     {
         return find(key, root);
@@ -144,7 +175,7 @@ protected:
         {
             return;
         }
-        printf(" [%d: %d] ", node->key(), node->value());
+        printf(" [%d: %d ] ", node->key(), node->height);
         if (node->left)
         {
             preorderTravel(node->left);
@@ -153,6 +184,36 @@ protected:
         {
             preorderTravel(node->right);
         }
+    }
+
+    TreeNode* leftRotate(TreeNode *node)
+    {
+        if (node && node->right)
+        {
+            TreeNode *parent = node->parent;
+            TreeNode *rightNode = node->right;
+            TreeNode *leftRight = rightNode->left;
+            rightNode->addLeft(node);
+            node->addRight(leftRight);
+            rightNode->parent = parent;
+            return rightNode;
+        }
+        return nullptr;
+    }
+
+    TreeNode* rightRotate(TreeNode *node)
+    {
+        if (node && node->left)
+        {
+            TreeNode *parent = node->parent;
+            TreeNode *leftNode = node->left;
+            TreeNode *rightLeft = leftNode->right;
+            leftNode->addRight(node);
+            node->addLeft(rightLeft);
+            leftNode->parent = parent;
+            return leftNode;
+        }
+        return nullptr;
     }
 
     Pair<K, V>* put(TreeNode *candidate, TreeNode *node)
@@ -168,7 +229,8 @@ protected:
         case -1:
             if (node->right == nullptr)
             {
-                node->right = candidate;
+                node->addRight(candidate);
+                updateHeightBottomUp(candidate, -1);
                 return candidate->pair;
             }else
             {
@@ -178,7 +240,8 @@ protected:
         case 1:
             if (node->left == nullptr)
             {
-                node->left = candidate;
+                node->addLeft(candidate);
+                updateHeightBottomUp(candidate, -1);
                 return candidate->pair;
             }else
             {
@@ -209,6 +272,8 @@ protected:
         }
         return nullptr;
     }
+
+
 
 };
 
