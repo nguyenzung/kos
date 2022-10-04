@@ -1,5 +1,6 @@
 #include "pair.h"
 #include "vector.h"
+#include "test/test.h"
 
 void VectorTest01();
 void VectorTest02();
