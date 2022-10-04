@@ -8,29 +8,33 @@ using namespace kernel;
 
 IMPL_MODULE_INSTANCE(HeapMemoryManager)
 
-HeapMemoryManager::HeapMemoryManager() {
+HeapMemoryManager::HeapMemoryManager()
+{
     initialize();
 }
 
-HeapMemoryManager::~HeapMemoryManager() {
-
+HeapMemoryManager::~HeapMemoryManager()
+{
 }
 
-void HeapMemoryManager::initialize() {
+void HeapMemoryManager::initialize()
+{
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
     kernelStackBase =  stackBase;
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
+    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x200000);
     printf("Kernel Heap %d Kernel Stack Base %d First allocation %d \n", kernelHeapBase, kernelStackBase, first);
     HeapMemoryManager::setInstance(this);
 }
 
-MemoryEntry* HeapMemoryManager::find(uint32 size) {
+MemoryEntry* HeapMemoryManager::find(uint32 size)
+{
     MemoryEntry *current = this->first;
     while (current->next)
     {
         MemoryEntry *next = current->next;
-        if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next) {            
+        if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next)
+        {
             return current;
         }
         current = next;
@@ -38,18 +42,22 @@ MemoryEntry* HeapMemoryManager::find(uint32 size) {
     return current;
 }
 
-void* HeapMemoryManager::malloc(uint32 size) {
+void* HeapMemoryManager::malloc(uint32 size)
+{
     MemoryEntry* prev = this->find(size);
     void* ptr = this->makeMemoryEntry(prev, size);
     return ptr + MEMORY_ENTRY_SIZE;
 }
 
-void* HeapMemoryManager::free(void *ptr) {
+void* HeapMemoryManager::free(void *ptr)
+{
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *prev = this->first;
     MemoryEntry *current = prev->next;
-    while(current) {
-        if (current == ptr) {
+    while(current)
+    {
+        if (current == ptr)
+        {
             prev->next = current->next;
             return (void*)current + MEMORY_ENTRY_SIZE;
         }
@@ -59,22 +67,27 @@ void* HeapMemoryManager::free(void *ptr) {
     return 0;
 }
 
-void* HeapMemoryManager::reserve(void* ptr, uint32 size) {
+void* HeapMemoryManager::reserve(void* ptr, uint32 size)
+{
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *current = this->first;
     while(current) {
         // Printer::println("W", 1);
-        if (current->next) {
-            if(current < ptr && ptr < current->next) {
-                if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next)) {
+        if (current->next)
+        {
+            if(current < ptr && ptr < current->next)
+            {
+                if (((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) && (ptr + size + MEMORY_ENTRY_SIZE <= (void*)current->next))
+                {
                     this->makeMemoryEntryAt(ptr, current, size);
                     return ptr + MEMORY_ENTRY_SIZE;
                 } else {
                     return 0;
                 }
-            } 
+            }
         }else {
-            if ((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr) {
+            if ((void*)current + MEMORY_ENTRY_SIZE + current->size <= ptr)
+            {
                 this->makeMemoryEntryAt(ptr , current, size);
                 return ptr + MEMORY_ENTRY_SIZE;
             }
@@ -84,20 +97,28 @@ void* HeapMemoryManager::reserve(void* ptr, uint32 size) {
     return 0;
 }
 
-void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size) {
+void HeapMemoryManager::enableMapModule()
+{
+
+}
+
+void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size)
+{
     MemoryEntry *entry = (MemoryEntry*)this->kernelHeapBase;
     entry->size = size;
     entry->next = 0;
     return entry;
 }
 
-void* HeapMemoryManager::makeMemoryEntry(void* ptrPrev, uint32 size) {
+void* HeapMemoryManager::makeMemoryEntry(void* ptrPrev, uint32 size)
+{
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     void* ptr = ptrPrev + MEMORY_ENTRY_SIZE + (prev->size);
     return this->makeMemoryEntryAt(ptr, ptrPrev, size);
 }
 
-void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size) {
+void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size)
+{
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     MemoryEntry *entry = (MemoryEntry*)ptr;
     entry->size = size;
@@ -106,44 +127,53 @@ void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size
     return ptr;
 }
 
-void* memreg(void* ptr, uint32 size) {
+void* memreg(void* ptr, uint32 size)
+{
     return HeapMemoryManager::getInstance()->reserve(ptr, size);
 }
 
-void memunreg(void *ptr) {
+void memunreg(void *ptr)
+{
     HeapMemoryManager::getInstance()->free(ptr);
 }
 
-void* malloc(size_t size) {
+void* malloc(size_t size)
+{
     // void *ptr = MemoryManager::getInstance()->malloc(size);
     return HeapMemoryManager::getInstance()->malloc(size);
 }
 
-void free(void* ptr){
+void free(void* ptr)
+{
     HeapMemoryManager::getInstance()->free(ptr);
 }
 
-void* operator new(size_t size) {
+void* operator new(size_t size)
+{
     // void *ptr = MemoryManager::getInstance()->malloc(size);
     return HeapMemoryManager::getInstance()->malloc(size);
 }
 
-void* operator new[](size_t size) {
+void* operator new[](size_t size)
+{
     // void *ptr = MemoryManager::getInstance()->malloc(size);
     return HeapMemoryManager::getInstance()->malloc(size);
 }
 
-void operator delete(void* ptr) {
+void operator delete(void* ptr)
+{
     void *result = HeapMemoryManager::getInstance()->free(ptr);
     // printf("\n DEL %p \n", result);
 }
 
-void operator delete(void* ptr, size_t) {
+void operator delete(void* ptr, size_t)
+{
     void *result = HeapMemoryManager::getInstance()->free(ptr);
     // printf("\n DEL %p \n", result);
 }
 
-void operator delete[](void* ptr) {
+void operator delete[](void* ptr)
+{
     void *result = HeapMemoryManager::getInstance()->free(ptr);
     // printf("\n DEL[] %p \n", result);
 }
