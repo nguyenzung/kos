@@ -357,10 +357,8 @@ protected:
         TreeNode *current = node;
         while (current && current->right)
         {
-            printf("\n Iter %d ", current->key());
             current = current->right;
         }
-        printf("\n Found successor %d ", current->key());
         return current;
     }
 
@@ -377,10 +375,8 @@ protected:
                 int score_ = left->getBalanceScore();
                 if (score_ >= 0) // Left Left Case
                 {
-                    printf("Rotate Right");
                     current = rightRotate(current);
                 } else {    // Left Right Case
-                    printf("Rotate Left Right");
                     current = leftRightRotate(current);
                 }
             } else if (score < -1) // Right heavier
@@ -389,11 +385,8 @@ protected:
                 int score_ = right->getBalanceScore();
                 if (score_ <= 0) // Right Right Case
                 {
-                    printf("[R Left %d ", current->value());
                     current = leftRotate(current);
-                    printf(" %d] ", current->value());
                 } else {    // Right Left Case
-                    printf("Rotate Right Left");
                     current = rightLeftRotate(current);
                 }
             }
@@ -546,9 +539,6 @@ protected:
         TreeNode *result = findNode(key, node);
         return result ? result->pair : nullptr;
     }
-
-
-
 };
 
 }
