@@ -19,7 +19,7 @@ public:
         this->second = value;
     }
 
-    Pair(const Pair &other) {
+    Pair(const Pair &other) : first(first_){
       first_ = other.first_;
       second = other.second;
     }
@@ -37,18 +37,12 @@ public:
     Pair& operator=(Pair other) {
       auto tmp(other);
       swap(tmp, *this);
+      return *this;
     }
 
     Pair& operator = (V value)
     {
         this->second = value;
-        return *this;
-    }
-
-    Pair& operator = (Pair &pair)
-    {
-        this->first_ = pair.first;
-        this->second = pair.second;
         return *this;
     }
 
