@@ -331,11 +331,11 @@ protected:
         {
             if (node->left)
             {
-                printf(" \n Swap find in left");
+                // printf(" \n Swap find in left");
                 return findMaxSuccessor(node->left);
             }else if (node->right)
             {
-                printf(" \n Swap find in right");
+                // printf(" \n Swap find in right");
                 return findMinSuccessor(node->right);
             }
         }
