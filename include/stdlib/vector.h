@@ -30,30 +30,43 @@ private:
   {
       auto tmp_m_data = m_data;
       size_t new_capacity = capacity() * ratioAllocate + 1;
-      reserve(new_capacity);
-      if (tmp_m_data != m_data) {
-        for (size_t i = 0; i < m_size; i++)
-          m_data[i] = tmp_m_data[i];
-        delete[] tmp_m_data;
+      auto ret = reserve(new_capacity);
+      if (ret) {
+        if (tmp_m_data != m_data) {
+          for (size_t i = 0; i < m_size; i++)
+            m_data[i] = tmp_m_data[i];
+          delete[] tmp_m_data;
+        }
+        m_data_tail = m_data + new_capacity;
       }
-      m_data_tail = m_data + new_capacity;
 
+      return ret;
   }
 public:
   iterator<T> begin() { return iterator<T>(m_data); }
 
   iterator<T> end() { return iterator<T>(m_data + size()); }
 
-  void reserve(size_t s) {
+  bool reserve(size_t s) {
     if (!s)
-      return;
+      return true;
     // lock here
     m_data = new T[s];
     m_data_tail = m_data + s;
     // unlock here
+
+    // FIX-ME when new can't allocated, it should be return false or throw some
+    // exception ( now haven't supported yet);
+    return true;
   }
 
-  Vector(size_t s = 0) : m_size(s) { reserve(m_size); }
+  Vector(size_t s = 0) : m_size(s) {
+    bool ret = reserve(m_size);
+    if (!ret) {
+      // FIX-ME (shold thow a exception)
+      printf("coundn't reserve memory with %d \n", m_size);
+    }
+  }
 
   ~Vector() {
     delete[] m_data;
@@ -89,7 +102,7 @@ public:
   T &operator[](int idx) {
     if (idx < m_size)
       return *(m_data + idx);
-    // need fix when exception is enabled
+    // FIX-ME need fix when exception is enabled
     return *(m_data + m_size - 1);
   }
 };
