@@ -9,9 +9,11 @@
 #include <stdlib/unorderedmap.h>
 #include <stdlib/map.h>
 #include <stdlib/math.h>
+#include <stdlib/vector.h>
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
+#include <stdlib/vector_test.h>
 
 using namespace kernel;
 
@@ -56,7 +58,10 @@ void Kernel::initialize()
     serial.active();
 
     deviceManager.registerDevice(&timer);
-    serial.printSerial(" Initialize Kernel \n");    
+    serial.printSerial(" Initialize Kernel \n");
+    
+    VectorTest();
+    return;
 
     Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
     Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
