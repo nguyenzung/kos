@@ -77,6 +77,20 @@ class Map
             }
         }
 
+        void childUnlink()
+        {
+            if (parent)
+            {
+                if (parent->left == this)
+                {
+                    parent->addLeft(nullptr);
+                } else if (parent->right == this) {
+                    parent->addRight(nullptr);
+                }
+            }
+            parent = nullptr;
+        }
+
         int updateHeight()
         {
             int leftHeight = getLeftHeight();
@@ -132,9 +146,9 @@ class Map
 
 public:
     TreeNode *root;
-    uint32 size;
+    uint32 size_;
 
-    Map<K,V>():root(nullptr), size(0){}
+    Map<K,V>():root(nullptr), size_(0){}
 
     ~Map<K,V>(){
         if (root)
@@ -150,12 +164,42 @@ public:
         }
         if (!root)
         {
-            ++size;
+            ++size_;
             root = candidate;
             return root->pair;
         } else {
             return put(candidate, root);
         }
+    }
+
+    bool earse(K key)
+    {
+        TreeNode *node = findNode(key, root);
+        if (node)
+        {
+            TreeNode *swapNode = findSwapNode(node);
+            TreeNode *anchorNode;
+            if (swapNode)
+            {
+                *node->pair = *swapNode->pair;
+                anchorNode = swapNode->parent;
+                swapNode->childUnlink();
+                --size_;
+                delete swapNode;
+            } else {
+                anchorNode = node->parent;
+                node->childUnlink();
+                --size_;
+                delete node;
+            }
+            if(anchorNode)
+            {
+                updateHeightBottomUp(anchorNode);
+                maintainAVLProperty(anchorNode);
+            }
+            return true;
+        }
+        return false;
     }
 
     void updateHeightBottomUp(TreeNode *node)
@@ -203,6 +247,11 @@ public:
     {
         printf("\n Pre-Order Travel \n");
         preorderTravel(root);
+    }
+
+    uint32 size()
+    {
+        return size_;
     }
 
     V min()
@@ -266,12 +315,61 @@ protected:
         }
     }
 
+    Pair<K, V>* upperBound(V value)
+    {
+        return nullptr;
+    }
+
+    Pair<K, V>* lowerBound(V value)
+    {
+        return nullptr;
+    }
+
+    TreeNode* findSwapNode(TreeNode *node)
+    {
+        if (node)
+        {
+            if (node->left)
+            {
+                printf(" \n Swap find in left");
+                return findMaxSuccessor(node->left);
+            }else if (node->right)
+            {
+                printf(" \n Swap find in right");
+                return findMinSuccessor(node->right);
+            }
+        }
+        return nullptr;
+    }
+
+    TreeNode* findMinSuccessor(TreeNode *node)
+    {
+        TreeNode *current = node;
+        while (current && current->left)
+        {
+            current = current->left;
+        }
+        return current;
+    }
+
+    TreeNode* findMaxSuccessor(TreeNode *node)
+    {
+        TreeNode *current = node;
+        while (current && current->right)
+        {
+            printf("\n Iter %d ", current->key());
+            current = current->right;
+        }
+        printf("\n Found successor %d ", current->key());
+        return current;
+    }
+
     TreeNode* maintainAVLProperty(TreeNode *node) 
     {
         TreeNode *current = node;
         while (current)
         {
-            bool isRoot = current == root;
+            bool isRoot = (current == root);
             int score = current->getBalanceScore();
             if (score > 1) // Left Heavier
             {
@@ -279,10 +377,10 @@ protected:
                 int score_ = left->getBalanceScore();
                 if (score_ >= 0) // Left Left Case
                 {
-                    printf("\nRotate Right");
+                    printf("Rotate Right");
                     current = rightRotate(current);
                 } else {    // Left Right Case
-                    printf("\nRotate Left Right");
+                    printf("Rotate Left Right");
                     current = leftRightRotate(current);
                 }
             } else if (score < -1) // Right heavier
@@ -291,10 +389,11 @@ protected:
                 int score_ = right->getBalanceScore();
                 if (score_ <= 0) // Right Right Case
                 {
+                    printf("[R Left %d ", current->value());
                     current = leftRotate(current);
-                    printf("\n Rotate Left %d ", current->value());
+                    printf(" %d] ", current->value());
                 } else {    // Right Left Case
-                    printf("\n Rotate Right Left");
+                    printf("Rotate Right Left");
                     current = rightLeftRotate(current);
                 }
             }
@@ -303,7 +402,6 @@ protected:
                 root = current;
             }
             current = current->parent;
-            
         }
     }
 
@@ -393,9 +491,9 @@ protected:
             return node->pair;
 
         case -1:
-            if (node->right == nullptr)
+            if (!node->right)
             {
-                ++size;
+                ++size_;
                 node->addRight(candidate);
                 updateHeightBottomUp(node);
                 maintainAVLProperty(candidate);
@@ -406,9 +504,9 @@ protected:
             }
 
         case 1:
-            if (node->left == nullptr)
+            if (!node->left)
             {
-                ++size;
+                ++size_;
                 node->addLeft(candidate);
                 updateHeightBottomUp(node);
                 maintainAVLProperty(candidate);
@@ -424,23 +522,29 @@ protected:
         return 0;
     }
 
-    Pair<K,V>* find(K key, TreeNode *node)
+    TreeNode* findNode(K key, TreeNode *node)
     {
         if (node)
         {
             switch (node->compareKey(key))
             {
             case 0:
-                return node->pair;
+                return node;
             case -1:
-                return find(key, node->right);
+                return node->right ? findNode(key, node->right) : nullptr;
             case 1:
-                return find(key, node->left);
+                return node->left ? findNode(key, node->left) : nullptr;
             default:
                 break;
             }
         }
         return nullptr;
+    }
+
+    Pair<K,V>* find(K key, TreeNode *node)
+    {
+        TreeNode *result = findNode(key, node);
+        return result ? result->pair : nullptr;
     }
 
 

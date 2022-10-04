@@ -51,14 +51,12 @@ void Kernel::initialize()
     
     Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
     
-    
     timer.active();
     cmos.active();
     serial.active();
 
     deviceManager.registerDevice(&timer);
-    serial.printSerial(" Initialize Kernel \n");
-    
+    serial.printSerial(" Initialize Kernel \n");    
 
     Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
     Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
@@ -68,17 +66,21 @@ void Kernel::initialize()
     cmos.updateDateTime();
 
     std::Map<uint64, uint64> map;
-    printf("\n %p ", map.put(10, 10));
-    map.put(13, 13);
-    map.put(15, 15);
-    map.put(16, 16);
-    map.put(18, 18);
-    map.put(10, 1000);
-    map.put(23, 23);
+    printf("\n %p ", map.put(40, 40));
+    map.put(50, 50);
+    map.put(30, 30);
+    map.put(35, 35);
+    map.put(25, 25);
+    // map.put(23, 23);
+
     map.preorderTravel();
     map.inorderTravel();
 
-    printf("\n");
+    map.earse(50);
+    map.preorderTravel();
+    map.inorderTravel();
+
+    // printf("\n");
     
     /*
     *   Stress test: slow need to improve heap allocation algorithm

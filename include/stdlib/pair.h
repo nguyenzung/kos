@@ -25,6 +25,13 @@ public:
         return *this;
     }
 
+    Pair& operator = (Pair &pair)
+    {
+        this->first_ = pair.first;
+        this->second = pair.second;
+        return *this;
+    }
+
     Pair& operator++()
     {
         this->second++;
