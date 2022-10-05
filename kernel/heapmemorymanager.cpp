@@ -23,8 +23,10 @@ void HeapMemoryManager::initialize()
     kernelHeapBase = heapBase;
     kernelHeapLimit = heapBase + HEAP_SIZE;
     kernelStackBase =  stackBase;
+    available = total = HEAP_SIZE;
+    used = 0;
     last = first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
-    printf("Kernel Heap %d Kernel Stack Base %d First allocation %d \n", kernelHeapBase, kernelStackBase, first);
+    printf("Heap base %d Heap limit %d First allocation %d \n", kernelHeapBase, kernelHeapLimit, first);
     HeapMemoryManager::setInstance(this);
 }
 
@@ -33,25 +35,31 @@ MemoryEntry* HeapMemoryManager::find(uint32 size)
     if ((uint64)this->last + MEMORY_ENTRY_SIZE + this->last->size + MEMORY_ENTRY_SIZE + size <= (uint64)kernelHeapLimit)
     {
         return this->last;
-    }
-    MemoryEntry *current = this->first;
-    while (current->next)
-    {
-        MemoryEntry *next = current->next;
-        if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next)
+    }else{
+        MemoryEntry *current = this->first;
+        while (current->next)
         {
-            return current;
+            MemoryEntry *next = current->next;
+            if((uint64)current + MEMORY_ENTRY_SIZE + current->size + MEMORY_ENTRY_SIZE + size <= (uint64)next)
+            {
+                return current;
+            }
+            current = next;
         }
-        current = next;
+        return nullptr;
     }
-    return current;
+    
 }
 
 void* HeapMemoryManager::malloc(uint32 size)
 {
     MemoryEntry* prev = this->find(size);
-    void* ptr = this->makeMemoryEntry(prev, size);
-    return ptr + MEMORY_ENTRY_SIZE;
+    if (prev)
+    {
+        void* ptr = this->makeMemoryEntry(prev, size);
+        return ptr + MEMORY_ENTRY_SIZE;
+    }
+    return nullptr;
 }
 
 void* HeapMemoryManager::free(void *ptr)
@@ -70,6 +78,8 @@ void* HeapMemoryManager::free(void *ptr)
             if (current->next)
                 current->next->prev = prev;
             prev->next = current->next;
+            used -= MEMORY_ENTRY_SIZE + current->size;
+            available = total - used;
             return (void*)current + MEMORY_ENTRY_SIZE;
         }
         prev = current;
@@ -80,10 +90,14 @@ void* HeapMemoryManager::free(void *ptr)
 
 void* HeapMemoryManager::reserve(void* ptr, uint32 size)
 {
+    printf("\n Reserve %d %d ", (uint64)ptr, size);
+    if ((uint64)ptr + size >= (uint64)kernelHeapLimit)
+    {
+        return nullptr;
+    }
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *current = this->first;
     while(current) {
-        // Printer::println("W", 1);
         if (current->next)
         {
             if(current < ptr && ptr < current->next)
@@ -114,6 +128,8 @@ void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size)
     entry->size = size;
     entry->next = nullptr;
     entry->prev = nullptr;
+    used += MEMORY_ENTRY_SIZE + size;
+    available = total - used;
     return entry;
 }
 
@@ -139,7 +155,8 @@ void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size
     {
         entry->next->prev = entry;
     }
-    
+    used += MEMORY_ENTRY_SIZE + size;
+    available = total - used;
     return ptr;
 }
 
