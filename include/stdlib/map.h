@@ -181,7 +181,6 @@ public:
             TreeNode *anchorNode;
             if (swapNode)
             {
-                printf("\n Swap node: %d ", swapNode->key());
                 *node->pair = *swapNode->pair;
                 if (swapNode->left)
                 {
