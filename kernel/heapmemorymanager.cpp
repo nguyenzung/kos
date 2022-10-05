@@ -21,14 +21,19 @@ void HeapMemoryManager::initialize()
 {
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
     kernelHeapBase = heapBase;
+    kernelHeapLimit = heapBase + HEAP_SIZE;
     kernelStackBase =  stackBase;
-    first = (MemoryEntry*) this->makeFirstMemoryEntry(0x200000);
+    last = first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
     printf("Kernel Heap %d Kernel Stack Base %d First allocation %d \n", kernelHeapBase, kernelStackBase, first);
     HeapMemoryManager::setInstance(this);
 }
 
 MemoryEntry* HeapMemoryManager::find(uint32 size)
 {
+    if ((uint64)this->last + MEMORY_ENTRY_SIZE + this->last->size + MEMORY_ENTRY_SIZE + size <= (uint64)kernelHeapLimit)
+    {
+        return this->last;
+    }
     MemoryEntry *current = this->first;
     while (current->next)
     {
@@ -51,6 +56,8 @@ void* HeapMemoryManager::malloc(uint32 size)
 
 void* HeapMemoryManager::free(void *ptr)
 {
+    if (ptr == this->first)
+        return nullptr;
     ptr = ptr - MEMORY_ENTRY_SIZE;
     MemoryEntry *prev = this->first;
     MemoryEntry *current = prev->next;
@@ -58,6 +65,10 @@ void* HeapMemoryManager::free(void *ptr)
     {
         if (current == ptr)
         {
+            if (current == this->last)
+                this->last = current->prev;
+            if (current->next)
+                current->next->prev = prev;
             prev->next = current->next;
             return (void*)current + MEMORY_ENTRY_SIZE;
         }
@@ -97,16 +108,12 @@ void* HeapMemoryManager::reserve(void* ptr, uint32 size)
     return 0;
 }
 
-void HeapMemoryManager::enableMapModule()
-{
-
-}
-
 void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size)
 {
     MemoryEntry *entry = (MemoryEntry*)this->kernelHeapBase;
     entry->size = size;
-    entry->next = 0;
+    entry->next = nullptr;
+    entry->prev = nullptr;
     return entry;
 }
 
@@ -121,10 +128,53 @@ void* HeapMemoryManager::makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size
 {
     MemoryEntry *prev = (MemoryEntry*)ptrPrev;
     MemoryEntry *entry = (MemoryEntry*)ptr;
+    if (prev == this->last)
+        this->last = entry;
     entry->size = size;
     entry->next = prev->next;
+    entry->prev = prev;
+    // entry->nextFreeAddress = ptr + MEMORY_ENTRY_SIZE + size;
     prev->next = entry;
+    if (entry->next)
+    {
+        entry->next->prev = entry;
+    }
+    
     return ptr;
+}
+
+/*
+*   MemoryEntry is not null
+*/
+void* getFreeAddress(MemoryEntry *entry)
+{
+    void *ptr = (void*)entry + MEMORY_ENTRY_SIZE + entry->size;
+    return ptr;
+}
+
+/*
+*   MemoryEntry is not null
+*/
+void* getFreeSize(MemoryEntry *entry, HeapMemoryManager *instance)
+{
+    uint64 ptr = (uint64)entry + MEMORY_ENTRY_SIZE + entry->size;
+    uint64 next = (uint64)entry->next;
+    return (void*)(next?  next - ptr: (uint64)instance->kernelHeapLimit - ptr);
+}
+
+void* deleteNode(MemoryEntry *node, MemoryEntry *root)
+{
+    return nullptr;
+}
+
+void* addNode(MemoryEntry *node, MemoryEntry *root)
+{
+    return nullptr;
+}
+
+void* find(uint64 size, MemoryEntry* root)
+{
+    return nullptr;
 }
 
 void* memreg(void* ptr, uint32 size)
