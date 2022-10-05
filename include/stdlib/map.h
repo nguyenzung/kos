@@ -181,8 +181,16 @@ public:
             TreeNode *anchorNode;
             if (swapNode)
             {
+                printf("\n Swap node: %d ", swapNode->key());
                 *node->pair = *swapNode->pair;
-                anchorNode = swapNode->parent;
+                if (swapNode->left)
+                {
+                    anchorNode = swapNode->left;
+                    anchorNode->addParent(swapNode->parent, swapNode);
+                }else{
+                    anchorNode = swapNode->parent;
+                }
+                
                 swapNode->childUnlink();
                 --size_;
                 delete swapNode;
@@ -337,11 +345,12 @@ protected:
             {
                 // printf(" \n Swap find in left");
                 return findMaxSuccessor(node->left);
-            }else if (node->right)
-            {
-                // printf(" \n Swap find in right");
-                return findMinSuccessor(node->right);
             }
+            // else if (node->right)
+            // {
+            //     // printf(" \n Swap find in right");
+            //     return findMinSuccessor(node->right);
+            // }
         }
         return nullptr;
     }
