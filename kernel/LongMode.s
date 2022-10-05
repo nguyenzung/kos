@@ -211,8 +211,8 @@ section .bss
 global stack_base
 global heap_base
 align 4096
-stack_bottom: 		resb 4*1024*1024
-stack_base:         resb 16*1024*1024
+stack_bottom: 		resb 8*1024*1024
+stack_base:         resb 32*1024*1024
 stack_limit:        
 stack_size 			equ $ - stack_bottom
 heap_base:
