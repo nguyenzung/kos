@@ -6,20 +6,32 @@
 
 namespace kernel 
 {
-
-#define MEMORY_ENTRY_SIZE 12
+#define HEAP_SIZE 256*1024*1024
+#define MEMORY_ENTRY_SIZE 20
 typedef struct MemoryEntry 
 {
     MemoryEntry *next;
+    MemoryEntry *prev;
     uint32 size;
 } __attribute__((packed)) MemoryEntry;
 
+
+// class Map<int, int>;
 class HeapMemoryManager 
 {
+public:
     void* kernelHeapBase;
+    void* kernelHeapLimit;
     void* kernelStackBase;
     MemoryEntry *first;
+    MemoryEntry *last;
+
+    uint64 total;
+    uint64 available;
+    uint64 used;
+
     DEF_MODULE_INSTANCE(HeapMemoryManager)
+
 public:
     HeapMemoryManager();
     ~HeapMemoryManager();
@@ -37,7 +49,6 @@ protected:
     void* makeMemoryEntryAt(void* ptr, void* ptrPrev, uint32 size);
 };
 }
-
 
 void* memreg(void* ptr, kernel::uint32 size);
 void memunreg(void *ptr);
