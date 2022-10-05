@@ -189,6 +189,10 @@ public:
             } else {
                 anchorNode = node->parent;
                 node->childUnlink();
+                if (node == root)
+                {
+                    root = nullptr;
+                }
                 --size_;
                 delete node;
             }
