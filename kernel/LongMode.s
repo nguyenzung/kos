@@ -202,6 +202,7 @@ isrStubTable:
 %assign i i+1 
 %endrep
     stackBase               dq stack_base
+    stackLimit              dq stack_limit
     heapBase                dq heap_base
     stackSize               dq stack_size
     interrupt_handler_msg   db "[Enable Paging]",7
@@ -210,6 +211,9 @@ section .bss
 global stack_base
 global heap_base
 align 4096
-heap_base: 			resb 64*1024*1024
-stack_base:
-stack_size 			equ $ - heap_base
+stack_bottom: 		resb 4*1024*1024
+stack_base:         resb 16*1024*1024
+stack_limit:        
+stack_size 			equ $ - stack_bottom
+heap_base:
+
