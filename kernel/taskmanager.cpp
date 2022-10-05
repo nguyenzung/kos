@@ -26,6 +26,8 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     // LOCK(taskList);
     std::Node<KernelObject*>* prevNode = this->findTaskPosition();
     Task *newTask = new Task(entryPoint, argc, argv);
+    if(!newTask)
+        return nullptr;
     if (prevNode)
     {
         Task *prevTask = (Task*)prevNode->value;
