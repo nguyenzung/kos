@@ -8,7 +8,7 @@
 typedef struct PageTable
 {
     
-} __attribute__((packed)) PageTable;;
+} __attribute__((packed)) PageTable;
 
 class MemoryMapper
 {

@@ -32,8 +32,8 @@ class Printer {
      */
     static int volatile *getLockInstance();
     static void putc(char c, int i = 0, void (*ptr)(int) = updatePointer);
-    static void print(char *message, uint8 length = 0);
-    static void println(char *message, uint8 length);
+    static void print(const char *message, uint8 length = 0);
+    static void println(const char *message, uint8 length);
     static void printAddress(uint64 address);
     static void printlnAddress(uint64 address);
     static void printNumber(uint64 address);

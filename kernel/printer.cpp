@@ -50,7 +50,7 @@ void Printer::putc(char c, int i, void (*ptr)(int)) {
     }
 }
 
-void Printer::print(char *message, uint8 len) {
+void Printer::print(const char *message, uint8 len) {
     if (len == 0) {
         while (message[len] != '\0')
             len++;
@@ -62,7 +62,7 @@ void Printer::print(char *message, uint8 len) {
     updatePointer(len);
 }
 
-void Printer::println(char *message, uint8 len) {
+void Printer::println(const char *message, uint8 len) {
     Printer::print(message, len);
     y++;
     x = 0;

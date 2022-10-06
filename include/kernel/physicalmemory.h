@@ -2,6 +2,7 @@
 #define PHYSICAL_MEMORY
 
 #include <kernel/type.h>
+#include <kernel/utils.h>
 #include <stdlib/unorderedmap.h>
 
 namespace kernel
@@ -19,6 +20,8 @@ public:
 public:
     PhysicalMemory();
     ~PhysicalMemory();
+
+    DEF_MODULE_INSTANCE(PhysicalMemory)
 
     void initialize();
 

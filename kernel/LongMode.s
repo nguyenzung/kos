@@ -215,5 +215,5 @@ stack_bottom: 		resb 8*1024*1024
 stack_base:         resb 32*1024*1024
 stack_limit:        
 stack_size 			equ $ - stack_bottom
-heap_base:
+heap_base:          resb 256*1024*1024
 

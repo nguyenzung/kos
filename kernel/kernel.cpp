@@ -4,6 +4,7 @@
 #include <driver/vga.h>
 #include <kernel/utils.h>
 #include <kernel/heapmemorymanager.h>
+#include <kernel/sdt.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
@@ -48,7 +49,7 @@ void Kernel::initialize()
     serial.active();
 
     deviceManager.registerDevice(&timer);
-    serial.printSerial(" Initialize Kernel \n");    
+    serial.printSerial("Initialize Kernel");    
 
     // Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
     // Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
@@ -59,31 +60,34 @@ void Kernel::initialize()
 
     cmos.updateDateTime();
 
-    std::Map<uint64, uint64> map;
-    map.put(40, 40);
-    map.put(50, 50);
-    map.put(30, 30);
-    map.put(35, 35);
-    map.put(25, 25);
-    map.put(13, 13);
-    map.put(33, 33);
-    map.put(43, 43);
+    SDT sdt;
+    sdt.initialize();
 
-    map.preorderTravel();
-    // map.inorderTravel();
+//     std::Map<uint64, uint64> map;
+//     map.put(40, 40);
+//     map.put(50, 50);
+//     map.put(30, 30);
+//     map.put(35, 35);
+//     map.put(25, 25);
+//     map.put(13, 13);
+//     map.put(33, 33);
+//     map.put(43, 43);
 
-    map.earse(40);
-    map.earse(25);
-    map.put(46, 46);
-    map.put(24, 24);
-    map.put(54, 54);
-    map.put(58, 58);
-    map.earse(33);
-    map.put(60, 60);
-    map.preorderTravel();
-    map.inorderTravel();
+//     map.preorderTravel();
+//     map.inorderTravel();
 
-    // printf("\n");
+//     map.earse(40);
+//     map.earse(25);
+//     map.put(46, 46);
+//     map.put(24, 24);
+//     map.put(54, 54);
+//     map.put(58, 58);
+//     map.earse(33);
+//     map.put(60, 60);
+//     map.preorderTravel();
+//     map.inorderTravel();
+
+//     printf("\n");
     
     /*
     *   Stress test: slow need to improve heap allocation algorithm
@@ -111,7 +115,7 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-    // cmos.updateDateTime();
+//     cmos.updateDateTime();
 }
 
 int Kernel::start(int argc, char **argv)
