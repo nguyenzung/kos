@@ -51,12 +51,12 @@ typedef struct MADTHeader
     uint32 flags;
 } __attribute__ ((packed)) MADTHeader;
 
-typedef struct ProcessorDescriptor
+typedef struct LAPICDescriptor
 {
     uint8   type;               // type = 0
     uint8   length;
-    uint8   acpiProcessorId;
-    uint8   acpiId;
+    uint8   apicProcessorId;
+    uint8   apicId;
     uint32  flags;
 } __attribute__ ((packed)) ProcessorDescriptor;
 
@@ -64,19 +64,19 @@ typedef struct IOAPICDescriptor
 {
     uint8   type;               // type = 1
     uint8   length;
-    uint8   ioAcpiId;
+    uint8   ioApicId;
     uint8   reserved;
-    uint32  ioAcpiAddress;
+    uint32  ioApicAddress;
     uint32  globalSystemInterruptBase;
 } __attribute__ ((packed)) IOAPICDescriptor;
 
-typedef struct LAPICDescriptor
+typedef struct LAPICOverrideDescriptor
 {
     uint8   type;               // type = 5
     uint8   length;
     uint16  reserved;
     uint64  physicalAddress;
-} __attribute__((packed)) LAPICDescriptor;
+} __attribute__((packed)) LAPICOverrideDescriptor;
 
 class SDT
 {
