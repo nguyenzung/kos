@@ -64,5 +64,5 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -smp 8,sockets=2,cores=2,threads=2,maxcpus=8 -cpu host -m 378M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm 
+	qemu-system-x86_64 -smp 8,sockets=2,cores=2,threads=2,maxcpus=8 -cpu host -m 512M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm 
 	

@@ -4,7 +4,6 @@
 #include <driver/vga.h>
 #include <kernel/utils.h>
 #include <kernel/heapmemorymanager.h>
-#include <kernel/sdt.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
@@ -59,8 +58,9 @@ void Kernel::initialize()
     // printf("\n Task %d %d %d %d", task1, task2, task3, task4);
 
     cmos.updateDateTime();
-
-    SDT sdt;
+    
+    bsp.intialize();
+    printf("\n BSP Local APICID: %d ", bsp.localApicId);
     sdt.initialize();
 
 //     std::Map<uint64, uint64> map;

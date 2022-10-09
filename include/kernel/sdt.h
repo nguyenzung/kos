@@ -3,6 +3,7 @@
 
 #include <kernel/utils.h>
 #include <kernel/type.h>
+#include <stdlib/list.h>
 
 namespace kernel
 {
@@ -87,6 +88,9 @@ public:
     ACPISDTHeader *madt;
     ProcessorDescriptor *processorDescriptor;
     
+    std::List<LAPICDescriptor*> localApicDescriptors;
+    std::List<IOAPICDescriptor*> ioApicDescriptors;
+    
     SDT();
     DEF_MODULE_INSTANCE(SDT)
     
@@ -99,6 +103,8 @@ public:
     void parseXSDT();
     
     void parseMADT();
+    
+    void view();
 };
 
 

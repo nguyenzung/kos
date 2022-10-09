@@ -7,6 +7,8 @@
 #include <kernel/taskmanager.h>
 #include <kernel/context.h>
 #include <kernel/physicalmemory.h>
+#include <kernel/sdt.h>
+#include <kernel/bsp.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
 #include <driver/serial.h>
@@ -20,6 +22,9 @@ class Kernel
     InterruptManager interruptManager;
     TaskManager taskManager;
     PhysicalMemory physicalMemory;
+    
+    SDT sdt;
+    BSP bsp;
 
     driver::CMOS cmos;
     driver::Timer timer;
