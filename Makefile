@@ -43,7 +43,7 @@ all:  $(TARGET)
  $(TARGET): $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(CPP_HEAD_FILES) kernel.ld
 	$(LD) -o $(BUILD_DIR)/kernel.bin $(LDFLAGS) $(CPP_OBJ_FILES) $(ASM_OBJ_FILES) && \
 	cp $(BUILD_DIR)/kernel.bin iso/boot && \
-	grub-mkrescue /usr/lib/grub/i386-pc -o $@ iso
+	grub-mkrescue /usr/lib/grub/x86_64-efi -o $@ iso
 
 $(ASM_OBJ_FILES): $(BUILD_DIR)/%.o : %.s
 	@echo $@ $<
@@ -64,4 +64,5 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $<
+	qemu-system-x86_64 -smp 8,sockets=2,cores=2,threads=2,maxcpus=8 -cpu host -m 512M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm 
+	

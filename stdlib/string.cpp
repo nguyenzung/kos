@@ -60,4 +60,18 @@ void* memset(void* des, uint8 c, size_t size)
     return 0;
 }
 
+int memcmp(const void *ptr1, const void *ptr2, size_t num)
+{
+    char c;
+    for(int i = 0; i < num; i++)
+    {
+        c = *(char*)ptr1 - *(char*)ptr2;
+        if(c != 0)
+        {
+           return c; 
+        }
+    }
+    return 0;
+}
+
 }

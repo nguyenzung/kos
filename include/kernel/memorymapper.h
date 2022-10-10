@@ -1,18 +1,69 @@
 #ifndef MEMORY_MAPPER
 #define MEMORY_MAPPER
 
-/*
-* PML4-LongMode
-*/
+#include <kernel/type.h>
+#include <kernel/osspace.h>
 
-typedef struct PageTable
+namespace kernel
 {
+
+#define PAGE_SIZE             512
+#define MEMORY_FRAME_SIZE   4096
+
+class PML4
+{
+public:
+    __attribute__((aligned(0x1000)))
+    uint64 value[PAGE_SIZE];
     
-} __attribute__((packed)) PageTable;;
+    PML4();
+    void setEntry(uint16 index, void *pdpAddress, OSSpace space);
+};
+
+class PDP
+{
+public:
+    __attribute__((aligned(0x1000)))
+    uint64 value[PAGE_SIZE];
+    
+    PDP();
+    void setEntry(uint16 index, void *pdAddress, OSSpace space);
+};
+
+class PD
+{
+public:
+    __attribute__((aligned(0x1000)))
+    uint64 value[PAGE_SIZE];
+    
+    PD();
+    void setEntry(uint16 index, void *ptAddress, OSSpace space);
+};
+
+class PT
+{
+public:
+    __attribute__((aligned(0x1000)))
+    uint64 value[PAGE_SIZE];
+    
+    PT();
+    void setEntry(uint16 index, uint64 frameIndex, OSSpace space);
+};
+
 
 class MemoryMapper
 {
-
+public:
+    PML4   pml4;    
+    PDP    pdp;
+    PD     pd;
+    PT     pt[256]; // Cache 512MB
+    
+    MemoryMapper();
+    
+    void initialize();
 };
+
+}
 
 #endif

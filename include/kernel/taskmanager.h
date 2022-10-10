@@ -21,7 +21,7 @@ public:
     TaskManager();
     ~TaskManager();
 
-    DEF_MODULE_INSTANCE(TaskManager);
+    DEF_MODULE_INSTANCE(TaskManager)
 
     Task* makeTask(mainFunction entryPoint, int argc, char** argv);
     void initialize();

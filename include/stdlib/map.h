@@ -182,13 +182,24 @@ public:
             if (swapNode)
             {
                 *node->pair = *swapNode->pair;
-                anchorNode = swapNode->parent;
+                if (swapNode->left)
+                {
+                    anchorNode = swapNode->left;
+                    anchorNode->addParent(swapNode->parent, swapNode);
+                }else{
+                    anchorNode = swapNode->parent;
+                }
+                
                 swapNode->childUnlink();
                 --size_;
                 delete swapNode;
             } else {
                 anchorNode = node->parent;
                 node->childUnlink();
+                if (node == root)
+                {
+                    root = nullptr;
+                }
                 --size_;
                 delete node;
             }
@@ -331,13 +342,14 @@ protected:
         {
             if (node->left)
             {
-                printf(" \n Swap find in left");
+                // printf(" \n Swap find in left");
                 return findMaxSuccessor(node->left);
-            }else if (node->right)
-            {
-                printf(" \n Swap find in right");
-                return findMinSuccessor(node->right);
             }
+            // else if (node->right)
+            // {
+            //     // printf(" \n Swap find in right");
+            //     return findMinSuccessor(node->right);
+            // }
         }
         return nullptr;
     }
@@ -357,10 +369,8 @@ protected:
         TreeNode *current = node;
         while (current && current->right)
         {
-            printf("\n Iter %d ", current->key());
             current = current->right;
         }
-        printf("\n Found successor %d ", current->key());
         return current;
     }
 
@@ -377,10 +387,8 @@ protected:
                 int score_ = left->getBalanceScore();
                 if (score_ >= 0) // Left Left Case
                 {
-                    printf("Rotate Right");
                     current = rightRotate(current);
                 } else {    // Left Right Case
-                    printf("Rotate Left Right");
                     current = leftRightRotate(current);
                 }
             } else if (score < -1) // Right heavier
@@ -389,11 +397,8 @@ protected:
                 int score_ = right->getBalanceScore();
                 if (score_ <= 0) // Right Right Case
                 {
-                    printf("[R Left %d ", current->value());
                     current = leftRotate(current);
-                    printf(" %d] ", current->value());
                 } else {    // Right Left Case
-                    printf("Rotate Right Left");
                     current = rightLeftRotate(current);
                 }
             }
@@ -546,9 +551,6 @@ protected:
         TreeNode *result = findNode(key, node);
         return result ? result->pair : nullptr;
     }
-
-
-
 };
 
 }

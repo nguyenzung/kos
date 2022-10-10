@@ -3,7 +3,7 @@
 #include <kernel/printer.h>
 #include <driver/vga.h>
 #include <kernel/utils.h>
-#include <kernel/kernelobject.h>
+#include <kernel/heapmemorymanager.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
@@ -42,14 +42,6 @@ void Kernel::initialize()
     taskManager.initialize();
     interruptManager.initialize();
     physicalMemory.initialize();
-
-    char **argv= new char*[1];
-    argv[0] = new char[5];
-    argv[0][0] = 'm';
-    argv[0][1] = 'a';
-    argv[0][2] = 'i';
-    argv[0][3] = 'n';
-    argv[0][4] = '\0';
     
     Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
     
@@ -58,34 +50,47 @@ void Kernel::initialize()
     serial.active();
 
     deviceManager.registerDevice(&timer);
-    serial.printSerial(" Initialize Kernel \n");
-    
-    VectorTest();
-    return;
 
-    Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
-    Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
-    Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
-    Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
+    serial.printSerial("Initialize Kernel");    
+
+    // Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
+    // Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
+    // Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
+    // Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
+
+    // printf("\n Task %d %d %d %d", task1, task2, task3, task4);
 
     cmos.updateDateTime();
+    
+    bsp.intialize();
+    printf("\n BSP Local APICID: %d ", bsp.localApicId);
+    sdt.initialize();
 
-    std::Map<uint64, uint64> map;
-    printf("\n %p ", map.put(40, 40));
-    map.put(50, 50);
-    map.put(30, 30);
-    map.put(35, 35);
-    map.put(25, 25);
-    // map.put(23, 23);
+//     std::Map<uint64, uint64> map;
+//     map.put(40, 40);
+//     map.put(50, 50);
+//     map.put(30, 30);
+//     map.put(35, 35);
+//     map.put(25, 25);
+//     map.put(13, 13);
+//     map.put(33, 33);
+//     map.put(43, 43);
 
-    map.preorderTravel();
-    map.inorderTravel();
+//     map.preorderTravel();
+//     map.inorderTravel();
 
-    map.earse(50);
-    map.preorderTravel();
-    map.inorderTravel();
+//     map.earse(40);
+//     map.earse(25);
+//     map.put(46, 46);
+//     map.put(24, 24);
+//     map.put(54, 54);
+//     map.put(58, 58);
+//     map.earse(33);
+//     map.put(60, 60);
+//     map.preorderTravel();
+//     map.inorderTravel();
 
-    // printf("\n");
+//     printf("\n");
     
     /*
     *   Stress test: slow need to improve heap allocation algorithm
@@ -113,7 +118,7 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-    // cmos.updateDateTime();
+//     cmos.updateDateTime();
 }
 
 int Kernel::start(int argc, char **argv)
