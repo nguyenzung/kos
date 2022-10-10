@@ -2,6 +2,7 @@
 #define VIRTUAL_MEMORY
 
 #include <kernel/memorymapper.h>
+#include <kernel/osspace.h>
 #include <kernel/type.h>
 
 namespace kernel
@@ -10,12 +11,12 @@ namespace kernel
 class VirtualMemory
 {
 public:
-    MemoryMapper mapper;
+    MemoryMapper memoryMapper;
     uint64 size;
 
     VirtualMemory();
     
-    void initialize(uint64 size);
+    void initialize(uint64 size, OSSpace space);
     void loadDefault();     // Load config from assembly code
     void active();
 };

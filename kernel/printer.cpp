@@ -2,7 +2,7 @@
 #include <kernel/utils.h>
 #include <stdlib/string.h>
 
-#define ADDRESS_LENGTH 18
+#define ADDRESS_LENGTH 66
 #define SCREEN_WITH 80
 #define SCREEN_HIEGHT 25
 #define SCREEN_MAP_MEM 0xb8000 
@@ -117,6 +117,20 @@ void Printer::printlnNumber(uint64 address)
 {
     char message[ADDRESS_LENGTH];
     char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToDecString);
+    Printer::println(pMessage, ADDRESS_LENGTH - (pMessage - message));
+}
+
+void Printer::printBinary(uint64 address)
+{
+    char message[ADDRESS_LENGTH];
+    char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToBinString);
+    Printer::print(pMessage, ADDRESS_LENGTH - (pMessage - message));
+}
+
+void Printer::printlnBinary(uint64 address)
+{
+    char message[ADDRESS_LENGTH];
+    char *pMessage = buildMessage(address, message, ADDRESS_LENGTH, &Utils::convertIntToBinString);
     Printer::println(pMessage, ADDRESS_LENGTH - (pMessage - message));
 }
 

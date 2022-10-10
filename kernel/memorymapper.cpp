@@ -1,4 +1,5 @@
 #include <kernel/memorymapper.h>
+#include <kernel/physicalmemory.h>
 
 using namespace kernel;
 
@@ -10,11 +11,14 @@ PML4::PML4()
 
 void PML4::setEntry(uint16 index, void *pdpAddress, OSSpace space)
 {
+    
     uint64 address = (uint64)pdpAddress;
+    printf("\n [Before] %d %b %p", index, address, pdpAddress);
     address = address | 0b11;
     if(space == OSSpace::RING_3)
         address = address | 0b100;
     value[index] = address;
+    printf("\n [After] %d %b %p", index, address, pdpAddress);
 }
 
 PDP::PDP()
@@ -67,7 +71,33 @@ MemoryMapper::MemoryMapper()
     
 }
 
-void MemoryMapper::initialize()
+void MemoryMapper::initialize(uint64 size, OSSpace space)
 {
+    uint64 totalPhysicalMemoryFrame = (size / MEMORY_FRAME_SIZE) + (size % MEMORY_FRAME_SIZE ? 1 : 0);
+    if (totalPhysicalMemoryFrame > PAGE_SIZE * PAGE_SIZE)
+        totalPhysicalMemoryFrame = PAGE_SIZE * PAGE_SIZE;
     
+    pml4.setEntry(0, &pdp.value[0], space);
+    pdp.setEntry(0, &pd.value[0], space);
+    PhysicalMemory *physicalMemory = PhysicalMemory::getInstance();
+    for (uint32 i = 0; i < totalPhysicalMemoryFrame; ++i)
+    {
+        uint32 frameIndex = physicalMemory->load();
+        pt[i / PAGE_SIZE].setEntry(i % PAGE_SIZE, frameIndex, space);
+        if (i  % PAGE_SIZE == 0)
+        {
+            pd.setEntry(i / PAGE_SIZE, &pt[i / PAGE_SIZE], space);
+        }      
+    }
+}
+
+void MemoryMapper::debug()
+{
+    printf("\nPML4 %b %b ", pml4.value[0], pml4.value[1]);
+    printf("\nPDP %b %b ", pdp.value[0], pdp.value[1]);
+    printf("\nPD %b %b %b %b ", pd.value[0], pd.value[1], pd.value[255], pd.value[256]);  
+    
+    printf("\nPML4 %p %p ", &pml4.value[0], &pml4.value[1]);
+    printf("\nPDP %p %p ", &pdp.value[0], &pdp.value[1]);
+    printf("\nPD %p %p %p %p ", &pd.value[0], &pd.value[1], &pd.value[255], &pd.value[256]);  
 }

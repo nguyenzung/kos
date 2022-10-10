@@ -49,19 +49,26 @@ void Kernel::initialize()
 
     deviceManager.registerDevice(&timer);
     serial.printSerial("Initialize Kernel");    
-
-    // Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
-    // Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
-    // Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
-    // Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
-
-    // printf("\n Task %d %d %d %d", task1, task2, task3, task4);
-
+    
     cmos.updateDateTime();
     
     bsp.intialize();
     printf("\n BSP Local APICID: %d ", bsp.localApicId);
     sdt.initialize();
+
+    virtualMemory.initialize(512*1024*1024, OSSpace::RING_0);
+    virtualMemory.active();
+
+    char *argv[] = {"Main"};
+    
+    Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
+    Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
+    Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
+    Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
+
+//    printf("\n Task %d %d %d %d", task1, task2, task3, task4);
+
+    
 
 //     std::Map<uint64, uint64> map;
 //     map.put(40, 40);

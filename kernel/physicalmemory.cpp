@@ -1,7 +1,11 @@
 #include <kernel/physicalmemory.h>
 
+IMPL_MODULE_INSTANCE(PhysicalMemory)
+
+
 PhysicalMemory::PhysicalMemory()
 {
+    setInstance(this);
 }
 
 PhysicalMemory::~PhysicalMemory()
@@ -11,24 +15,24 @@ PhysicalMemory::~PhysicalMemory()
 void PhysicalMemory::initialize()
 {
     totalFrame          = UINT32_MAX;   // Need to calculate
-    minAllocatedIndex   = 30000;       // Need to calculate
+    minAllocatedIndex   = 0;            // Need to calculate
     nextAllocatedIndex  = minAllocatedIndex;
 }
 
 uint32 PhysicalMemory::load()
 {
     uint32 index;
-    return index = loadInFreeFrames(), index ? index: loadByNext();
+    return index = loadInFreeFrames(), index != -1 ? index: loadByNext();
 }
 
-uint32 PhysicalMemory::loadInFreeFrames()
+int PhysicalMemory::loadInFreeFrames()
 {
     if (freeFrames.size > 0)
     {
         uint32 index = freeFrames.removeLast();
         return load(index);
     }
-    return 0;
+    return -1;
 }
 
 uint32 PhysicalMemory::loadByNext()

@@ -7,7 +7,6 @@
 
 namespace kernel 
 {
-
 #define OFFSET 0x20
 
 typedef struct 

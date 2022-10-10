@@ -9,6 +9,7 @@
 #include <kernel/physicalmemory.h>
 #include <kernel/sdt.h>
 #include <kernel/bsp.h>
+#include <kernel/virtualmemory.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
 #include <driver/serial.h>
@@ -22,6 +23,7 @@ class Kernel
     InterruptManager interruptManager;
     TaskManager taskManager;
     PhysicalMemory physicalMemory;
+    VirtualMemory virtualMemory;
     
     SDT sdt;
     BSP bsp;

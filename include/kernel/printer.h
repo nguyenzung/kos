@@ -38,6 +38,8 @@ class Printer {
     static void printlnAddress(uint64 address);
     static void printNumber(uint64 address);
     static void printlnNumber(uint64 address);
+    static void printBinary(uint64 address);
+    static void printlnBinary(uint64 address);
     static void print();
     static void println();
     static void printlnNumbers(uint64 *numbers, uint8 size);
@@ -57,13 +59,13 @@ class Printer {
 
 template <typename T, typename... Args>
 void Printer::printfHelper(int i, const char *format, T first, Args... args) {
-    // char tmp[10] = {0};
-
     for (; format[i] != '\0'; i++) {
         if (format[i] == '%' && format[i + 1] != '\0') {
             switch (format[i + 1]) {
+            case 'b':
+                Printer::printBinary((uint64)first);
+                break;
             case 'd':
-                // Utils::convertIntToDecString((uint64)first, tmp, 10);
                 Printer::printNumber((uint64)first);
                 break;
             case 'p':

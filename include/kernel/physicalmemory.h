@@ -26,7 +26,7 @@ public:
     void initialize();
 
     uint32 load();
-    uint32 loadInFreeFrames();
+    int loadInFreeFrames();
     uint32 loadByNext();
     uint32 load(uint32 index);
 
