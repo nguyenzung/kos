@@ -14,18 +14,19 @@
 #include <tasks/counter.h>
 
 #define HEAP_SIZE 256*1024*1024
+#define MAX_KERNEL_SIZE 1024*1024*1024
 
 using namespace kernel;
 
 extern void* heapBase;
 extern void* stackBase;
 
-
 Kernel* Kernel::instance = 0;
 
 Kernel::Kernel()
 {
     Kernel::instance = this;
+    INIT_LOCK(intLock);
 }
 
 Kernel::~Kernel() 
@@ -45,9 +46,16 @@ void Kernel::initialize()
     taskManager.initialize();
     interruptManager.initialize();
     physicalMemory.initialize();
+    
+    
+    uint64 size = 1;
+    size <<= 32;
+//    printf("\n Max kernel size %d %d ", size, sizeof(uint64));
+    virtualMemory.initialize(size, OSSpace::RING_0);
+    virtualMemory.active();
 //    PhysicalMemory 
     
-    Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
+    Task *mainTask = taskManager.makeTask(nullptr, &Kernel::start, 1, 0);
     
     timer.active();
     cmos.active();
@@ -59,20 +67,16 @@ void Kernel::initialize()
     cmos.updateDateTime();
     
     bsp.intialize();
-    printf("\n BSP Local APICID: %d ", bsp.localApicId);
     sdt.initialize();
-
-    virtualMemory.initialize(512*1024*1024, OSSpace::RING_0);
-    virtualMemory.active();
 
     char *argv[] = {"Main"};
     
-    Task *task1 = taskManager.makeTask(&TaskTest::count, 10000, argv);
-    Task *task2 = taskManager.makeTask(&TaskTest::ask, 20000, argv);
-    Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
-    Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
+    Task *task1 = taskManager.makeTask(nullptr, &TaskTest::count, 10000, argv);
+    Task *task2 = taskManager.makeTask(nullptr, &TaskTest::ask, 20000, argv);
+    Task *task3 = taskManager.makeTask(nullptr, &TaskTest::count, 300000, argv);
+    Task *task4 = taskManager.makeTask(nullptr, &TaskTest::ask, 400000, argv);
 
-    printf("\n Task %d %d %d %d", task1, task2, task3, task4);
+    printf("\n Task %d %d %d %d %d ", mainTask, task1, task2, task3, task4);
 
 //     std::Map<uint64, uint64> map;
 //     map.put(40, 40);
@@ -96,27 +100,7 @@ void Kernel::initialize()
 //     map.earse(33);
 //     map.put(60, 60);
 //     map.preorderTravel();
-//     map.inorderTravel();
-
-//     printf("\n");
-    
-    /*
-    *   Stress test: slow need to improve heap allocation algorithm
-    */
-    // printf("\n i = %d", physicalMemory.minAllocatedIndex);
-    // uint32 i;
-    // printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
-    // printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 3));
-    // printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 4));
-    // printf("\n Use %d ", physicalMemory.load(physicalMemory.minAllocatedIndex + 2));
-    // printf("\n Use %d ", physicalMemory.unload(physicalMemory.minAllocatedIndex + 4));
-    // printf("\n Use %d ", physicalMemory.unload(physicalMemory.minAllocatedIndex + 2)); 
-    // for (i = physicalMemory.minAllocatedIndex; i < physicalMemory.totalFrame - 5; i++)
-    // {
-    //     uint32 index = physicalMemory.load();
-    //     if(i % 1000 ==0)
-    //         printf("\n Load %d ", index);
-    // }
+//     map.inorderTravel(); 
 
     // uint64 address = &Kernel::initialize;
     // VGA vga;
@@ -129,9 +113,32 @@ void Kernel::update()
      cmos.updateDateTime();
 }
 
+void Kernel::enableInterrupt()
+{
+    LOCK(intLock);
+    asm ("sti");
+    UNLOCK(intLock);
+}
+
+void Kernel::disableInterrupt()
+{
+    LOCK(intLock);
+    asm ("cli");
+    UNLOCK(intLock);
+}
+
+bool Kernel::isInterruptActive()
+{
+    LOCK(intLock);
+    uint64 flags;
+    asm ("pushf\n\t" "pop %0":"=g"(flags));
+    UNLOCK(intLock);
+    return flags & (1 << 9);
+}
+
 int Kernel::start(int argc, char **argv)
 {    
-    asm("sti");
+    asm ("sti");
     asm("_cpp_stop:");
     Kernel::getInstance()->update();
     asm("jmp _cpp_stop");

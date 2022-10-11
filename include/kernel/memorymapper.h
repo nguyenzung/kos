@@ -8,6 +8,8 @@ namespace kernel
 {
 
 #define PAGE_SIZE           512
+#define NUM_PD_TABLE        4
+#define NUM_PT_TABLE        2048
 #define MEMORY_FRAME_SIZE   4096
 
 class PML4
@@ -54,11 +56,11 @@ public:
 class MemoryMapper
 {
 public:
-    __attribute__((aligned(0x1000)))
-    PML4   pml4;    
+//    __attribute__((aligned(0x1000)))
+    PML4   pml4;
     PDP    pdp;
-    PD     pd;
-    PT     pt[256]; // Cache 512MB
+    PD     pd[NUM_PD_TABLE];
+    PT     pt[NUM_PT_TABLE]; // Cache 4GB
     
     uint64 size;
     

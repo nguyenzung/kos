@@ -72,20 +72,21 @@ MemoryMapper::MemoryMapper()
 
 void MemoryMapper::initialize(uint64 size, OSSpace space)
 {
-    uint64 totalPhysicalMemoryFrame = (size / MEMORY_FRAME_SIZE) + (size % MEMORY_FRAME_SIZE ? 1 : 0);
-    if (totalPhysicalMemoryFrame > PAGE_SIZE * PAGE_SIZE)
-        totalPhysicalMemoryFrame = PAGE_SIZE * PAGE_SIZE;
-    
-    pml4.setEntry(0, &pdp.value[0], space);
-    pdp.setEntry(0, &pd.value[0], space);
     PhysicalMemory *physicalMemory = PhysicalMemory::getInstance();
-    for (uint32 i = 0; i < totalPhysicalMemoryFrame; ++i)
+    
+    uint64 totalPhysicalMemoryFrame = (size / MEMORY_FRAME_SIZE) + (size % MEMORY_FRAME_SIZE ? 1 : 0);
+    if (totalPhysicalMemoryFrame > PAGE_SIZE * NUM_PT_TABLE)
+        totalPhysicalMemoryFrame = PAGE_SIZE * NUM_PT_TABLE;    
+    pml4.setEntry(0, &pdp.value[0], space);
+    for (uint8 i = 0; i < NUM_PD_TABLE; ++i)
+        pdp.setEntry(i, &pd[i].value[0], space);
+    for (uint64 i = 0; i < totalPhysicalMemoryFrame; ++i)
     {
         uint32 frameIndex = physicalMemory->load();
-        pt[i / PAGE_SIZE].setEntry(i % PAGE_SIZE, frameIndex, space);
-        if (i  % PAGE_SIZE == 0)
+        pt[i >> 9].setEntry(i & 0b111111111, frameIndex, space);
+        if (i % PAGE_SIZE == 0)
         {
-            pd.setEntry(i / PAGE_SIZE, &pt[i / PAGE_SIZE], space);
+            pd[i >> 18].setEntry((i >> 9) & 0b111111111, &pt[i >> 9].value[0], space);
         }      
     }
 }
@@ -93,10 +94,11 @@ void MemoryMapper::initialize(uint64 size, OSSpace space)
 void MemoryMapper::debug()
 {
     printf("\nPML4 %b %b ", pml4.value[0], pml4.value[1]);
-    printf("\nPDP %b %b ", pdp.value[0], pdp.value[1]);
-    printf("\nPD %b %b %b %b ", pd.value[0], pd.value[1], pd.value[255], pd.value[256]);  
+    printf("\nPDP %b %b ", pdp.value[0], pdp.value[3]);
+    printf("\nPD %b %b %b %b ", pd[3].value[0], pd[3].value[1], pd[3].value[255], pd[2].value[256]); 
+     printf("\nPT %b %b %b %b ", pt[2047].value[0], pt[2047].value[1], pt[2047].value[255], pt[2047].value[511]); 
     
-    printf("\nPML4 %p %p ", &pml4.value[0], &pml4.value[1]);
-    printf("\nPDP %p %p ", &pdp.value[0], &pdp.value[1]);
-    printf("\nPD %p %p %p %p ", &pd.value[0], &pd.value[1], &pd.value[255], &pd.value[256]);  
+//    printf("\nPML4 %p %p ", &pml4.value[0], &pml4.value[1]);
+//    printf("\nPDP %p %p ", &pdp.value[0], &pdp.value[1]);
+//    printf("\nPD %p %p %p %p ", &pd.value[0], &pd.value[1], &pd.value[255], &pd.value[256]);  
 }

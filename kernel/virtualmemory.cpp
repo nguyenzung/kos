@@ -11,8 +11,8 @@ VirtualMemory:: VirtualMemory()
 void VirtualMemory::initialize(uint64 size, OSSpace space)
 {
     this->size = size;
-    memoryMapper.initialize(size, space);
-    memoryMapper.debug();
+    this->memoryMapper.initialize(size, space);
+//    memoryMapper.debug();
 }
 
 void VirtualMemory::loadDefault()
