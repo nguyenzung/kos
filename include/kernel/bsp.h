@@ -12,8 +12,10 @@ public:
    BSP();
    void intialize(uint8 localApicId = 0) override;
    
+   void enablePIC();
    void disablePIC();
    void enableAPIC();
+   void disableAPIC();
    
    void activeSMP();
 };

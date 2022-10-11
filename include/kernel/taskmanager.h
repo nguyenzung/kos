@@ -5,11 +5,12 @@
 #include <kernel/utils.h>
 #include <stdlib/list.h>
 
-#define TASK_STACK_SIZE (1 << 15)  // 32KB for stack size
+#define TASK_STACK_SIZE (1 << 20)  // 1MB for stack size
 
 namespace kernel 
 {
 
+class Process;
 class TaskManager
 {
 protected:
@@ -23,7 +24,7 @@ public:
 
     DEF_MODULE_INSTANCE(TaskManager)
 
-    Task* makeTask(mainFunction entryPoint, int argc, char** argv);
+    Task* makeTask(Process *process, mainFunction entryPoint, int argc, char** argv);
     void initialize();
     void save(uint64 *address);
     void load(uint64 *address);

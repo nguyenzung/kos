@@ -50,6 +50,13 @@ public:
     
     PT();
     void setEntry(uint16 index, uint64 frameIndex, OSSpace space);
+//    {
+//        uint64 address = frameIndex * MEMORY_FRAME_SIZE;
+//        address = address | 0b11;
+//        if(space == OSSpace::RING_3)
+//            address = address | 0b100;
+//        value[index] = address;    
+//    }
 };
 
 

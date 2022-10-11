@@ -19,7 +19,7 @@ void SDT::initialize()
 {
     scan();
     parse();
-    view();
+//    view();
 }
 
 /*   The RSDP is either located within the first 1 KB of the EBDA (Extended BIOS Data Area) 
@@ -28,19 +28,11 @@ void SDT::initialize()
  */
 void SDT::scan()
 {
-
-    uint16 *ebda = (uint16*)0x040E;
-    printf("\n EDBA %p", (*ebda) << 4);
-
-    uint16 addr = (*ebda) << 4;
-
     uint64 *startAddress = (uint64*)(0x000E0000);
     uint64 *endAddress = (uint64*)(0x000FFFFF);
 
     char signature_[9] = "RSD PTR ";
     uint64 *signature = (uint64*)signature_;
-    printf("\n Signature %p ", *signature);
-
     while (startAddress < endAddress)
     {
         if (*startAddress == *signature)
@@ -57,7 +49,6 @@ void SDT::scan()
 
 void SDT::parse()
 {
-    printf("\nRSDP %d %d ", rsdpDescriptor->revision, rsdpDescriptor->checksum);
     switch (rsdpDescriptor->revision) {
     case 0:
         parseRSDT();
@@ -71,18 +62,18 @@ void SDT::parse()
 
 bool SDT::checksum()
 {
-//    char sum = 0;
-//    for (uint16 i = 0; i < rsdpDescriptor->length; i++)
-//    {
-//        sum += ((char*)rsdpDescriptor)[i];
-//    }
-//    printf("\n Checksum result %d", sum);
-//    return !sum;
+    char sum = 0;
+    for (uint16 i = 0; i < rsdpDescriptor->length; i++)
+    {
+        sum += ((char*)rsdpDescriptor)[i];
+    }
+    return !sum;
 }
 
 void SDT::parseRSDT()
 {
     rsdt = (RSDT *) rsdpDescriptor->rsdtAddress;
+    printf("\n parseRSDT %d ", rsdt);
     uint8 numTable = (rsdt->h.length - sizeof(rsdt->h)) / 4;
 
     for (int i = 0; i < numTable; i++)
@@ -104,7 +95,6 @@ void SDT::parseXSDT()
 
     for (int i = 0; i < numTable; i++)
     {
-        // uint32 address = ()rsdt->nextSDT
         ACPISDTHeader *h = (ACPISDTHeader *)xsdt->nextSDT[i];
         if (!std::memcmp(h->signature, "ACPI", 4))
         {
@@ -117,7 +107,7 @@ void SDT::parseXSDT()
 void SDT::parseMADT()
 {
     madtHeader = (MADTHeader*)((void*)madt + sizeof(ACPISDTHeader));
-    printf("\n MADT Header: LAPIC Address %p %b ", madtHeader->localAPICAddress, madtHeader->flags);
+//    printf("\n MADT Header: LAPIC Address %p %b ", madtHeader->localAPICAddress, madtHeader->flags);
     void *descriptorEntries = (void*)madt + sizeof(ACPISDTHeader) + sizeof(MADTHeader);
     
     while (descriptorEntries < (void*)madt + madt->length) {

@@ -10,6 +10,8 @@
 #include <kernel/sdt.h>
 #include <kernel/bsp.h>
 #include <kernel/virtualmemory.h>
+#include <kernel/process.h>
+#include <stdlib/list.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
 #include <driver/serial.h>
@@ -18,12 +20,15 @@ namespace kernel
 {
 class Kernel
 {
+    DECLARE_LOCK(intLock);
     HeapMemoryManager heapMemoryManager;
     DeviceManager deviceManager;
     InterruptManager interruptManager;
     TaskManager taskManager;
     PhysicalMemory physicalMemory;
     VirtualMemory virtualMemory;
+    
+    std::List<Process*> processes;
     
     SDT sdt;
     BSP bsp;
@@ -42,6 +47,10 @@ public:
 
     void initialize();
     void update();
+    
+    void enableInterrupt();
+    void disableInterrupt();
+    bool isInterruptActive();
 
     static int start(int argc, char**argv);
 

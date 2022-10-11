@@ -1,14 +1,13 @@
 #include <kernel/taskmanager.h>
 #include <kernel/kernel.h>
 #include <kernel/kernelobject.h>
+#include <kernel/process.h>
 #include <kernel/printer.h>
 #include <stdlib/lock.h>
 
 extern void* stackBase;
 
 IMPL_MODULE_INSTANCE(TaskManager)
-
-DECLARE_LOCK(taskList);
 
 TaskManager::TaskManager()
 {
@@ -21,13 +20,13 @@ TaskManager::~TaskManager()
 }
 /*
 */
-Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
+Task* TaskManager::makeTask(Process *process, mainFunction entryPoint, int argc, char** argv)
 {
-    // LOCK(taskList);
     std::Node<KernelObject*>* prevNode = this->findTaskPosition();
-    Task *newTask = new Task(entryPoint, argc, argv);
+    Task *newTask = new Task(process, entryPoint, argc, argv);
     if(!newTask)
         return nullptr;
+
     if (prevNode)
     {
         Task *prevTask = (Task*)prevNode->value;
@@ -41,7 +40,6 @@ Task* TaskManager::makeTask(mainFunction entryPoint, int argc, char** argv)
     {
         list.getFirst();
     }
-    // UNLOCK(taskList);
     return newTask;
 }
 
@@ -52,7 +50,6 @@ void TaskManager::initialize()
 
 void TaskManager::save(uint64 *address)
 {
-    // LOCK(taskList);
     if(this->saveCounter == 0)
     {
         std::Node<KernelObject*> *node = this->list.current;
@@ -63,7 +60,6 @@ void TaskManager::save(uint64 *address)
         }
     }
     this->saveCounter++;
-    // UNLOCK(taskList);
 }
 
 void TaskManager::load(uint64 *address)
@@ -108,9 +104,9 @@ void TaskManager::loadMainKernel(uint64 *address)
 
 void TaskManager::removeTask(Task *task)
 {
-    LOCK(taskList);
+//    LOCK(taskList);
     this->list.removeNodeByValue(task);
-    UNLOCK(taskList);
+//    UNLOCK(taskList);
 }
 
 void TaskManager::contextInfo() {
@@ -134,7 +130,6 @@ int TaskManager::runTask(Task *task)
 
 std::Node<KernelObject*>* TaskManager::findTaskPosition()
 {
-    LOCK(taskList);
     std::Node<KernelObject*> *currentNode = list.first;
     if (currentNode)
     {
@@ -151,6 +146,5 @@ std::Node<KernelObject*>* TaskManager::findTaskPosition()
             nextNode = this->list.next();
         }
     }
-    UNLOCK(taskList);
     return currentNode;
 }

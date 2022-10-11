@@ -5,8 +5,8 @@
 #include <kernel/context.h>
 #include <kernel/type.h>
 
-using namespace kernel;
-
+namespace kernel
+{
 
 class Process;
 class Task : public KernelObject
@@ -19,13 +19,15 @@ public:
     Context context;
 
 public:
-    Task();
-    Task(mainFunction entryPoint, int argc, char **argv);
+    Task(Process *process);
+    Task(Process *process, mainFunction entryPoint, int argc, char **argv);
     ~Task();
 
     void initialize(uint64 rbp);
     void save(uint64 *address);
     void load(uint64 *address);
 };
+
+}
 
 #endif

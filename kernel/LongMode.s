@@ -16,10 +16,11 @@
     push rbp
     push gs
     push fs
-
+	pushf
 %endmacro
 
 %macro POP_REGISTERS 0
+	popf
     pop fs
     pop gs
     pop rbp
@@ -127,7 +128,7 @@ isrTimerHandler:
     PUSH_REGISTERS
     
     mov rsi, rsp
-    add rsi, (17 * 8 + 32)  ; calculate stackframe size
+    add rsi, (18 * 8 + 32)  ; calculate stackframe size
     mov [stackIndex], rsi
 
     ; mov rsi, interrupt_handler_msg
@@ -144,7 +145,6 @@ isrTimerHandler:
     mov rdi, rax
     mov rsi, 0x20
     call _ZN6kernel16InterruptManager15handleInterruptEm
-
 
     ; schedule new task
     call _ZN6kernel11TaskManager11getInstanceEv
@@ -211,8 +211,8 @@ section .bss
 global stack_base
 global heap_base
 align 4096
-stack_bottom: 		resb 8*1024*1024
-stack_base:         resb 32*1024*1024
+stack_bottom: 		resb 64*1024*1024
+stack_base:         resb 64*1024*1024
 stack_limit:        
 stack_size 			equ $ - stack_bottom
 heap_base:          resb 256*1024*1024

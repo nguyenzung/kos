@@ -1,14 +1,17 @@
 #include <kernel/task.h>
 #include <kernel/taskmanager.h>
+#include <kernel/process.h>
 #include <kernel/printer.h>
 
-Task::Task()
-{
+using namespace kernel;
 
+Task::Task(Process *process):process(process)
+{
 }
 
-Task::Task(mainFunction entryPoint, int argc, char **argv)
+Task::Task(Process *process, mainFunction entryPoint, int argc, char **argv)
 {
+    this->process = process;
     this->context.rip = (uint64)(&TaskManager::runTask);
     this->context.entryPoint = entryPoint;
     this->context.argc = argc;

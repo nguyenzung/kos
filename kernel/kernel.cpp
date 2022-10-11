@@ -47,10 +47,9 @@ void Kernel::initialize()
     interruptManager.initialize();
     physicalMemory.initialize();
     
-    
+    cmos.updateDateTime();
     uint64 size = 1;
-    size <<= 32;
-//    printf("\n Max kernel size %d %d ", size, sizeof(uint64));
+    size <<= 32;    
     virtualMemory.initialize(size, OSSpace::RING_0);
     virtualMemory.active();
 //    PhysicalMemory 

@@ -28,7 +28,7 @@ void HeapMemoryManager::initialize(void *heapBase, uint64 heapSize, void *stackB
     used = 0;
     last = first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
     printf("Heap base %d Heap limit %d First allocation %d \n", heapBase, heapLimit, first);
-    HeapMemoryManager::setInstance(this);
+    HeapMemoryManager::setInstance(this);    
 }
 
 MemoryEntry* HeapMemoryManager::find(uint32 size)
