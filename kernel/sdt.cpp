@@ -116,7 +116,10 @@ void SDT::parseXSDT()
 
 void SDT::parseMADT()
 {
+    madtHeader = (MADTHeader*)((void*)madt + sizeof(ACPISDTHeader));
+    printf("\n MADT Header: LAPIC Address %p %b ", madtHeader->localAPICAddress, madtHeader->flags);
     void *descriptorEntries = (void*)madt + sizeof(ACPISDTHeader) + sizeof(MADTHeader);
+    
     while (descriptorEntries < (void*)madt + madt->length) {
 //        printf("\n Entry type: %d %d", *((uint8*)descriptorEntries), descriptorEntries);
         switch(*((uint8*)descriptorEntries)) {
