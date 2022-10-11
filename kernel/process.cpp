@@ -2,12 +2,12 @@
 
 using namespace kernel;
 
-Process::Process()
+kernel::Process::Process()
 {
 
 }
 
-void Process::initialze()
+void kernel::Process::initialze()
 {
     
 }

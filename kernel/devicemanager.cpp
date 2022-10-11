@@ -5,7 +5,6 @@
 using namespace kernel;
 
 DeviceManager::DeviceManager() {
-    initialize();
 }
 
 DeviceManager::~DeviceManager() {

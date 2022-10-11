@@ -1,38 +1,39 @@
 #include <kernel/heapmemorymanager.h>
 #include <kernel/printer.h>
 
-extern void* heapBase;
-extern void* stackBase;
-
 using namespace kernel;
 
 IMPL_MODULE_INSTANCE(HeapMemoryManager)
 
 HeapMemoryManager::HeapMemoryManager()
 {
-    initialize();
+}
+
+HeapMemoryManager::HeapMemoryManager(void *heapBase, uint64 heapSize, void *stackBase)
+{
+    initialize(heapBase, heapSize, stackBase);
 }
 
 HeapMemoryManager::~HeapMemoryManager()
 {
 }
 
-void HeapMemoryManager::initialize()
+void HeapMemoryManager::initialize(void *heapBase, uint64 heapSize, void *stackBase)
 {
     static_assert(sizeof(kernel::MemoryEntry) == MEMORY_ENTRY_SIZE);
-    kernelHeapBase = heapBase;
-    kernelHeapLimit = heapBase + HEAP_SIZE;
-    kernelStackBase =  stackBase;
-    available = total = HEAP_SIZE;
+    this->heapBase = heapBase;
+    this->heapLimit = heapBase + heapSize;
+    this->stackBase =  stackBase;
+    available = total = heapSize;
     used = 0;
     last = first = (MemoryEntry*) this->makeFirstMemoryEntry(0x1000);
-    printf("Heap base %d Heap limit %d First allocation %d \n", kernelHeapBase, kernelHeapLimit, first);
+    printf("Heap base %d Heap limit %d First allocation %d \n", heapBase, heapLimit, first);
     HeapMemoryManager::setInstance(this);
 }
 
 MemoryEntry* HeapMemoryManager::find(uint32 size)
 {
-    if ((uint64)this->last + MEMORY_ENTRY_SIZE + this->last->size + MEMORY_ENTRY_SIZE + size <= (uint64)kernelHeapLimit)
+    if ((uint64)this->last + MEMORY_ENTRY_SIZE + this->last->size + MEMORY_ENTRY_SIZE + size <= (uint64)heapLimit)
     {
         return this->last;
     }else{
@@ -91,7 +92,7 @@ void* HeapMemoryManager::free(void *ptr)
 void* HeapMemoryManager::reserve(void* ptr, uint32 size)
 {
     printf("\n Reserve %d %d ", (uint64)ptr, size);
-    if ((uint64)ptr + size >= (uint64)kernelHeapLimit)
+    if ((uint64)ptr + size >= (uint64)heapLimit)
     {
         return nullptr;
     }
@@ -124,7 +125,7 @@ void* HeapMemoryManager::reserve(void* ptr, uint32 size)
 
 void* HeapMemoryManager::makeFirstMemoryEntry(uint32 size)
 {
-    MemoryEntry *entry = (MemoryEntry*)this->kernelHeapBase;
+    MemoryEntry *entry = (MemoryEntry*)this->heapBase;
     entry->size = size;
     entry->next = nullptr;
     entry->prev = nullptr;
@@ -176,7 +177,7 @@ void* getFreeSize(MemoryEntry *entry, HeapMemoryManager *instance)
 {
     uint64 ptr = (uint64)entry + MEMORY_ENTRY_SIZE + entry->size;
     uint64 next = (uint64)entry->next;
-    return (void*)(next?  next - ptr: (uint64)instance->kernelHeapLimit - ptr);
+    return (void*)(next?  next - ptr: (uint64)instance->heapLimit - ptr);
 }
 
 void* deleteNode(MemoryEntry *node, MemoryEntry *root)

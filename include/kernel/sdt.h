@@ -86,6 +86,7 @@ public:
     RSDT *rsdt;
     XSDT *xsdt;
     ACPISDTHeader *madt;
+    MADTHeader *madtHeader;
     ProcessorDescriptor *processorDescriptor;
     
     std::List<LAPICDescriptor*> localApicDescriptors;

@@ -13,10 +13,13 @@
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
 
+#define HEAP_SIZE 256*1024*1024
+
 using namespace kernel;
 
 extern void* heapBase;
 extern void* stackBase;
+
 
 Kernel* Kernel::instance = 0;
 
@@ -36,10 +39,13 @@ Kernel* Kernel::getInstance()
 
 void Kernel::initialize()
 {
+    printf("\n Kernel initialize! ");
+    heapMemoryManager.initialize(heapBase, HEAP_SIZE, stackBase);
     deviceManager.initialize();
     taskManager.initialize();
     interruptManager.initialize();
     physicalMemory.initialize();
+//    PhysicalMemory 
     
     Task *mainTask = taskManager.makeTask(&Kernel::start, 1, 0);
     
@@ -66,9 +72,7 @@ void Kernel::initialize()
     Task *task3 = taskManager.makeTask(&TaskTest::count, 300000, argv);
     Task *task4 = taskManager.makeTask(&TaskTest::ask, 400000, argv);
 
-//    printf("\n Task %d %d %d %d", task1, task2, task3, task4);
-
-    
+    printf("\n Task %d %d %d %d", task1, task2, task3, task4);
 
 //     std::Map<uint64, uint64> map;
 //     map.put(40, 40);
@@ -122,7 +126,7 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-//     cmos.updateDateTime();
+     cmos.updateDateTime();
 }
 
 int Kernel::start(int argc, char **argv)

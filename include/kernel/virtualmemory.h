@@ -8,11 +8,22 @@
 namespace kernel
 {
 
+typedef struct MemorySegment
+{
+    void *baseAddress;
+    uint64 size;
+} MemorySegment;
+
 class VirtualMemory
 {
 public:
     MemoryMapper memoryMapper;
     uint64 size;
+    
+    MemorySegment codeSegment;
+    MemorySegment stackSegment;
+    MemorySegment heapSegment;
+    
 
     VirtualMemory();
     

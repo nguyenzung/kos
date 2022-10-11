@@ -6,7 +6,6 @@
 
 namespace kernel 
 {
-#define HEAP_SIZE 256*1024*1024
 #define MEMORY_ENTRY_SIZE 20
 typedef struct MemoryEntry 
 {
@@ -20,9 +19,9 @@ typedef struct MemoryEntry
 class HeapMemoryManager 
 {
 public:
-    void* kernelHeapBase;
-    void* kernelHeapLimit;
-    void* kernelStackBase;
+    void* heapBase;
+    void* heapLimit;
+    void* stackBase;
     MemoryEntry *first;
     MemoryEntry *last;
 
@@ -34,9 +33,10 @@ public:
 
 public:
     HeapMemoryManager();
+    HeapMemoryManager(void *heapBase, uint64 heapSize, void *stackBase);
     ~HeapMemoryManager();
 
-    void initialize();
+    void initialize(void *heapBase, uint64 heapSize, void *stackBase);
 
     void* malloc(uint32 size);
     void* free(void *ptr);

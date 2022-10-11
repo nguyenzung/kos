@@ -14,7 +14,7 @@ public:
     uint32 totalFrame;
     uint32 nextAllocatedIndex;
     uint32 minAllocatedIndex;
-    std::UnorderedMap<uint32, uint8> frameInfo;    // A Frame can be assigned to many processes
+    std::UnorderedMap<uint32, uint8> *frameInfo;    // A Frame can be assigned to many processes
     std::List<uint32> freeFrames;
 
 public:
