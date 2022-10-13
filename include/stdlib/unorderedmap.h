@@ -25,7 +25,6 @@ class UnorderedMap
 public:
     UnorderedMap(uint16 numSlot = NUM_SLOT_DEFAULT):numSlot(numSlot)
     {
-        printf("\n Total slots %d", numSlot);
         this->error = false;
         lists = new List<Pair<K, V>*>*[numSlot];
         if (!lists)
