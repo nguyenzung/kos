@@ -14,7 +14,7 @@ PhysicalMemory::~PhysicalMemory()
 
 void PhysicalMemory::initialize()
 {
-    frameInfo = new std::UnorderedMap<uint32, uint8>();
+    frameInfo = new std::UnorderedMap<uint32, uint8>(20129);
     totalFrame          = UINT32_MAX;   // Need to calculate
     minAllocatedIndex   = 0;            // Need to calculate
     nextAllocatedIndex  = minAllocatedIndex;

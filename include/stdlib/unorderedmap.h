@@ -8,7 +8,7 @@
 #include <stdlib/algorithm.h>
 #include <kernel/printer.h>
 
-#define NUM_SLOT_DEFAULT 5399    // We choose a prime number for the total slots
+#define NUM_SLOT_DEFAULT 2269    // We choose a prime number for the total slots
 
 using namespace kernel;
 
@@ -144,7 +144,7 @@ protected:
     uint64 hash(K key)
     {
         uint64 p = 267419;   // Randomly choose a prime number
-        uint64 a = 187639;    // a < p
+        uint64 a = 187639;   // a < p
         uint64 b = 203183;   // b < p
         uint64 index = ((a * (uint64) key + b) % p) % numSlot;
         return index;
