@@ -25,6 +25,7 @@ class UnorderedMap
 public:
     UnorderedMap(uint16 numSlot = NUM_SLOT_DEFAULT):numSlot(numSlot)
     {
+        printf("\n Total slots %d", numSlot);
         this->error = false;
         lists = new List<Pair<K, V>*>*[numSlot];
         if (!lists)
@@ -143,10 +144,10 @@ protected:
     */
     uint64 hash(K key)
     {
-        uint64 p = 19997;   // Randomly choose a prime number
-        uint64 a = 8123;    // a < p
-        uint64 b = 10973;   // b < p
-        uint64 index = ((a * (uint64) key + b) % p) % NUM_SLOT_DEFAULT;
+        uint64 p = 267419;   // Randomly choose a prime number
+        uint64 a = 187639;    // a < p
+        uint64 b = 203183;   // b < p
+        uint64 index = ((a * (uint64) key + b) % p) % numSlot;
         return index;
     }
 };
