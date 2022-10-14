@@ -18,29 +18,15 @@ TaskManager::TaskManager()
 TaskManager::~TaskManager()
 {
 }
-/*
-*/
-Task* TaskManager::makeTask(Process *process, mainFunction entryPoint, int argc, char** argv)
-{
-    std::Node<KernelObject*>* prevNode = this->findTaskPosition();
-    Task *newTask = new Task(process, entryPoint, argc, argv);
-    if(!newTask)
-        return nullptr;
 
-    if (prevNode)
-    {
-        Task *prevTask = (Task*)prevNode->value;
-        newTask->initialize(prevTask->context.rbp + TASK_STACK_SIZE);
-    } else
-    {
-        newTask->initialize((uint64)stackBase);
-    }
-    list.addNodeAfter(prevNode,new std::Node<KernelObject*>(newTask));
+Task* TaskManager::addTask(Task *task)
+{
+    list.add(task);
     if (list.getCurrent() == 0)
     {
         list.getFirst();
     }
-    return newTask;
+    return task;
 }
 
 void TaskManager::initialize()
@@ -52,7 +38,7 @@ void TaskManager::save(uint64 *address)
 {
     if(this->saveCounter == 0)
     {
-        std::Node<KernelObject*> *node = this->list.current;
+        std::Node<Task*> *node = this->list.current;
         if (node)
         {
             Task *task = (Task*)node->value;
@@ -67,7 +53,7 @@ void TaskManager::load(uint64 *address)
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
-        std::Node<KernelObject*> *node = this->list.next();
+        std::Node<Task*> *node = this->list.next();
         if (!node)
         {
             node = this->list.getFirst();
@@ -75,6 +61,7 @@ void TaskManager::load(uint64 *address)
         if (node)
         {
             Task *task = (Task*)node->value;
+//            printf("\n Load %d ", task);
             task->load(address);
         }
     }
@@ -84,7 +71,7 @@ void TaskManager::saveMainKernel(uint64 *address)
 {
     if(this->saveCounter == 0)
     {
-        std::Node<KernelObject*> *node = this->list.first;
+        std::Node<Task*> *node = this->list.first;
         Task *task = (Task*)node->value;
         task->save(address);
     }
@@ -96,7 +83,7 @@ void TaskManager::loadMainKernel(uint64 *address)
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
-        std::Node<KernelObject*> *node = this->list.first;
+        std::Node<Task*> *node = this->list.first;
         Task *task = (Task*)node->value;
         task->load(address);
     }
@@ -116,9 +103,11 @@ void TaskManager::contextInfo() {
 
 int TaskManager::runTask(Task *task)
 {
+    printf("\n Start run task %d %d ", task, task->context.entryPoint);
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
     printf("\n Result %d: %d", result, task->context.argc);
     asm("cli");
+    task->onFinished();
     TaskManager::getInstance()->removeTask(task);
     asm("sti");
     while (true)
@@ -126,25 +115,4 @@ int TaskManager::runTask(Task *task)
         asm("hlt");
     }
     return 0;
-}
-
-std::Node<KernelObject*>* TaskManager::findTaskPosition()
-{
-    std::Node<KernelObject*> *currentNode = list.first;
-    if (currentNode)
-    {
-        std::Node<KernelObject*> *nextNode = list.next();
-        while (nextNode)
-        {
-            Task *currentTask = (Task*)currentNode->value;
-            Task* nextTask = (Task*)nextNode->value;
-            if (nextTask->context.rbp - currentTask->context.rbp >= TASK_STACK_SIZE * 2)
-            {
-                return currentNode;
-            }
-            currentNode = nextNode;
-            nextNode = this->list.next();
-        }
-    }
-    return currentNode;
 }

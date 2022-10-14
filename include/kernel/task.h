@@ -13,6 +13,7 @@ class Task : public KernelObject
 {
 public:
     Process*    process;
+    uint64      stackBase;
     uint16      taskID;
 
 public:
@@ -23,9 +24,11 @@ public:
     Task(Process *process, mainFunction entryPoint, int argc, char **argv);
     ~Task();
 
-    void initialize(uint64 rbp);
+    void initialize(uint64 stackBase);
     void save(uint64 *address);
     void load(uint64 *address);
+    
+    void onFinished();
 };
 
 }

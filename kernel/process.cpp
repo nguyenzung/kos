@@ -1,11 +1,16 @@
 #include <kernel/process.h>
+#include <kernel/processmanager.h>
 #include <kernel/taskmanager.h>
 
 kernel::Process::Process(
         uint64 pid,
         HeapMemoryManager *heapMemoryManager, 
         VirtualMemory *virtualMemory, 
-        uint64 memorySize, 
+        uint64 memorySize,
+        uint64 heapBase,
+        uint64 heapSize,
+        uint64 stackBottom,
+        uint64 stackBase,
         uint64 stackSize, 
         mainFunction entryPoint, 
         int argc, 
@@ -13,10 +18,14 @@ kernel::Process::Process(
         OSSpace space)
     :
       pid(pid),
-      memorySize(memorySize),
       stackSize(stackSize),
       heapMemoryManager(heapMemoryManager),
       virtualMemory(virtualMemory),
+      memorySize(memorySize),
+      heapBase(heapBase),
+      heapSize(heapSize),
+      stackBottom(stackBottom),
+      stackBase(stackBase),
       entryPoint(entryPoint),
       argc(argc),
       argv(argv),
@@ -30,26 +39,76 @@ kernel::Process::~Process()
 
 void kernel::Process::initialize()
 {
+    printf("\n init process %d ", entryPoint);
+    createTask(entryPoint, argc, argv);    
+}
+
+void kernel::Process::initializeHeapManagement()
+{
     if (!heapMemoryManager)
         heapMemoryManager = new HeapMemoryManager();
+}
+
+void kernel::Process::initializeVirtualMemory()
+{
     if (!virtualMemory)
     {
         virtualMemory = new VirtualMemory();
         virtualMemory->initialize(memorySize, space);
     }
-    
-    // TODO: init memory for
-    createTask(entryPoint, argc, argv);    
+}
+
+void kernel::Process::initializeGDT()
+{
+    if (!gdt)
+        gdt = new GDT();
 }
 
 kernel::Task* kernel::Process::createTask(mainFunction entryPoint, int argc, char **argv)
 {
-    TaskManager *taskManager = TaskManager::getInstance();
-    Task *task = taskManager->makeTask(this, entryPoint, argc, argv);
-    this->tasks.add(task);
+    std::Node<Task*>* prevNode = this->findTaskPosition();
+    Task *newTask = new Task(this, entryPoint, argc, argv);
+    if(!newTask)
+        return nullptr;
+    
+    if (prevNode)
+    {
+        Task *prevTask = (Task*)prevNode->value;
+        newTask->initialize(prevTask->stackBase + TASK_STACK_SIZE);
+    } else
+    {
+        newTask->initialize((uint64)stackBase);
+    }
+    tasks.addNodeAfter(prevNode, new std::Node<Task*>(newTask));
+    TaskManager::getInstance()->addTask(newTask);
 }
 
-void kernel::Process::onTaskFinish(Task *task)
+std::Node<Task*>* kernel::Process::findTaskPosition()
 {
-    
+    std::Node<Task*> *currentNode = tasks.getFirst();
+    printf("\n Curr %d ", currentNode);
+    if (currentNode)
+    {
+        std::Node<Task*> *nextNode = tasks.next();
+        while (nextNode)
+        {
+            Task *currentTask = (Task*)currentNode->value;
+            Task* nextTask = (Task*)nextNode->value;
+            if (nextTask->stackBase - currentTask->stackBase >= TASK_STACK_SIZE * 2)
+            {
+                return currentNode;
+            }
+            currentNode = nextNode;
+            nextNode = tasks.next();
+        }
+    }
+    return currentNode;
+}
+
+void kernel::Process::onTaskFinished(Task *task)
+{
+//    printf("\n onTaskFinished");
+    this->tasks.removeNodeByValue(task);
+    if (this->tasks.size == 0)
+        ProcessManager::getInstance()->onProcessFinished(this);
 }

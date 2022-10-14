@@ -12,12 +12,10 @@ PML4::PML4()
 void PML4::setEntry(uint16 index, void *pdpAddress, OSSpace space)
 {    
     uint64 address = (uint64)pdpAddress;
-    printf("\n [Before] %d %b %p", index, address, pdpAddress);
     address = address | 0b11;
     if(space == OSSpace::RING_3)
         address = address | 0b100;
     value[index] = address;
-    printf("\n [After] %d %b %p", index, address, pdpAddress);
 }
 
 PDP::PDP()

@@ -126,14 +126,14 @@ ACCESSED    equ 1 << 0
 
 ; Flags bits
 GRAN_4K     equ 1 << 7
-SZ_32       equ 1 << 6
+SZ_32       equ 0 << 6
 LONG_MODE   equ 1 << 5
 align 4096
 GDT64:
     .Null: equ $ - GDT64
         dq 0
     .Code: equ $ - GDT64
-        dd 0xFFFF                                   ; Limit & Base (low, bits 0-15)
+        dd 0x0000                                   ; Limit & Base (low, bits 0-15)
         db 0                                        ; Base (mid, bits 16-23)
         db PRESENT | NOT_SYS | EXEC | RW            ; Access
         db GRAN_4K | LONG_MODE | 0xF                ; Flags & Limit (high, bits 16-19)

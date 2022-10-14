@@ -16,6 +16,7 @@ void Printer::printfHelper(int i, const char *format) { print((char*)format + i)
 
 int volatile *Printer::getLockInstance() {
     static DECLARE_LOCK(print_lock);
+//    INIT_LOCK(print_lock);
     return &print_lockLocked;
 }
 

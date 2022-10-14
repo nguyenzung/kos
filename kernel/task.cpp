@@ -23,11 +23,12 @@ Task::~Task()
 {
 }
 
-void Task::initialize(uint64 rbp)
+void Task::initialize(uint64 stackBase)
 {
-    this->context.rbp = rbp;
-    this->context.rsp = rbp;
-    printf("\n [Task init] %d %d %d %d", this->context.rbp, this->context.rsp, this->context.rip, this);
+    this->stackBase = stackBase;
+    this->context.rbp = stackBase;
+    this->context.rsp = stackBase;
+    printf("\n [Task init] %d %d %d %d ", this->context.rbp, this->context.rsp, this->context.rip, this);
     this->context.initialize();
 }
 
@@ -39,4 +40,9 @@ void Task::save(uint64 *address)
 void Task::load(uint64 *address)
 {
     this->context.load(address);
+}
+
+void Task::onFinished()
+{
+    this->process->onTaskFinished(this);
 }

@@ -96,7 +96,9 @@ template <typename... Args>
 void printf(const char *format, Args... args) {
     volatile int &print_lockLocked = *Printer::getLockInstance();
     LOCK(print_lock);
+//    asm("cli");
     kernel::Printer::printf(format, args...);
+//    asm("sti");
     UNLOCK(print_lock);
 }
 

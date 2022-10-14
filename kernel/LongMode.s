@@ -190,6 +190,7 @@ IRS_NO_ERR_STUB 31
 
 section .data
 global isrStubTable
+global stackBottom
 global stackBase
 global stackSize
 global heapBase
@@ -205,6 +206,7 @@ isrStubTable:
     stackLimit              dq stack_limit
     heapBase                dq heap_base
     stackSize               dq stack_size
+	stackBottom				dq stack_bottom
     interrupt_handler_msg   db "[Enable Paging]",7
 
 section .bss

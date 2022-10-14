@@ -20,6 +20,7 @@ using namespace kernel;
 
 extern void* heapBase;
 extern void* stackBase;
+extern void* stackBottom;
 
 Kernel* Kernel::instance = 0;
 
@@ -41,21 +42,20 @@ Kernel* Kernel::getInstance()
 void Kernel::initialize()
 {
     printf("\n Kernel initialize! ");
+    uint64 kernelMemorySize = 1;
+    kernelMemorySize <<= 32;   
     heapMemoryManager.initialize(heapBase, HEAP_SIZE, stackBase);
     deviceManager.initialize();
     taskManager.initialize();
     interruptManager.initialize();
     physicalMemory.initialize();
     
-    cmos.updateDateTime();
-    uint64 size = 1;
-    size <<= 32;    
-    virtualMemory.initialize(size, OSSpace::RING_0);
+    cmos.updateDateTime();    
+
+    virtualMemory.initialize(kernelMemorySize, OSSpace::RING_0);
+    processManager.initialize();
+
     virtualMemory.active();
-//    PhysicalMemory 
-    
-    Task *mainTask = taskManager.makeTask(nullptr, &Kernel::start, 1, 0);
-    
     timer.active();
     cmos.active();
     serial.active();
@@ -67,15 +67,51 @@ void Kernel::initialize()
     
     bsp.intialize();
     sdt.initialize();
-
-    char *argv[] = {"Main"};
     
-    Task *task1 = taskManager.makeTask(nullptr, &TaskTest::count, 10000, argv);
-    Task *task2 = taskManager.makeTask(nullptr, &TaskTest::ask, 20000, argv);
-    Task *task3 = taskManager.makeTask(nullptr, &TaskTest::count, 300000, argv);
-    Task *task4 = taskManager.makeTask(nullptr, &TaskTest::ask, 400000, argv);
-
-    printf("\n Task %d %d %d %d %d ", mainTask, task1, task2, task3, task4);
+    uint64 pid = makeProcess(
+                &heapMemoryManager, 
+                &virtualMemory,
+                kernelMemorySize,
+                (uint64)heapBase,
+                HEAP_SIZE,
+                (uint64)stackBottom,
+                (uint64)stackBase,
+                1<<26,
+                &Kernel::start,
+                1,
+                0,
+                OSSpace::RING_0);
+    
+    char **argv = new char*;
+    argv[0] = new char[5];
+    argv[0][0] = 'M';
+    argv[0][0] = 'a';
+    argv[0][0] = 'i';
+    argv[0][0] = 'n';
+    argv[0][0] = '\0';
+        
+    uint64 pid1 = makeProcess(
+                &heapMemoryManager, 
+                &virtualMemory,
+                kernelMemorySize,
+                (uint64)heapBase,
+                HEAP_SIZE,
+                (uint64)stackBottom,
+                (uint64)stackBase + 0x10000,
+                1<<26,
+                &TaskTest::processOne,
+                10,
+                argv,
+                OSSpace::RING_0);
+    
+    
+    printf("\n Process ID: %d %d %d ", pid, pid1);
+    
+    makeThread(pid, &TaskTest::count, 2000, argv);
+    makeThread(pid, &TaskTest::ask, 2000, argv); 
+    makeThread(pid1, &TaskTest::processTwo, 5, argv);
+    
+    cmos.updateDateTime();
 
 //     std::Map<uint64, uint64> map;
 //     map.put(40, 40);

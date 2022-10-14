@@ -10,7 +10,7 @@
 #include <kernel/sdt.h>
 #include <kernel/bsp.h>
 #include <kernel/virtualmemory.h>
-#include <kernel/process.h>
+#include <kernel/processmanager.h>
 #include <stdlib/list.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
@@ -27,8 +27,7 @@ class Kernel
     TaskManager taskManager;
     PhysicalMemory physicalMemory;
     VirtualMemory virtualMemory;
-    
-    std::List<Process*> processes;
+    ProcessManager processManager;
     
     SDT sdt;
     BSP bsp;

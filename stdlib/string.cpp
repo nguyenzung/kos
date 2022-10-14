@@ -37,7 +37,6 @@ void* memmove(void* des, void* src, size_t size)
 
 void* memset(void* des, uint8 c, size_t size)
 {
-    // asm("cli");
     size_t numq = size >> 3;
     uint16 cw = c;
     cw = (cw << 8) | c;
@@ -56,7 +55,6 @@ void* memset(void* des, uint8 c, size_t size)
     {
         bdes[i] = c;
     }
-    // asm("sti");
     return 0;
 }
 

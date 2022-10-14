@@ -14,7 +14,7 @@ class Process;
 class TaskManager
 {
 protected:
-    std::List<KernelObject*> list;
+    std::List<Task*> list;
 
 public:
     uint64 saveCounter;
@@ -24,7 +24,8 @@ public:
 
     DEF_MODULE_INSTANCE(TaskManager)
 
-    Task* makeTask(Process *process, mainFunction entryPoint, int argc, char** argv);
+//    Task* makeTask(Process *process, mainFunction entryPoint, int argc, char** argv);
+    Task* addTask(Task *task);
     void initialize();
     void save(uint64 *address);
     void load(uint64 *address);
@@ -43,7 +44,7 @@ protected:
    /*
     *   Find position of new task in the list. Return prev task address
     */
-    std::Node<KernelObject*>* findTaskPosition();   
+//    std::Node<Task*>* findTaskPosition();   
 };
 
 }

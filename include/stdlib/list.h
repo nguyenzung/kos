@@ -1,7 +1,7 @@
 #ifndef LIST
 #define LIST
 
-#include <kernel/kernelobject.h>
+#include <kernel/printer.h>
 #include <kernel/type.h>
 
 namespace std {
@@ -147,10 +147,11 @@ public:
         {
             return;
         }
-        if(!prevNode)
+        if(!first)
         {
-            node->addNext(this->first);
-            this->first = node;
+            first = node;
+            last = node;
+//            node->addNext(null);
         }else{
             Node<T> *next = prevNode->next;
             prevNode->addNext(node);
