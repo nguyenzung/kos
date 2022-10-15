@@ -21,8 +21,7 @@ setupAP:
 	mov al, 'e'
 	int 0x10
 	mov al, 'd'
-	int 0x10
-	
+	int 0x10	
 	jmp $
 	
 section .data

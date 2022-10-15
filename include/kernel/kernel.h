@@ -11,6 +11,7 @@
 #include <kernel/bsp.h>
 #include <kernel/virtualmemory.h>
 #include <kernel/processmanager.h>
+#include <kernel/pic.h>
 #include <stdlib/list.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>

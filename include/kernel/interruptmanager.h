@@ -1,14 +1,13 @@
 #ifndef INTERRUPT_MANAGER
 #define INTERRUPT_MANAGER
 
+#include <kernel/pic.h>
 #include <kernel/utils.h>
 #include <kernel/type.h>
 #include <driver/keyboard.h>
 
 namespace kernel 
 {
-#define OFFSET 0x20
-
 typedef struct GateEntry
 {
 	uint16    isr_low;      
@@ -39,6 +38,9 @@ class InterruptManager
 protected:
     GateEntry idt[256];
 	IDTR idtr;
+    PIC pic;
+    
+    bool isLegacy;
 	// Keyboard keyboard;
 
 public:
