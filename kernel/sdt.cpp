@@ -11,6 +11,7 @@ SDT::SDT()
     ,xsdt(nullptr)
     ,madt(nullptr)
 {
+    SDT::instance = this;
 }
 
 IMPL_MODULE_INSTANCE(SDT)
@@ -19,7 +20,7 @@ void SDT::initialize()
 {
     scan();
     parse();
-//    view();
+    view();
 }
 
 /*   The RSDP is either located within the first 1 KB of the EBDA (Extended BIOS Data Area) 
@@ -37,7 +38,6 @@ void SDT::scan()
     {
         if (*startAddress == *signature)
         {
-            printf("\n Found %p ", startAddress);
             rsdpDescriptor = (RSDPDescriptor*)startAddress;
             if (checksum())
                 break;
@@ -49,6 +49,7 @@ void SDT::scan()
 
 void SDT::parse()
 {
+    printf("\n Version %d ", rsdpDescriptor->revision);
     switch (rsdpDescriptor->revision) {
     case 0:
         parseRSDT();
@@ -73,7 +74,6 @@ bool SDT::checksum()
 void SDT::parseRSDT()
 {
     rsdt = (RSDT *) rsdpDescriptor->rsdtAddress;
-    printf("\n parseRSDT %d ", rsdt);
     uint8 numTable = (rsdt->h.length - sizeof(rsdt->h)) / 4;
 
     for (int i = 0; i < numTable; i++)
@@ -136,4 +136,9 @@ void SDT::view()
         LAPICDescriptor* item = *it;
         printf("\n LAPIC: %d %d %d ", item->apicId, item->apicProcessorId, item->flags);
     }
+}
+
+MADTHeader* SDT::getMADTHeader()
+{
+    return madtHeader;
 }

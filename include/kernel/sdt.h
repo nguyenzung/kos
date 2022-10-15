@@ -98,7 +98,7 @@ public:
     void initialize();
     void scan();
     void parse();
-    bool checksum();
+    bool checksum();    
 
     void parseRSDT();
     void parseXSDT();
@@ -106,6 +106,8 @@ public:
     void parseMADT();
     
     void view();
+    
+    MADTHeader *getMADTHeader();
 };
 
 

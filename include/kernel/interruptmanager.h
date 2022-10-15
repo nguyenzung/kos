@@ -2,6 +2,7 @@
 #define INTERRUPT_MANAGER
 
 #include <kernel/pic.h>
+#include <kernel/apic.h>
 #include <kernel/utils.h>
 #include <kernel/type.h>
 #include <driver/keyboard.h>
@@ -39,7 +40,7 @@ protected:
     GateEntry idt[256];
 	IDTR idtr;
     PIC pic;
-    
+    APIC *apic;
     bool isLegacy;
 	// Keyboard keyboard;
 
@@ -57,6 +58,8 @@ public:
 	void* getIDTAddress();
 
 	void handleInterrupt(uint64 vector);
+    
+    void enableAPIC();
 
 protected:
 	void setupIDT();
