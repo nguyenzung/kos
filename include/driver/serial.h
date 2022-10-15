@@ -16,6 +16,8 @@ class SERIAL : public BaseDriver
 public:
     SERIAL();
     ~SERIAL();
+    
+    DEF_MODULE_INSTANCE(SERIAL)
 
     void active();
     void deactive();

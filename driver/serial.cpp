@@ -28,8 +28,10 @@ void SERIAL::printSerial(char *msg){
     }
 }
 
-SERIAL::SERIAL(){
+IMPL_MODULE_INSTANCE(SERIAL)
 
+SERIAL::SERIAL(){
+    SERIAL::instance = this;
 }
 
 SERIAL::~SERIAL() {

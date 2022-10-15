@@ -50,7 +50,6 @@ void TaskManager::save(uint64 *address)
 
 void TaskManager::load(uint64 *address)
 {
-    printf("\n Load");
     this->saveCounter--;
     if(this->saveCounter == 0)
     {
