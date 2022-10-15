@@ -40,8 +40,11 @@ void readDateTime(DateTime &dateTime)
         dateTime.year += 100;
 }
 
+IMPL_MODULE_INSTANCE(CMOS)
+
 CMOS::CMOS()
 {
+    CMOS::instance = this;
 }
 
 CMOS::~CMOS()

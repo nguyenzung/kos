@@ -11,6 +11,7 @@ namespace kernel
 #define TPR                 0x80
 #define EOI                 0xB0
 #define LOGICAL_DESTINATION 0xD0
+#define DFR                 0xE0
 #define SPURIOUS            0xF0
 #define INT_CMD_LOW         0x300
 #define INT_CMD_HIGH        0x310
@@ -30,8 +31,9 @@ public:
     
     void write(uint16 reg, uint32 data);
     uint32 read(uint16 reg);
-    
+    void finishedINT(uint8 vector);
     void startTimer();
+    
 };
 
 APIC* loadAPIC();

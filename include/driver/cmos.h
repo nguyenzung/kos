@@ -61,6 +61,8 @@ public:
 
     CMOS();
     ~CMOS();
+    
+    DEF_MODULE_INSTANCE(CMOS)
 
     void active();
     void deactive();

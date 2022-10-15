@@ -57,17 +57,20 @@ void* InterruptManager::getIDTAddress()
 void InterruptManager::handleInterrupt(uint64 vector)
 {
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
-//    if(isLegacy)
-    pic.eoi(vector);
+    if(isLegacy)
+        pic.eoi(vector);
+    else
+        apic->finishedINT(vector);
     
 }
 
 void InterruptManager::enableAPIC()
 {
-//    pic.disable();
-//    apic = loadAPIC();
-//    apic->enable();
-//    apic->startTimer();
+    isLegacy = false;
+    pic.disable();
+    apic = loadAPIC();
+    apic->enable();
+    apic->startTimer();
 }
 
 __attribute__((interrupt))

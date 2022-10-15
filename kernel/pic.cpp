@@ -68,9 +68,6 @@ void PIC::remap()
 	io_wait();
 	outb(PIC2_DATA, ICW4_8086);
 	io_wait();
-    
-    outb(PIC1_DATA, a1);
-	outb(PIC2_DATA, a2);
 }
 
 void PIC::setMask(uint8 irq)

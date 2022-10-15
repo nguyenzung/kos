@@ -68,7 +68,7 @@ void Kernel::initialize()
     bsp.intialize();
     sdt.initialize();
     
-//    interruptManager.enableAPIC();
+    interruptManager.enableAPIC();
         
     uint64 pid = makeProcess(
                 &heapMemoryManager, 
@@ -110,8 +110,8 @@ void Kernel::initialize()
     
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
-    makeThread(pid, &TaskTest::count, 200, argv);
-    makeThread(pid, &TaskTest::ask, 200, argv); 
+    makeThread(pid, &TaskTest::count, 20000, argv);
+    makeThread(pid, &TaskTest::ask, 22000, argv); 
 //    makeThread(pid1, &TaskTest::processTwo, 5, argv);
     
 //    cmos.updateDateTime();
@@ -149,6 +149,7 @@ void Kernel::initialize()
 void Kernel::update()
 {
     cmos.updateDateTime();
+    serial.printSerial("\n A second passed "); 
 }
 
 void Kernel::enableInterrupt()
@@ -178,6 +179,7 @@ int Kernel::start(int argc, char **argv)
 {    
     asm ("sti");
     asm("_cpp_stop:");
+    asm("hlt");
     Kernel::getInstance()->update();
     asm("jmp _cpp_stop");
 }
