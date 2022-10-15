@@ -4,6 +4,7 @@
 #include <kernel/utils.h>
 #include <kernel/taskmanager.h>
 #include <kernel/kernel.h>
+#include <kernel/apic.h>
 
 using namespace kernel;
 
@@ -56,9 +57,17 @@ void* InterruptManager::getIDTAddress()
 void InterruptManager::handleInterrupt(uint64 vector)
 {
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
-    if(isLegacy)
-        pic.eoi(vector);
+//    if(isLegacy)
+    pic.eoi(vector);
     
+}
+
+void InterruptManager::enableAPIC()
+{
+//    pic.disable();
+//    apic = loadAPIC();
+//    apic->enable();
+//    apic->startTimer();
 }
 
 __attribute__((interrupt))
@@ -88,7 +97,7 @@ void InterruptManager::setupIDT()
     }
     this->setGateEntry(0x20, &isrTimerHandler, 0x8E);    
     asm ("lidt %0" : : "m"(idtr));
-    pic.enable();
+    pic.enable();   
 }
 
 void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags)

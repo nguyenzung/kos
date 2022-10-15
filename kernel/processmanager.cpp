@@ -41,7 +41,6 @@ Process* ProcessManager::makeProcess(
         char **argv,
         OSSpace osspace)
 {
-    printf("\n Make new process: HeapBase: %d | HeapSize: %d", heapBase, heapSize);
     Process *process = new Process(
                 current,
                 heapMemoryManager,
@@ -58,15 +57,12 @@ Process* ProcessManager::makeProcess(
                 osspace);
     (*processes)[current++] = process;
     process->initialize();
-    printf("\n Process address %d ", process);
     return process;
 }
 
 bool ProcessManager::onProcessFinished(Process *process)
 {
-    printf("\n On Process finished: Before Del %d %d", process->pid, processes->contains(process->pid));
     processes->erase(process->pid);
-    printf("\n On Process finished: After Del %d %d", process->pid, processes->contains(process->pid));
     delete process;
 }
 

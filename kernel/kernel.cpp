@@ -4,6 +4,7 @@
 #include <driver/vga.h>
 #include <kernel/utils.h>
 #include <kernel/heapmemorymanager.h>
+#include <kernel/apic.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
@@ -41,7 +42,6 @@ Kernel* Kernel::getInstance()
 
 void Kernel::initialize()
 {
-    printf("\n Kernel initialize! ");
     uint64 kernelMemorySize = 1;
     kernelMemorySize <<= 32;   
     heapMemoryManager.initialize(heapBase, HEAP_SIZE, stackBase);
@@ -68,6 +68,8 @@ void Kernel::initialize()
     bsp.intialize();
     sdt.initialize();
     
+//    interruptManager.enableAPIC();
+        
     uint64 pid = makeProcess(
                 &heapMemoryManager, 
                 &virtualMemory,
@@ -81,6 +83,7 @@ void Kernel::initialize()
                 1,
                 0,
                 OSSpace::RING_0);
+    printf("\n ProcessID: %d ", pid);
     
     char **argv = new char*;
     argv[0] = new char[5];
@@ -90,28 +93,28 @@ void Kernel::initialize()
     argv[0][0] = 'n';
     argv[0][0] = '\0';
         
-    uint64 pid1 = makeProcess(
-                &heapMemoryManager, 
-                &virtualMemory,
-                kernelMemorySize,
-                (uint64)heapBase,
-                HEAP_SIZE,
-                (uint64)stackBottom,
-                (uint64)stackBase + 0x10000,
-                1<<26,
-                &TaskTest::processOne,
-                10,
-                argv,
-                OSSpace::RING_0);
+//    uint64 pid1 = makeProcess(
+//                &heapMemoryManager, 
+//                &virtualMemory,
+//                kernelMemorySize,
+//                (uint64)heapBase,
+//                HEAP_SIZE,
+//                (uint64)stackBottom,
+//                (uint64)stackBase + 0x10000,
+//                1<<26,
+//                &TaskTest::processOne,
+//                10,
+//                argv,
+//                OSSpace::RING_0);
     
     
-    printf("\n Process ID: %d %d %d ", pid, pid1);
+//    printf("\n Process ID: %d %d %d ", pid, pid1);
     
     makeThread(pid, &TaskTest::count, 200, argv);
     makeThread(pid, &TaskTest::ask, 200, argv); 
-    makeThread(pid1, &TaskTest::processTwo, 5, argv);
+//    makeThread(pid1, &TaskTest::processTwo, 5, argv);
     
-    cmos.updateDateTime();
+//    cmos.updateDateTime();
 
 //     std::Map<uint64, uint64> map;
 //     map.put(40, 40);
@@ -145,7 +148,7 @@ void Kernel::initialize()
 
 void Kernel::update()
 {
-     cmos.updateDateTime();
+    cmos.updateDateTime();
 }
 
 void Kernel::enableInterrupt()

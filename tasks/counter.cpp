@@ -16,7 +16,7 @@ int TaskTest::count(int argc, char** argv)
     printf("\n [Count] %d %s %p", argc, argv[0], &i);
     for (i = 0; i <= argc; i++)
     {
-        for (j = 0; j < 20000; j++)
+        for (j = 0; j < 200; j++)
             for (k = 0; k < 3000; k++)
             {}
         printf(" Count ");
@@ -32,7 +32,7 @@ int TaskTest::ask(int argc, char** argv)
     printf("\n [Ask] %d %s %p", argc, argv[0], &i);
     for (i = 0; i <= argc; i++)
     {
-        for (j = 0; j < 20000; j++)
+        for (j = 0; j < 200; j++)
             for (k = 0; k < 3000; k++)
             {}
         printf("  Ask  ");

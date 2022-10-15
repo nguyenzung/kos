@@ -39,7 +39,6 @@ kernel::Process::~Process()
 
 void kernel::Process::initialize()
 {
-    printf("\n init process %d ", entryPoint);
     createTask(entryPoint, argc, argv);    
 }
 
@@ -86,7 +85,6 @@ kernel::Task* kernel::Process::createTask(mainFunction entryPoint, int argc, cha
 std::Node<Task*>* kernel::Process::findTaskPosition()
 {
     std::Node<Task*> *currentNode = tasks.getFirst();
-    printf("\n Curr %d ", currentNode);
     if (currentNode)
     {
         std::Node<Task*> *nextNode = tasks.next();
@@ -107,7 +105,6 @@ std::Node<Task*>* kernel::Process::findTaskPosition()
 
 void kernel::Process::onTaskFinished(Task *task)
 {
-//    printf("\n onTaskFinished");
     this->tasks.removeNodeByValue(task);
     if (this->tasks.size == 0)
         ProcessManager::getInstance()->onProcessFinished(this);
