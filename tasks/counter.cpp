@@ -19,7 +19,7 @@ int TaskTest::count(int argc, char** argv)
         for (j = 0; j < 200; j++)
             for (k = 0; k < 3000; k++)
             {}
-        printf(" Count ");
+//        printf(" Count ");
         result += i;
     }
     return result;
@@ -35,7 +35,7 @@ int TaskTest::ask(int argc, char** argv)
         for (j = 0; j < 200; j++)
             for (k = 0; k < 3000; k++)
             {}
-        printf("  Ask  ");
+//        printf("  Ask  ");
         result += i;
     }
     return result;

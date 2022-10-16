@@ -126,7 +126,7 @@ ACCESSED    equ 1 << 0
 
 ; Flags bits
 GRAN_4K     equ 1 << 7
-SZ_32       equ 0 << 6
+SZ_32       equ 1 << 6
 LONG_MODE   equ 1 << 5
 align 4096
 GDT64:

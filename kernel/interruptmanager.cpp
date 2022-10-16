@@ -66,18 +66,24 @@ void InterruptManager::handleInterrupt(uint64 vector)
 
 void InterruptManager::enableAPIC()
 {
+    // disable PIC
     isLegacy = false;
     pic.disable();
+    
+    // load APIC
     apic = loadAPIC();
     apic->enable();
     apic->startTimer();
+        
+    // load IOAPIC
+    ioApic = loadIOAPIC();
 }
 
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)
 {
     printf("\n [CPU Exception] %d %d %d %d %d| %d \n", errorCode, frame->rip, frame->cs, frame->ss, frame->rsp, frame);
-    TaskManager::getInstance()->contextInfo();
+//    TaskManager::getInstance()->contextInfo();
     while (true)
     {
         /* code */

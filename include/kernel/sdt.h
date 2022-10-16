@@ -3,7 +3,7 @@
 
 #include <kernel/utils.h>
 #include <kernel/type.h>
-#include <stdlib/list.h>
+#include <stdlib/vector.h>
 
 namespace kernel
 {
@@ -89,8 +89,8 @@ public:
     MADTHeader *madtHeader;
     ProcessorDescriptor *processorDescriptor;
     
-    std::List<LAPICDescriptor*> localApicDescriptors;
-    std::List<IOAPICDescriptor*> ioApicDescriptors;
+    std::Vector<LAPICDescriptor*> localApicDescriptors;
+    std::Vector<IOAPICDescriptor*> ioApicDescriptors;
     
     SDT();
     DEF_MODULE_INSTANCE(SDT)
@@ -105,8 +105,8 @@ public:
     void parseMADT();
             
     MADTHeader *getMADTHeader();
-    std::List<LAPICDescriptor*> getLAPICDescriptors();
-    std::List<IOAPICDescriptor*> getIOAPICDescriptors();
+    std::Vector<LAPICDescriptor*> getLAPICDescriptors();
+    std::Vector<IOAPICDescriptor*> getIOAPICDescriptors();
     
     void view();    
 };

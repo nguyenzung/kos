@@ -9,19 +9,23 @@ using namespace kernel;
 namespace std
 {
 
-template <typename T> class iterator {
-public:
-  iterator(T *ptr) : ptr(ptr) {}
-  void operator++() { ++ptr; }
-  bool operator!=(const iterator &other) const { return ptr != other.ptr; }
-  const T &operator*() const { return *ptr; }
 
-private:
-  T *ptr;
-};
 template <typename T>
 class Vector
 {
+public:
+    class Iterator 
+    {
+    public:
+      Iterator(T *ptr) : ptr(ptr) {}
+      void operator++() { ++ptr; }
+      bool operator!=(const Iterator &other) const { return ptr != other.ptr; }
+      const T &operator*() const { return *ptr; }
+    
+    private:
+      T *ptr;
+    };
+    
   const int ratioAllocate = 2;
 
 private:
@@ -49,9 +53,9 @@ private:
       return ret;
   }
 public:
-  iterator<T> begin() { return iterator<T>(m_data); }
+  Iterator begin() { return Iterator(m_data); }
 
-  iterator<T> end() { return iterator<T>(m_data + size()); }
+  Iterator end() { return Iterator(m_data + size()); }
 
   bool reserve(size_t s) {
     if (!s)
