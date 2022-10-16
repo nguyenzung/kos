@@ -10,6 +10,7 @@
 #include <stdlib/unorderedmap.h>
 #include <stdlib/map.h>
 #include <stdlib/math.h>
+#include <stdlib/vector.h>
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
@@ -61,6 +62,7 @@ void Kernel::initialize()
     serial.active();
 
     deviceManager.registerDevice(&timer);
+
     serial.printSerial("Initialize Kernel");    
     
     cmos.updateDateTime();
@@ -110,8 +112,9 @@ void Kernel::initialize()
     
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
-    makeThread(pid, &TaskTest::count, 20000, argv);
-    makeThread(pid, &TaskTest::ask, 22000, argv); 
+//    makeThread(pid, &TaskTest::count, 200, argv);
+//    makeThread(pid, &TaskTest::ask, 22000, argv); 
+    
 //    makeThread(pid1, &TaskTest::processTwo, 5, argv);
     
 //    cmos.updateDateTime();
