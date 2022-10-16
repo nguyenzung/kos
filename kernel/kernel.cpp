@@ -10,9 +10,11 @@
 #include <stdlib/unorderedmap.h>
 #include <stdlib/map.h>
 #include <stdlib/math.h>
+#include <stdlib/vector.h>
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
+#include <stdlib/vector_test.h>
 
 #define HEAP_SIZE 256*1024*1024
 #define MAX_KERNEL_SIZE 1024*1024*1024
@@ -61,6 +63,7 @@ void Kernel::initialize()
     serial.active();
 
     deviceManager.registerDevice(&timer);
+
     serial.printSerial("Initialize Kernel");    
     
     cmos.updateDateTime();
