@@ -18,31 +18,17 @@ public:
         this->first_ = key;
         this->second = value;
     }
-
-    Pair(const Pair &other) : first(first_){
-      first_ = other.first_;
-      second = other.second;
-    }
-
-    void swap(Pair &p1, Pair &p2) {
-      auto first1 = p1.first_;
-      p1.first_ = p2.first_;
-      p2.first_ = first1;
-
-      auto second1 = p1.second;
-      p1.second = p2.second;
-      p2.second = second;
-    }
-
-    Pair& operator=(Pair other) {
-      auto tmp(other);
-      swap(tmp, *this);
-      return *this;
-    }
-
+    
     Pair& operator = (V value)
     {
         this->second = value;
+        return *this;
+    }
+
+    Pair& operator = (Pair &pair)
+    {
+        this->first_ = pair.first;
+        this->second = pair.second;
         return *this;
     }
 

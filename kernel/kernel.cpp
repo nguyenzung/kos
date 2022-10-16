@@ -14,7 +14,6 @@
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
-#include <stdlib/vector_test.h>
 
 #define HEAP_SIZE 256*1024*1024
 #define MAX_KERNEL_SIZE 1024*1024*1024
@@ -113,8 +112,9 @@ void Kernel::initialize()
     
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
-    makeThread(pid, &TaskTest::count, 20000, argv);
-    makeThread(pid, &TaskTest::ask, 22000, argv); 
+//    makeThread(pid, &TaskTest::count, 200, argv);
+//    makeThread(pid, &TaskTest::ask, 22000, argv); 
+    
 //    makeThread(pid1, &TaskTest::processTwo, 5, argv);
     
 //    cmos.updateDateTime();

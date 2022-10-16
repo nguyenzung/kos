@@ -5,6 +5,10 @@
 #include <stdlib/string.h>
 
 using namespace kernel;
+
+namespace std
+{
+
 template <typename T> class iterator {
 public:
   iterator(T *ptr) : ptr(ptr) {}
@@ -111,5 +115,5 @@ public:
     return *(m_data + m_size - 1);
   }
 };
-
+}
 #endif

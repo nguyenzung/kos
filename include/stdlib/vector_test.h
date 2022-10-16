@@ -2,6 +2,8 @@
 #include "vector.h"
 #include "test/test.h"
 
+using namespace std;
+
 void VectorTest01();
 void VectorTest02();
 
