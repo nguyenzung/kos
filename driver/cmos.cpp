@@ -77,7 +77,7 @@ void CMOS::updateDateTime()
     } while(currentDateTime == dateTime);
 
     dateTime = currentDateTime;
-    printf("\n Time: %d/%d/%d %d:%d:%d", dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second);
+//    printf("\n Time: %d/%d/%d %d:%d:%d", dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second);
 }
 
 uint8 CMOS::getUpdateInProgressFlag()

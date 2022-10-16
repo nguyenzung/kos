@@ -114,10 +114,10 @@ void SDT::parseMADT()
 //        printf("\n Entry type: %d %d", *((uint8*)descriptorEntries), descriptorEntries);
         switch(*((uint8*)descriptorEntries)) {
         case 0: 
-            localApicDescriptors.add((LAPICDescriptor*)descriptorEntries);
+            localApicDescriptors.push_back((LAPICDescriptor*)descriptorEntries);
             break;
         case 1: 
-            ioApicDescriptors.add((IOAPICDescriptor*)descriptorEntries);
+            ioApicDescriptors.push_back((IOAPICDescriptor*)descriptorEntries);
             break;
         case 5:
             break;
@@ -131,22 +131,22 @@ MADTHeader* SDT::getMADTHeader()
     return madtHeader;
 }
 
-std::List<LAPICDescriptor*> SDT::getLAPICDescriptors()
+std::Vector<LAPICDescriptor*> SDT::getLAPICDescriptors()
 {
     return localApicDescriptors;
 }
 
-std::List<IOAPICDescriptor*> SDT::getIOAPICDescriptors()
+std::Vector<IOAPICDescriptor*> SDT::getIOAPICDescriptors()
 {
     return ioApicDescriptors;
 }
 
 void SDT::view()
 {
-    printf("\n Total LAPIC item: %d ", localApicDescriptors.size);
-    printf("\n Total IOAPIC item: %d ", ioApicDescriptors.size);
+    printf("\n Total LAPIC item: %d ", localApicDescriptors.size());
+    printf("\n Total IOAPIC item: %d ", ioApicDescriptors.size());
     
-    for(std::List<LAPICDescriptor*>::Iterator it = localApicDescriptors.begin(); it != localApicDescriptors.end(); ++it)
+    for(std::Vector<LAPICDescriptor*>::Iterator it = localApicDescriptors.begin(); it != localApicDescriptors.end(); ++it)
     {
         LAPICDescriptor* item = *it;
         printf("\n LAPIC: %d %d %d ", item->apicId, item->apicProcessorId, item->flags);

@@ -3,6 +3,7 @@
 
 #include <kernel/pic.h>
 #include <kernel/apic.h>
+#include <kernel/ioapic.h>
 #include <kernel/utils.h>
 #include <kernel/type.h>
 #include <driver/keyboard.h>
@@ -41,6 +42,7 @@ protected:
 	IDTR idtr;
     PIC pic;
     APIC *apic;
+    IOAPIC *ioApic;
     bool isLegacy;
 	// Keyboard keyboard;
 
