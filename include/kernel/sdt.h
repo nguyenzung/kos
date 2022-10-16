@@ -101,13 +101,14 @@ public:
     bool checksum();    
 
     void parseRSDT();
-    void parseXSDT();
-    
+    void parseXSDT();    
     void parseMADT();
-    
-    void view();
-    
+            
     MADTHeader *getMADTHeader();
+    std::List<LAPICDescriptor*> getLAPICDescriptors();
+    std::List<IOAPICDescriptor*> getIOAPICDescriptors();
+    
+    void view();    
 };
 
 
