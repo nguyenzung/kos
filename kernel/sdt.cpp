@@ -126,6 +126,21 @@ void SDT::parseMADT()
     }
 }
 
+MADTHeader* SDT::getMADTHeader()
+{
+    return madtHeader;
+}
+
+std::List<LAPICDescriptor*> SDT::getLAPICDescriptors()
+{
+    return localApicDescriptors;
+}
+
+std::List<IOAPICDescriptor*> SDT::getIOAPICDescriptors()
+{
+    return ioApicDescriptors;
+}
+
 void SDT::view()
 {
     printf("\n Total LAPIC item: %d ", localApicDescriptors.size);
@@ -136,9 +151,4 @@ void SDT::view()
         LAPICDescriptor* item = *it;
         printf("\n LAPIC: %d %d %d ", item->apicId, item->apicProcessorId, item->flags);
     }
-}
-
-MADTHeader* SDT::getMADTHeader()
-{
-    return madtHeader;
 }

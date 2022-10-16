@@ -112,9 +112,8 @@ void Kernel::initialize()
     
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
-//    makeThread(pid, &TaskTest::count, 200, argv);
-//    makeThread(pid, &TaskTest::ask, 22000, argv); 
-    
+    makeThread(pid, &TaskTest::count, 200, argv);
+    makeThread(pid, &TaskTest::ask, 220, argv); 
 //    makeThread(pid1, &TaskTest::processTwo, 5, argv);
     
 //    cmos.updateDateTime();
