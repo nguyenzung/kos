@@ -28,11 +28,7 @@ typedef struct RedirectionEntry
 
 class IOAPIC
 {
-public:
-//    uint32 test;
-//    uint32 volatile *selAddress;
-//    uint32 volatile *winAddress;
-    
+public:    
     IOAPIC();
     ~IOAPIC();
     
