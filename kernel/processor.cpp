@@ -7,7 +7,7 @@ Processor::Processor()
     
 }
 
-void Processor::intialize(uint8 localApicID)
+void Processor::initialize(uint8 localApicID)
 {
     this->localApicId = localApicID;
 }

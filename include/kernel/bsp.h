@@ -10,7 +10,7 @@ class BSP : public Processor
 {
 public:
    BSP();
-   void intialize(uint8 localApicId = 0) override;
+   void initialize(uint8 localApicId = 0) override;
    
    void enablePIC();
    void disablePIC();

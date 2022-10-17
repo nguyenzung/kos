@@ -13,7 +13,7 @@ BSP::BSP():Processor()
     
 }
 
-void BSP::intialize(uint8)
+void BSP::initialize(uint8)
 {
     asm ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(this->localApicId) : : );
     printf("\n Setup AP %d ", setupAPAddress);

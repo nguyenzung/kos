@@ -168,7 +168,7 @@ void Mouse::handleInterrupt() {
     i++;
     status = inb(STATUS_REG);
   }
-  // doNotify();
+   doNotify();
 }
 
 void Mouse::doNotify() {

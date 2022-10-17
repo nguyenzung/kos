@@ -33,8 +33,8 @@ class Kernel
     SDT sdt;
     BSP bsp;
 
-    driver::CMOS cmos;
     driver::Timer timer;
+    driver::CMOS cmos;
     driver::SERIAL serial;
 
     static Kernel* instance;
@@ -51,6 +51,8 @@ public:
     void enableInterrupt();
     void disableInterrupt();
     bool isInterruptActive();
+    
+    void loadDevice(InterruptHandler *handler);
 
     static int start(int argc, char**argv);
 

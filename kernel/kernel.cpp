@@ -29,7 +29,6 @@ Kernel* Kernel::instance = 0;
 Kernel::Kernel()
 {
     Kernel::instance = this;
-    INIT_LOCK(intLock);
 }
 
 Kernel::~Kernel() 
@@ -48,29 +47,26 @@ void Kernel::initialize()
     heapMemoryManager.initialize(heapBase, HEAP_SIZE, stackBase);
     deviceManager.initialize();
     taskManager.initialize();
-    interruptManager.initialize();
+    
     physicalMemory.initialize();
     
-    cmos.updateDateTime();    
-
     virtualMemory.initialize(kernelMemorySize, OSSpace::RING_0);
     processManager.initialize();
-
     virtualMemory.active();
+    
+    sdt.initialize();
+    bsp.initialize();
+    
     timer.active();
+    deviceManager.registerDevice(&timer);
     cmos.active();
     serial.active();
-
-    deviceManager.registerDevice(&timer);
-
     serial.printSerial("Initialize Kernel");    
     
     cmos.updateDateTime();
-    
-    bsp.intialize();
-    sdt.initialize();
-    
+    interruptManager.initialize();
     interruptManager.enableAPIC();
+    
         
     uint64 pid = makeProcess(
                 &heapMemoryManager, 
@@ -175,6 +171,11 @@ bool Kernel::isInterruptActive()
     asm ("pushf\n\t" "pop %0":"=g"(flags));
     UNLOCK(intLock);
     return flags & (1 << 9);
+}
+
+void Kernel::loadDevice(InterruptHandler *handler)
+{
+    deviceManager.registerDevice(handler);
 }
 
 int Kernel::start(int argc, char **argv)

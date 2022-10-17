@@ -1,9 +1,10 @@
 
-#include <kernel/kernel.h>
+#include <kernel/os.h>
 #include <kernel/printer.h>
 
 int main() {
-    kernel::Kernel kernel;
-    kernel.initialize();
-    kernel::Kernel::start(1, 0);    
+    OS os;
+    os.setupHardware();
+    os.initialize();
+    os.startOS();
 }

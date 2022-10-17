@@ -13,7 +13,7 @@ public:
     
     Processor();
     
-    virtual void intialize(uint8 localApicID = 0);
+    virtual void initialize(uint8 localApicID = 0);
 };
 
 }
