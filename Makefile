@@ -5,7 +5,7 @@ MAP	= $(BUILD_DIR)/kernel.map
 LSS	= $(BUILD_DIR)/kernel.lss
 
 CXX = x86_64-linux-gnu-g++
-LD 	= x86_64-elf-ld
+LD 	?= x86_64-elf-ld
 AS 	= nasm # Force use nasm
 
 CXXFLAGS = -I./include 
