@@ -17,11 +17,10 @@ IOAPIC::~IOAPIC()
 
 void IOAPIC::initialize()
 {
-    printf("\n IOAPIC::initialize %d ", this);    
     uint32 ioApicId  = read32(IOAPICID);
     uint32 ioApicVer = read32(IOAPICVER) & 0b1111111111;
     uint32 maxRedirectionEntry = ((read32(IOAPICVER) >> 16) & 0xff) + 1;
-    printf("\n IOAPIC info: id: %d | ver: %d | count: %d", ioApicId, ioApicVer, maxRedirectionEntry);
+    // printf("\n IOAPIC info: id: %d | ver: %d | count: %d", ioApicId, ioApicVer, maxRedirectionEntry);
     
     setupIRQ(1, 0);     // enable Keyboard Interrupt
     setupIRQ(12, 0);    // enable Mouse Interrupt
@@ -79,7 +78,6 @@ IOAPIC* kernel::loadIOAPIC(uint8 index)
     if (ioApicDescriptors.size() > 0)
     {
         IOAPICDescriptor* descriptor = ioApicDescriptors[index];
-        printf("\n IOAPIC Descriptor %d %d %p ", descriptor->ioApicId, descriptor->ioApicAddress, descriptor->globalSystemInterruptBase);
         IOAPIC *ioApic = (IOAPIC*)(descriptor->ioApicAddress);
         ioApic->initialize();
         return (IOAPIC*)(descriptor->ioApicAddress);

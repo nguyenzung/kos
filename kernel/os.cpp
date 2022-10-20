@@ -20,6 +20,7 @@ void OS::initialize()
 
 void OS::setupHardware()
 {
+    keyboard.active();
     kernel.loadDevice(&keyboard);
     
     mouse.active();

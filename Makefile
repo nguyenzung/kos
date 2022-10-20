@@ -17,7 +17,6 @@ CXXFLAGS += -mgeneral-regs-only
 CXXFLAGS += -MMD
 CXXFLAGS += -O0
 CXXFLAGS += -mno-red-zone
-CXXFLAGS += -g
 CXXFLAGS += -ffreestanding
 
 ASFLAGS = -felf64 
@@ -64,5 +63,8 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm 
+	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm
+	
+install: $(BUILD_DIR)/kernel.bin
+	cp $(BUILD_DIR)/kernel.bin /boot/
 	

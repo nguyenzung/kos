@@ -80,16 +80,9 @@ void InterruptManager::enableAPIC()
     apic->startTimer();
     
     // load IOAPIC
-    ioApic = loadIOAPIC();
-    
-    flushPS2();
+    ioApic = loadIOAPIC();    
 }
 
-void InterruptManager::flushPS2()
-{
-    uint8 value = inb(0x60);
-    printf("\n Flush %d", value);
-}
 
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)

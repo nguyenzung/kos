@@ -57,7 +57,6 @@ public:
     void eoi(uint64 vector);
     
     void enableAPIC();
-    void flushPS2();
 
 protected:
 	void setupIDT();

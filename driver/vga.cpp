@@ -14,9 +14,12 @@
 #define	VGA_AC_INDEX		0x3C0
 #define	VGA_AC_WRITE		0x3C0
 
-IMPL_MODULE_INSTANCE(VGA)
 
 using namespace kernel;
+using namespace driver;
+
+IMPL_MODULE_INSTANCE(VGA)
+
 
 VGA::VGA()
 {

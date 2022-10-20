@@ -3,6 +3,7 @@ bits 32
 
 global printMessage
 printMessage:
+    ret
 	mov dl, byte [esi]
 	mov eax, [currentIndex]
 	mov byte [eax], dl

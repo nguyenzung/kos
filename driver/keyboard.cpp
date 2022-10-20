@@ -20,8 +20,7 @@ Keyboard::~Keyboard() {
 }
 
 void Keyboard::active() {
-    outb(0x21, 0xfd);
-	outb(0xa1, 0xff);
+    inb(0x60);
 }
 
 void Keyboard::deactive() {

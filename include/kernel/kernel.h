@@ -9,6 +9,7 @@
 #include <kernel/physicalmemory.h>
 #include <kernel/sdt.h>
 #include <kernel/bsp.h>
+#include <kernel/ap.h>
 #include <kernel/virtualmemory.h>
 #include <kernel/processmanager.h>
 #include <kernel/pic.h>
@@ -32,11 +33,11 @@ class Kernel
     
     SDT sdt;
     BSP bsp;
-
     driver::Timer timer;
-    driver::CMOS cmos;
     driver::SERIAL serial;
-
+    std::Vector<AP*> aps;
+    driver::CMOS cmos;
+    
     static Kernel* instance;
 
 public:
@@ -52,6 +53,7 @@ public:
     void disableInterrupt();
     bool isInterruptActive();
     
+    void loadCores();
     void loadDevice(InterruptHandler *handler);
 
     static int start(int argc, char**argv);

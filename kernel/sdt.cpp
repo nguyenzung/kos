@@ -20,7 +20,7 @@ void SDT::initialize()
 {
     scan();
     parse();
-    view();
+//    view();
 }
 
 /*   The RSDP is either located within the first 1 KB of the EBDA (Extended BIOS Data Area) 
@@ -44,12 +44,10 @@ void SDT::scan()
         }
         startAddress += 2;
     }
- 
 }
 
 void SDT::parse()
 {
-    printf("\n Version %d ", rsdpDescriptor->revision);
     switch (rsdpDescriptor->revision) {
     case 0:
         parseRSDT();

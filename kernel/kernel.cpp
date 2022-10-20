@@ -5,6 +5,7 @@
 #include <kernel/utils.h>
 #include <kernel/heapmemorymanager.h>
 #include <kernel/apic.h>
+#include <kernel/multiboot.h>
 #include <stdlib/lock.h>
 #include <stdlib/list.h>
 #include <stdlib/unorderedmap.h>
@@ -23,6 +24,7 @@ using namespace kernel;
 extern void* heapBase;
 extern void* stackBase;
 extern void* stackBottom;
+extern void* multibootData;
 
 Kernel* Kernel::instance = 0;
 
@@ -55,7 +57,7 @@ void Kernel::initialize()
     virtualMemory.active();
     
     sdt.initialize();
-    bsp.initialize();
+    loadCores();
     
     timer.active();
     deviceManager.registerDevice(&timer);
@@ -67,7 +69,6 @@ void Kernel::initialize()
     interruptManager.initialize();
     interruptManager.enableAPIC();
     
-        
     uint64 pid = makeProcess(
                 &heapMemoryManager, 
                 &virtualMemory,
@@ -101,7 +102,7 @@ void Kernel::initialize()
 //                (uint64)stackBase + 0x10000,
 //                1<<26,
 //                &TaskTest::processOne,
-//                10,
+//                100,
 //                argv,
 //                OSSpace::RING_0);
     
@@ -109,8 +110,8 @@ void Kernel::initialize()
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
     makeThread(pid, &TaskTest::count, 1000, argv);
-    makeThread(pid, &TaskTest::ask, 5000, argv); 
-//    makeThread(pid1, &TaskTest::processTwo, 5, argv);
+    makeThread(pid, &TaskTest::ask, 2000, argv); 
+//    makeThread(pid1, &TaskTest::processTwo, 120, argv);
     
 //    cmos.updateDateTime();
 
@@ -139,15 +140,73 @@ void Kernel::initialize()
 //     map.inorderTravel(); 
 
     // uint64 address = &Kernel::initialize;
-    // VGA vga;
-    // vga.setupVideoMode();
-    // vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
+//     VGA vga;
+//     vga.setupVideoMode();
+//     vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
+    
+    void *videoAddress = 0;
+    
+    MultibootHeader *mbHeader = (MultibootHeader*)multibootData;
+    
+    printf("\n Multiboot Size %d", mbHeader->totalSize);
+    printf("\n Multiboot reserved %d", mbHeader->reseved);
+    void *endTagAddress = (multibootData + mbHeader->totalSize);
+    void *tagAddress = (multibootData + 8);
+    while (tagAddress < endTagAddress) {
+        MultibootTag *tag = (MultibootTag*)tagAddress;
+        printf("\n Type %d %d", tag->type, tag->size);
+        if (tag->type == 8)
+        {
+            MultibootTagFrameBuffer *frameBuffer = (MultibootTagFrameBuffer*)tag;
+            videoAddress = (void*)(frameBuffer->address);
+            char message[] = "             ";
+//            printf("");
+            serial.printSerial("\n Addr ");
+            serial.printSerial(Utils::convertIntToHexString(frameBuffer->address, message, 11));
+            std::memset(message, ' ', 11);
+            serial.printSerial("\n Addr ");
+            serial.printSerial(Utils::convertIntToDecString(frameBuffer->address, message, 11));
+            std::memset(message, ' ', 11);
+            serial.printSerial("\n With ");
+            serial.printSerial(Utils::convertIntToDecString(frameBuffer->width, message, 11));
+            std::memset(message, ' ', 11);
+            serial.printSerial("\n Height ");
+            serial.printSerial(Utils::convertIntToDecString(frameBuffer->height, message, 11));
+            std::memset(message, ' ', 11);
+            serial.printSerial("\n Pitch ");
+            serial.printSerial(Utils::convertIntToDecString(frameBuffer->pitch, message, 11));
+            std::memset(message, ' ', 11);
+            serial.printSerial("\n Type ");
+            serial.printSerial(Utils::convertIntToDecString(frameBuffer->type, message, 11));
+            printf("\n Fb: Addr %d  W %d H %d P %d Type %d", frameBuffer->address, frameBuffer->width, frameBuffer->height, frameBuffer->pitch, frameBuffer->type);
+        }
+        tagAddress += ((tag->size + 7) & ~7);        
+    }
+    
+    void *graphicsMemory = (void*)videoAddress;
+    for (uint32 i = 0; i < 3072 * 3; i = i + 3)
+    {
+        *((uint8*)(graphicsMemory + i)) = 0x00;
+        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
+        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
+//        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
+    }
+    
+    for (uint32 i = 3072 * 3; i < 3072 * 768; i = i + 3)
+    {
+        *((uint8*)(graphicsMemory + i)) = 0xff;
+        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
+        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
+//        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
+    }
+    
+    
 }
 
 void Kernel::update()
 {
     cmos.updateDateTime();
-    serial.printSerial("\n A second passed "); 
+//    serial.printSerial("\n A second passed "); 
 }
 
 void Kernel::enableInterrupt()
@@ -171,6 +230,11 @@ bool Kernel::isInterruptActive()
     asm ("pushf\n\t" "pop %0":"=g"(flags));
     UNLOCK(intLock);
     return flags & (1 << 9);
+}
+
+void Kernel::loadCores()
+{
+    
 }
 
 void Kernel::loadDevice(InterruptHandler *handler)

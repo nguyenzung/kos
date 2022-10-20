@@ -4,10 +4,20 @@ start_multiboot:
     dd 0
     dd end_multiboot - start_multiboot
     dd 0x100000000 - (0xe85250d6 + 0 + (end_multiboot - start_multiboot))
-    dw 0
-    dw 0
-    dd 8
 end_multiboot:
+align 8
+	dw 5
+	dw 1
+	dd 20
+	dd 1024
+	dd 768
+	dd 24
+
+align 8
+    dw 0
+	dw 0
+	dd 8
+
 
 section .text
 bits 32
@@ -17,6 +27,7 @@ extern printMessage
 extern startLongMode
 
 start:
+    mov [multibootData], ebx
 	call verifySupportCPUID
 	call verifySupportLongMode
 	call setupMemoryPaging
@@ -155,6 +166,7 @@ GDTPTR		equ GDT64.Pointer
 section .data
 global pageMapStart
 global pageMapEnd
+global multibootData
 	current_lv2_index 			dw 0
 	current_lv1_index 			dw 0
 	support_cpuid_message 		db "[Support CPUID]",7
@@ -168,6 +180,7 @@ global pageMapEnd
 	GDT64Code					dq GDT64.Code
 	GDT64Data					dq GDT64.Data
 	GDT64TSS					dq GDT64.TSS
+	multibootData				dq 0
 	pageMapStart				dq lv4_page_address
 	pageMapEnd					dq end_page_address
 
