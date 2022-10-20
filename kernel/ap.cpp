@@ -6,3 +6,8 @@ AP::AP():Processor()
 {
     
 }
+
+std::Vector<AP*> kernel::loadAPs()
+{
+    
+}

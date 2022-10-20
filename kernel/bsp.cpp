@@ -13,9 +13,10 @@ BSP::BSP():Processor()
     
 }
 
-void BSP::intialize(uint8)
+void BSP::initialize(uint8)
 {
     asm ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(this->localApicId) : : );
+    printf("\n BSP: %d ", localApicId);
     printf("\n Setup AP %d ", setupAPAddress);
     
     std::memmove((void*)0x8000, setupAPAddress, 4096);

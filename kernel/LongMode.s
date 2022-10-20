@@ -112,15 +112,14 @@ startLongMode:
     mov rax, 0x1F201F201F201F20 
     mov ecx, 500
     rep stosq
-    ; mov rax, isrStub_0
-    ; cmp rax, [isrStubTable]
-    ; je debug
+	
     mov rsi, [stackBase]
     ;mov qword [rsi], 0x12345678
     mov qword [rsi-8], 0x87654321
     mov rsi, [heapBase]
     mov qword [rsi], 0x23456789
     call main
+	jmp $
 
 isrTimerHandler:
     ; call switchTask

@@ -1,0 +1,7 @@
+Initialize Kernel
+ Addr    E0000000  
+ Addr  3758096384  
+ With        3072  
+ Height        1024  
+ Pitch           0  
+ Type           3  

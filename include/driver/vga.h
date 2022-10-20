@@ -1,9 +1,12 @@
+#ifndef VGA_H
+#define VGA_H
+
 #include <driver/basegraphicsdevice.h>
 #include <kernel/type.h>
 #include <kernel/utils.h>
 
-#ifndef VGA_H
-#define VGA_H
+namespace driver
+{
 
 typedef enum VGAColor {
     BLACK,
@@ -45,5 +48,7 @@ public:
     void drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, uint8 r, uint8 g, uint8 b) override;
 
 };
-        
+ 
+}
+
 #endif

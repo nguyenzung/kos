@@ -15,7 +15,7 @@ namespace kernel
 class PML4
 {
 public:
-    __attribute__((aligned(0x1000)))
+//    __attribute__((aligned(0x1000)))
     uint64 value[PAGE_SIZE];
     
     PML4();
@@ -25,7 +25,7 @@ public:
 class PDP
 {
 public:
-    __attribute__((aligned(0x1000)))
+//    __attribute__((aligned(0x1000)))
     uint64 value[PAGE_SIZE];
     
     PDP();
@@ -35,7 +35,7 @@ public:
 class PD
 {
 public:
-    __attribute__((aligned(0x1000)))
+//    __attribute__((aligned(0x1000)))
     uint64 value[PAGE_SIZE];
     
     PD();
@@ -45,7 +45,7 @@ public:
 class PT
 {
 public:
-    __attribute__((aligned(0x1000)))
+//    __attribute__((aligned(0x1000)))
     uint64 value[PAGE_SIZE];
     
     PT();
@@ -56,7 +56,7 @@ public:
 class MemoryMapper
 {
 public:
-//    __attribute__((aligned(0x1000)))
+    __attribute__((aligned(0x1000)))
     PML4   pml4;
     PDP    pdp;
     PD     pd[NUM_PD_TABLE];

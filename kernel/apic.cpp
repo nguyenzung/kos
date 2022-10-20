@@ -43,7 +43,7 @@ void APIC::startTimer()
 {
     write(TIMER_INITIAL_COUNT, UINT32_MAX);
     driver::CMOS::getInstance()->updateDateTime();  
-    uint32 delay = (UINT32_MAX - read(TIMER_CURRENT_COUNT))/100;
+    uint32 delay = (UINT32_MAX - read(TIMER_CURRENT_COUNT))/10000;
     write(TIMER_INITIAL_COUNT, delay);
     write(TIMER_LVT, 0x20020);
 }

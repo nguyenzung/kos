@@ -57,11 +57,15 @@ void* InterruptManager::getIDTAddress()
 void InterruptManager::handleInterrupt(uint64 vector)
 {
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
+    eoi(vector);
+}
+
+void InterruptManager::eoi(uint64 vector)
+{
     if(isLegacy)
         pic.eoi(vector);
     else
         apic->finishedINT(vector);
-    
 }
 
 void InterruptManager::enableAPIC()
@@ -74,10 +78,11 @@ void InterruptManager::enableAPIC()
     apic = loadAPIC();
     apic->enable();
     apic->startTimer();
-        
+    
     // load IOAPIC
-    ioApic = loadIOAPIC();
+    ioApic = loadIOAPIC();    
 }
+
 
 __attribute__((interrupt))
 void handleException(ExceptionStackFrame *frame, uint64 errorCode)

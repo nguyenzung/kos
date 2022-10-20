@@ -17,14 +17,13 @@ IOAPIC::~IOAPIC()
 
 void IOAPIC::initialize()
 {
-    printf("\n IOAPIC::initialize %d ", this);    
     uint32 ioApicId  = read32(IOAPICID);
     uint32 ioApicVer = read32(IOAPICVER) & 0b1111111111;
-    uint32 ioApicCount = ((read32(IOAPICVER) >> 16) & 0xff) + 1;
-//    uint32 ioApicArb = read32(IOAPICARB);
-    printf("\n IOAPIC info: id: %d | ver: %d | count: %d", ioApicId, ioApicVer, ioApicCount);
+    uint32 maxRedirectionEntry = ((read32(IOAPICVER) >> 16) & 0xff) + 1;
+    // printf("\n IOAPIC info: id: %d | ver: %d | count: %d", ioApicId, ioApicVer, maxRedirectionEntry);
     
-    setupIRQ(1, 0); // enable Keyboard Interrupt
+    setupIRQ(1, 0);     // enable Keyboard Interrupt
+    setupIRQ(12, 0);    // enable Mouse Interrupt
 }
 
 void IOAPIC::write32(uint8 regIndex, uint32 value)
@@ -41,7 +40,6 @@ uint32 IOAPIC::read32(uint8 regIndex)
 
 void IOAPIC::write(uint8 irqRegBaseIndex, uint64 value)
 {
-    printf("\n Write64: %d", value);
     uint32 low = value & 0xffffffff;
     write32(irqRegBaseIndex, low);
     uint32 high = value >> 32;
@@ -52,7 +50,7 @@ uint64 IOAPIC::read(uint8 irqRegBaseIndex)
 {
     uint64 value = read32(irqRegBaseIndex + 1);
     value = value << 32;
-    value = value | read32(irqRegBaseIndex + 1);
+    value = value | read32(irqRegBaseIndex);
     return value;
 }
 
@@ -62,7 +60,7 @@ void IOAPIC::setupIRQ(uint8 irqIndex, uint8 apicId)
     entry.vector = irqIndex + OFFSET;
     entry.deliveryMode = 0;             // Fixed Mode
     entry.destinationMode = 0;          // Physical Mode
-    entry.deliveryStatus = 0;           // Relaxing
+    entry.deliveryStatus = 0;
     entry.pinPolarity = 0;              // Active High
     entry.triggerMode = 0;              // Edge
     entry.destination = apicId;    
@@ -80,7 +78,6 @@ IOAPIC* kernel::loadIOAPIC(uint8 index)
     if (ioApicDescriptors.size() > 0)
     {
         IOAPICDescriptor* descriptor = ioApicDescriptors[index];
-        printf("\n IOAPIC Descriptor %d %d %p ", descriptor->ioApicId, descriptor->ioApicAddress, descriptor->globalSystemInterruptBase);
         IOAPIC *ioApic = (IOAPIC*)(descriptor->ioApicAddress);
         ioApic->initialize();
         return (IOAPIC*)(descriptor->ioApicAddress);

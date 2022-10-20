@@ -6,7 +6,6 @@
 #include <kernel/ioapic.h>
 #include <kernel/utils.h>
 #include <kernel/type.h>
-#include <driver/keyboard.h>
 
 namespace kernel 
 {
@@ -44,15 +43,10 @@ protected:
     APIC *apic;
     IOAPIC *ioApic;
     bool isLegacy;
-	// Keyboard keyboard;
 
 public:
     InterruptManager();
     ~InterruptManager();
-
-	// static InterruptManager* instance;
-	// static void setInstance(InterruptManager *instance);
-	// static InterruptManager* getInstance();
 
 	DEF_MODULE_INSTANCE(InterruptManager)
 
@@ -60,6 +54,7 @@ public:
 	void* getIDTAddress();
 
 	void handleInterrupt(uint64 vector);
+    void eoi(uint64 vector);
     
     void enableAPIC();
 
