@@ -63,9 +63,10 @@ void Kernel::initialize()
     deviceManager.registerDevice(&timer);
     cmos.active();
     serial.active();
-    serial.printSerial("Initialize Kernel");    
+    serial.printSerial("\n Initialize Kernel");    
     
-    cmos.updateDateTime();
+    multiboot.initializeInLegacyMode(multibootData);
+    
     interruptManager.initialize();
     interruptManager.enableAPIC();
     
@@ -144,62 +145,31 @@ void Kernel::initialize()
 //     vga.setupVideoMode();
 //     vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
     
-    void *videoAddress = 0;
+//    void *videoAddress = 0;
     
-    MultibootHeader *mbHeader = (MultibootHeader*)multibootData;
     
-    printf("\n Multiboot Size %d", mbHeader->totalSize);
-    printf("\n Multiboot reserved %d", mbHeader->reseved);
-    void *endTagAddress = (multibootData + mbHeader->totalSize);
-    void *tagAddress = (multibootData + 8);
-    while (tagAddress < endTagAddress) {
-        MultibootTag *tag = (MultibootTag*)tagAddress;
-        printf("\n Type %d %d", tag->type, tag->size);
-        if (tag->type == 8)
-        {
-            MultibootTagFrameBuffer *frameBuffer = (MultibootTagFrameBuffer*)tag;
-            videoAddress = (void*)(frameBuffer->address);
-            char message[] = "             ";
-//            printf("");
-            serial.printSerial("\n Addr ");
-            serial.printSerial(Utils::convertIntToHexString(frameBuffer->address, message, 11));
-            std::memset(message, ' ', 11);
-            serial.printSerial("\n Addr ");
-            serial.printSerial(Utils::convertIntToDecString(frameBuffer->address, message, 11));
-            std::memset(message, ' ', 11);
-            serial.printSerial("\n With ");
-            serial.printSerial(Utils::convertIntToDecString(frameBuffer->width, message, 11));
-            std::memset(message, ' ', 11);
-            serial.printSerial("\n Height ");
-            serial.printSerial(Utils::convertIntToDecString(frameBuffer->height, message, 11));
-            std::memset(message, ' ', 11);
-            serial.printSerial("\n Pitch ");
-            serial.printSerial(Utils::convertIntToDecString(frameBuffer->pitch, message, 11));
-            std::memset(message, ' ', 11);
-            serial.printSerial("\n Type ");
-            serial.printSerial(Utils::convertIntToDecString(frameBuffer->type, message, 11));
-            printf("\n Fb: Addr %d  W %d H %d P %d Type %d", frameBuffer->address, frameBuffer->width, frameBuffer->height, frameBuffer->pitch, frameBuffer->type);
-        }
-        tagAddress += ((tag->size + 7) & ~7);        
-    }
     
-    void *graphicsMemory = (void*)videoAddress;
-    for (uint32 i = 0; i < 3072 * 3; i = i + 3)
-    {
-        *((uint8*)(graphicsMemory + i)) = 0x00;
-        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
-        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
+//    void *graphicsMemory = (void*)3221225472;
+//    for (uint32 i = 0; i < 3072 * 3; i = i + 3)
+//    {
+//        *((uint8*)(graphicsMemory + i)) = 0x00;
+//        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
 //        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
-    }
+//    }
     
-    for (uint32 i = 3072 * 3; i < 3072 * 768; i = i + 3)
-    {
-        *((uint8*)(graphicsMemory + i)) = 0xff;
-        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
-        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
-//        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
-    }
+//    for (uint32 i = 3072 * 3; i < 3072 * 160; i = i + 3)
+//    {
+//        *((uint8*)(graphicsMemory + i)) = 0xff;
+//        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
+//        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
+//    }
     
+//    for (uint32 i = 3072 * 160; i < 3072 * 768; i = i + 3)
+//    {
+//        *((uint8*)(graphicsMemory + i)) = 0x00;
+//        *((uint8*)(graphicsMemory + i + 1)) = 0xff;
+//        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
+//    }
     
 }
 
@@ -237,9 +207,16 @@ void Kernel::loadCores()
     
 }
 
-void Kernel::loadDevice(InterruptHandler *handler)
+void Kernel::loadDevice(BaseDriver *handler)
 {
+    handler->active();
     deviceManager.registerDevice(handler);
+}
+
+void Kernel::loadGraphics(BaseGraphicsDevice *device)
+{
+    device->active();
+    graphics.initializeDevice(device);
 }
 
 int Kernel::start(int argc, char **argv)

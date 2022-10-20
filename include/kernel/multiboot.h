@@ -2,6 +2,7 @@
 #define MULTIBOOTHEADER_H
 
 #include <kernel/type.h>
+#include <kernel/utils.h>
 
 namespace kernel
 {
@@ -31,12 +32,40 @@ typedef struct MultibootTagFrameBuffer
     uint32  height;
     uint8   bpp;    
     uint8   type;
-    uint16  reserved;
+    union
+    {
+        struct
+        {
+            uint32 framebufferPaletteAddrress;
+            uint16 framebufferPaletteNumColors;
+        };
+        struct
+        {
+            uint8 framebufferRedFieldPosition;
+            uint8 framebufferRedMaskSize;
+            uint8 framebufferGreenFieldPosition;
+            uint8 framebufferGreenMaskSize;
+            uint8 framebufferBlueFieldPosition;
+            uint8 framebufferBlueMaskSize;
+        };
+    };
 }MultibootTagFrameBuffer;
 
 class Multiboot    
 {
-    MultibootHeader *header;
+public:
+    MultibootHeader *mbHeader;
+    MultibootTagFrameBuffer *frameBuffer;
+    
+    Multiboot();
+    ~Multiboot();
+    
+    DEF_MODULE_INSTANCE(Multiboot)
+    
+    void initializeInLegacyMode(void *multibootAddress);
+    
+    MultibootHeader *getMultibootHeader();
+    MultibootTagFrameBuffer * getFrameBuffer();
 };
 
 }

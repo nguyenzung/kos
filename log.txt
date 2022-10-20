@@ -1,7 +1,8 @@
 Initialize Kernel
- Addr    E0000000  
- Addr  3758096384  
- With        3072  
- Height        1024  
- Pitch           0  
- Type           3  
+ Address:    3758096384
+ Width:          3072
+ Height:          1024
+ Depth:             0
+ Red:            24
+ Green:             0
+ Blue:            16
