@@ -49,7 +49,6 @@ MemoryEntry* HeapMemoryManager::find(uint32 size)
         }
         return nullptr;
     }
-    
 }
 
 void* HeapMemoryManager::malloc(uint32 size)

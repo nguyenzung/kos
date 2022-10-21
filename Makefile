@@ -24,7 +24,6 @@ ASFLAGS = -felf64
 LDFLAGS = -T kernel.ld -nostdlib -n
 LDFLAGS += -Map=$(MAP)
 
-
 CPP_HEAD_FILES := $(shell find . -name *.h)
 CPP_SOURCE_FILES := $(shell find . -name *.cpp)
 CPP_OBJ_FILES := $(patsubst ./%.cpp, $(BUILD_DIR)/%.o, $(CPP_SOURCE_FILES))
@@ -64,7 +63,7 @@ clean:
 	rm -rf build
 
 demo:  $(TARGET)
-	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm
+	qemu-system-x86_64 -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm
 
 uefi:  $(TARGET)
 	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm

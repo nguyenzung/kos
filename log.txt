@@ -1,8 +1,4 @@
-Initialize Kernel
- Address:    3758096384
- Width:          3072
- Height:          1024
- Depth:             0
- Red:            24
- Green:             0
- Blue:            16
+
+ Initialize Kernel
+ VESA Setup Video Mode 
+ AddChild 
