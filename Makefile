@@ -39,7 +39,8 @@ info: $(ASM_SOURCE_FILES)
 	@echo $(ASM_SOURCE_FILES)
 
 all:  $(TARGET)
- $(TARGET): $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(CPP_HEAD_FILES) kernel.ld
+
+$(TARGET): $(ASM_OBJ_FILES) $(CPP_OBJ_FILES) $(CPP_HEAD_FILES) kernel.ld
 	$(LD) -o $(BUILD_DIR)/kernel.bin $(LDFLAGS) $(CPP_OBJ_FILES) $(ASM_OBJ_FILES) && \
 	cp $(BUILD_DIR)/kernel.bin iso/boot && \
 	grub-mkrescue /usr/lib/grub/x86_64-efi -o $@ iso
@@ -64,7 +65,10 @@ clean:
 
 demo:  $(TARGET)
 	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm
-	
+
+uefi:  $(TARGET)
+	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -smp 4,sockets=2,cores=2,maxcpus=4 -cpu host -m 8192M -serial file:kos_serial.log -no-reboot -no-shutdown -cdrom $< --enable-kvm
+
 install: $(BUILD_DIR)/kernel.bin
 	cp $(BUILD_DIR)/kernel.bin /boot/
 	

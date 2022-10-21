@@ -4,7 +4,8 @@
 
 int main() {
     OS os;
-    os.setupHardware();
     os.initialize();
+    os.setupHardware();
+    
     os.startOS();
 }

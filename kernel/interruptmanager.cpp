@@ -57,7 +57,7 @@ void* InterruptManager::getIDTAddress()
 void InterruptManager::handleInterrupt(uint64 vector)
 {
     Kernel::getInstance()->getDeviceManager()->handleInterrupt(vector);
-    eoi(vector);
+    this->eoi(vector);
 }
 
 void InterruptManager::eoi(uint64 vector)
@@ -80,7 +80,7 @@ void InterruptManager::enableAPIC()
     apic->startTimer();
     
     // load IOAPIC
-    ioApic = loadIOAPIC();    
+    ioApic = loadIOAPIC();
 }
 
 
@@ -109,9 +109,9 @@ void InterruptManager::setupIDT()
     for (uint8 vector = OFFSET; vector < 32 + OFFSET; vector++) {
         this->setGateEntry(vector, isrStubTable[vector + 1 - OFFSET], 0x8E);
     }
-    this->setGateEntry(0x20, &isrTimerHandler, 0x8E);    
+    this->setGateEntry(0x20, &isrTimerHandler, 0x8E);
     asm ("lidt %0" : : "m"(idtr));
-    pic.enable();   
+    pic.enable();
 }
 
 void InterruptManager::setGateEntry(uint8 vector, void* isr, uint8 flags)

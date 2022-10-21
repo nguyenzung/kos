@@ -22,6 +22,7 @@ IMPL_MODULE_INSTANCE(VGA)
 
 
 VGA::VGA()
+    :BaseGraphicsDevice()
 {
     VGA::setInstance(this);
 }
@@ -168,7 +169,7 @@ VGAColor VGA::getColorIndex(uint8 r, uint8 g, uint8 b)
     }
 }
 
-void VGA::drawPixel(uint32 x, uint32 y,  VGAColor colorIndex)
+void VGA::drawPixel(uint16 x, uint16 y,  VGAColor colorIndex)
 {
     if(x < 0 || 320 <= x
     || y < 0 || 200 <= y)
@@ -178,19 +179,19 @@ void VGA::drawPixel(uint32 x, uint32 y,  VGAColor colorIndex)
     *pixelAddress = colorIndex;
 }
            
-void VGA::drawPixel(uint32 x, uint32 y,  uint8 r, uint8 g, uint8 b)
+void VGA::drawPixel(uint16 x, uint16 y,  uint8 r, uint8 g, uint8 b)
 {
     drawPixel(x,y, getColorIndex(r,g,b));
 }
 
-void VGA::drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, VGAColor color)
+void VGA::drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, VGAColor color)
 {
     for(uint32 Y = y; Y < y + h; Y++)
         for(uint32 X = x; X < x + w; X++)
             drawPixel(X, Y, color);
 }
 
-void VGA::drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, uint8 r, uint8 g, uint8 b)
+void VGA::drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b)
 {
     for(uint32 Y = y; Y < y + h; Y++)
         for(uint32 X = x; X < x + w; X++)

@@ -13,6 +13,8 @@
 #include <kernel/virtualmemory.h>
 #include <kernel/processmanager.h>
 #include <kernel/pic.h>
+#include <kernel/multiboot.h>
+#include <kernel/graphicsserver.h>
 #include <stdlib/list.h>
 #include <driver/timer.h>
 #include <driver/cmos.h>
@@ -38,6 +40,9 @@ class Kernel
     std::Vector<AP*> aps;
     driver::CMOS cmos;
     
+    Multiboot multiboot;
+    GraphicsServer graphics;
+    
     static Kernel* instance;
 
 public:
@@ -54,7 +59,8 @@ public:
     bool isInterruptActive();
     
     void loadCores();
-    void loadDevice(InterruptHandler *handler);
+    void loadDevice(BaseDriver *handler);
+    void loadGraphics(BaseGraphicsDevice *device);
 
     static int start(int argc, char**argv);
 

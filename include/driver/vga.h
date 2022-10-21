@@ -1,7 +1,7 @@
 #ifndef VGA_H
 #define VGA_H
 
-#include <driver/basegraphicsdevice.h>
+#include <kernel/basegraphicsdevice.h>
 #include <kernel/type.h>
 #include <kernel/utils.h>
 
@@ -28,7 +28,7 @@ typedef enum VGAColor {
 } VGAColor;
 
 
-class VGA: BaseGraphicsDevice
+class VGA: public BaseGraphicsDevice
 {
 protected:
     uint8* getFrameSegment();        
@@ -42,10 +42,10 @@ public:
     void handleInterrupt();
 
     void setupVideoMode() override;
-    void drawPixel(uint32 x, uint32 y, VGAColor colorIndex);
-    void drawPixel(uint32 x, uint32 y,  uint8 r, uint8 g, uint8 b) override;
-    void drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, VGAColor color);
-    void drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, uint8 r, uint8 g, uint8 b) override;
+    void drawPixel(uint16 x, uint16 y, VGAColor colorIndex);
+    void drawPixel(uint16 x, uint16 y,  uint8 r, uint8 g, uint8 b) override;
+    void drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, VGAColor color);
+    void drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b) override;
 
 };
  

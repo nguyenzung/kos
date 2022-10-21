@@ -3,35 +3,38 @@
 
 #include <kernel/type.h>
 #include <kernel/utils.h>
-#include <driver/basegraphicsdevice.h>
+#include <kernel/multiboot.h>
+
+#include <kernel/basegraphicsdevice.h>
 
 using namespace kernel;
 
 namespace driver
 {
 
-class VESA: BaseGraphicsDevice {
+class VESA: public BaseGraphicsDevice {
 public:
     class Font {
         
     };
 
-protected:
-    uint16 width;
-    uint16 height;
-    uint8 depth;
-    
+protected:    
     void *frameBuffer;
+    
+    uint8 redIndex;
+    uint8 greenIndex;
+    uint8 blueIndex;
+    
 public:
-    VESA(void *frameBufferInfo);
+    VESA();
     ~VESA();
     
     DEF_MODULE_INSTANCE(VESA)
     
     void setupVideoMode() override;
-    void drawPixel(uint32 x, uint32 y, uint8 r, uint8 g, uint8 b) override;
-    void drawRectangle(uint32 x, uint32 y, uint32 w, uint32 h, uint8 r, uint8 g, uint8 b) override;
-    
+    void drawPixel(uint16 x, uint16 y, uint8 r, uint8 g, uint8 b) override;
+    void drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b) override;
+    void clearScreen(uint8 r, uint8 g, uint8 b);
 };
 
 }

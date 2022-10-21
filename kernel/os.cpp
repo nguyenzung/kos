@@ -20,11 +20,13 @@ void OS::initialize()
 
 void OS::setupHardware()
 {
-    keyboard.active();
-    kernel.loadDevice(&keyboard);
+//    keyboard.active();
+    kernel.loadDevice((BaseDriver*)&keyboard);
     
-    mouse.active();
-    kernel.loadDevice(&mouse);
+//    mouse.active();
+    kernel.loadDevice((BaseDriver*)&mouse);
+    
+    kernel.loadGraphics((BaseGraphicsDevice*)(&vesa));
 }
 
 void OS::startOS()
