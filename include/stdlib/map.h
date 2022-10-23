@@ -5,6 +5,7 @@
 #include <stdlib/math.h>
 // #include <kernel/type.h>
 #include <kernel/printer.h>
+#include <driver/serial.h>
 
 namespace std
 {
@@ -139,10 +140,55 @@ class Map
         }
     };
 
-    // class Iterator
-    // {
+public:
+    class Iterator
+    {
+    protected:
+        TreeNode* ptr;
 
-    // };
+    public:
+        Iterator(TreeNode* ptr)
+        {
+            this->ptr = ptr;
+        }
+
+        Iterator& operator = (TreeNode* ptr)
+        {
+            this->ptr = ptr;
+            return *this;
+        }
+
+        Iterator& operator++()
+        {
+            if (ptr)
+            {
+                ptr = ptr->next;
+            }
+            return *this;
+        }
+ 
+        Iterator operator++(int)
+        {
+            Iterator iterator = *this;
+            ++*this;
+            return iterator;
+        }
+ 
+        bool operator!=(const Iterator& iterator)
+        {
+            return ptr != iterator.ptr;
+        }
+        
+        bool operator==(const Iterator& iterator)
+        {
+            return ptr == iterator.ptr;
+        }
+ 
+        Pair<K,V>* operator*()
+        {
+            return ptr->pair;
+        }
+    };
 
 public:
     TreeNode *root;
@@ -550,6 +596,21 @@ protected:
     {
         TreeNode *result = findNode(key, node);
         return result ? result->pair : nullptr;
+    }
+
+public:
+    Iterator begin()
+    {
+        TreeNode *current = root;
+        while (current && current->left ) {
+            current = current->left;
+        }
+        return Iterator(current);
+    }
+ 
+    Iterator end()
+    {
+        return Iterator(0);
     }
 };
 

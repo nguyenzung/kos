@@ -14,9 +14,6 @@ namespace driver
 
 class VESA: public BaseGraphicsDevice {
 public:
-    class Font {
-        
-    };
 
 protected:    
     void *frameBuffer;

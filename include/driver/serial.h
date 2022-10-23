@@ -27,6 +27,7 @@ public:
     bool isBufferNull();
     void send(char a);
     void printSerial(char *msg);
+    void printNumber(uint64 number);
 
 };
 

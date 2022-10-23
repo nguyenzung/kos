@@ -15,6 +15,7 @@
 #include <stdlib/string.h>
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
+#include <ui/desktop.h>
 
 #define HEAP_SIZE 256*1024*1024
 #define MAX_KERNEL_SIZE 1024*1024*1024
@@ -139,44 +140,18 @@ void Kernel::initialize()
 //     map.put(60, 60);
 //     map.preorderTravel();
 //     map.inorderTravel(); 
+    
 
-    // uint64 address = &Kernel::initialize;
-//     VGA vga;
-//     vga.setupVideoMode();
-//     vga.drawRectangle(0,0, 320, 200, VGAColor::CYAN);
-    
-//    void *videoAddress = 0;
-    
-    
-    
-//    void *graphicsMemory = (void*)3221225472;
-//    for (uint32 i = 0; i < 3072 * 3; i = i + 3)
-//    {
-//        *((uint8*)(graphicsMemory + i)) = 0x00;
-//        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
-//        *((uint8*)(graphicsMemory + i + 2)) = 0xff;
-//    }
-    
-//    for (uint32 i = 3072 * 3; i < 3072 * 160; i = i + 3)
-//    {
-//        *((uint8*)(graphicsMemory + i)) = 0xff;
-//        *((uint8*)(graphicsMemory + i + 1)) = 0x00;
-//        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
-//    }
-    
-//    for (uint32 i = 3072 * 160; i < 3072 * 768; i = i + 3)
-//    {
-//        *((uint8*)(graphicsMemory + i)) = 0x00;
-//        *((uint8*)(graphicsMemory + i + 1)) = 0xff;
-//        *((uint8*)(graphicsMemory + i + 2)) = 0x00;
-//    }
-    
 }
 
 void Kernel::update()
 {
-    cmos.updateDateTime();
-//    serial.printSerial("\n A second passed "); 
+    static uint32 counter = 0;
+    if (counter % 180 == 0)
+    {
+        graphics.update();
+    }
+    counter++;
 }
 
 void Kernel::enableInterrupt()
@@ -217,6 +192,8 @@ void Kernel::loadGraphics(BaseGraphicsDevice *device)
 {
     device->active();
     graphics.initializeDevice(device);
+    ui::Desktop *desktop = new ui::Desktop();
+    graphics.setBaseWidget(desktop);
 }
 
 int Kernel::start(int argc, char **argv)

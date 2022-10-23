@@ -30,7 +30,7 @@ void VESA::setupVideoMode()
     this->redIndex = 2;
     this->greenIndex = 1;
     this->blueIndex = 0;    
-    this->clearScreen(0x00,0xff,0xff);
+//    this->clearScreen(0x00,0xff,0xff);
 }
 
 void VESA::drawPixel(uint16 x, uint16 y, uint8 r, uint8 g, uint8 b)

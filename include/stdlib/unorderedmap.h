@@ -8,7 +8,7 @@
 #include <stdlib/algorithm.h>
 #include <kernel/printer.h>
 
-#define NUM_SLOT_DEFAULT 2269    // We choose a prime number for the total slots
+#define NUM_SLOT_DEFAULT 101    // We choose a prime number for the total slots
 
 using namespace kernel;
 
