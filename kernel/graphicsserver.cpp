@@ -30,7 +30,7 @@ void GraphicsServer::initializeDevice(BaseGraphicsDevice *device)
 void GraphicsServer::update()
 {
     // We can just use memmov
-    
+//    asm("cli");
     if (frameBuffer && widget)
     {
         widget->osUpdate();
@@ -43,6 +43,7 @@ void GraphicsServer::update()
             }
         }
     }
+//    asm("sti");
 }
 
 void GraphicsServer::setBaseWidget(Widget *widget)
@@ -53,6 +54,8 @@ void GraphicsServer::setBaseWidget(Widget *widget)
 
 void GraphicsServer::drawPixel(uint16 x, uint16 y, uint8 r, uint8 g, uint8 b)
 {
+    if (x < 0 || x >= width || y < 0 || y >= height)
+        return;
     uint8 *address = (uint8*)(frameBuffer + y * width * 3 + x * 3);
     address[0] = r;
     address[1] = g;

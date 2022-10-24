@@ -147,7 +147,7 @@ void Kernel::initialize()
 void Kernel::update()
 {
     static uint32 counter = 0;
-    if (counter % 180 == 0)
+    if (counter % 200 == 0)
     {
         graphics.update();
     }

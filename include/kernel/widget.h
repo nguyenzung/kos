@@ -13,8 +13,9 @@ class Widget
 private:
 
 protected:
-    uint16 x, y, z, width, height;   // x, y, z is relative position base on parent widget
-    
+    int16 x, y;
+    uint16 z, width, height;   // x, y, z is relative position base on parent widget
+    bool isWrapped;
     Widget *parent;
     std::Map<uint32, Widget*> childs;
     std::UnorderedMap<Widget*, uint32> mapper;
@@ -22,10 +23,12 @@ protected:
 public:
 //    Widget(Widget *parent = 0);
     Widget(Widget *parent = 0, uint16 z = 0);
-    Widget(uint16 x, uint16 y, uint16 w, uint16 h, Widget *parent = 0);
+    Widget(int16 x, int16 y, uint16 w, uint16 h, Widget *parent = 0);
     ~Widget();
     
     void setSize(uint16 w, uint16 h);
+    void setPosition(int16 x, int16 y);
+    void setIsWrapped(bool isWrapped);
     
     void osUpdate();
     virtual void render();
@@ -43,8 +46,8 @@ protected:
     uint32 calculateZ(uint16 z);
     void addChild(Widget *child, uint16 z = 0);
     
-    void rectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b);
-    void rectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint32 color);
+    void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b);
+    void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint32 color);
 };
 
 }
