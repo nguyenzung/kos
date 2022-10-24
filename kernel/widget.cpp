@@ -143,15 +143,6 @@ void Widget::rectangle(int16 x, int16 y, uint16 w, uint16 h, uint8 r, uint8 g, u
         w = xBottomRight - xTopLeft;
         h = yBottomRight - yTopLeft;
         
-    }else{
-        driver::SERIAL::getInstance()->printSerial("\n is wrapped = false ");
-        driver::SERIAL::getInstance()->printNumber(x);
-        driver::SERIAL::getInstance()->printSerial(" ");
-        driver::SERIAL::getInstance()->printNumber(y);
-        driver::SERIAL::getInstance()->printSerial(" ");
-        driver::SERIAL::getInstance()->printNumber(w);
-        driver::SERIAL::getInstance()->printSerial(" ");
-        driver::SERIAL::getInstance()->printNumber(h);
     }
     if (parent)
     {
