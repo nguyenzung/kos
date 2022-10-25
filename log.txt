@@ -1,4 +1,0 @@
-
- Initialize Kernel
- VESA Setup Video Mode 
- AddChild 

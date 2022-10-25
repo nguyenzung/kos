@@ -29,6 +29,8 @@ public:
     void load(uint64 *address);
     
     void onFinished();
+    
+    friend class Process;
 };
 
 }

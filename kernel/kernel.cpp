@@ -23,6 +23,7 @@
 using namespace kernel;
 
 extern void* heapBase;
+extern void* stackSize;
 extern void* stackBase;
 extern void* stackBottom;
 extern void* multibootData;
@@ -79,7 +80,7 @@ void Kernel::initialize()
                 HEAP_SIZE,
                 (uint64)stackBottom,
                 (uint64)stackBase,
-                1<<26,
+                (uint64)stackSize,
                 &Kernel::start,
                 1,
                 0,

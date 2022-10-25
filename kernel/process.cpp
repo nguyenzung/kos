@@ -73,10 +73,16 @@ kernel::Task* kernel::Process::createTask(mainFunction entryPoint, int argc, cha
     if (prevNode)
     {
         Task *prevTask = (Task*)prevNode->value;
-        newTask->initialize(prevTask->stackBase + TASK_STACK_SIZE);
+        if (stackBottom + stackSize > prevTask->stackBase + TASK_STACK_SIZE)
+            newTask->initialize(prevTask->stackBase + TASK_STACK_SIZE);
+        else
+            return nullptr;
     } else
     {
-        newTask->initialize((uint64)stackBase);
+        if (tasks.size() == 0)
+            newTask->initialize((uint64)stackBase);
+        else
+            return nullptr;
     }
     tasks.addNodeAfter(prevNode, new std::Node<Task*>(newTask));
     TaskManager::getInstance()->addTask(newTask);
@@ -106,6 +112,6 @@ std::Node<Task*>* kernel::Process::findTaskPosition()
 void kernel::Process::onTaskFinished(Task *task)
 {
     this->tasks.removeNodeByValue(task);
-    if (this->tasks.size == 0)
+    if (this->tasks.size() == 0)
         ProcessManager::getInstance()->onProcessFinished(this);
 }

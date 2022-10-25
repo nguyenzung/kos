@@ -28,7 +28,7 @@ uint32 PhysicalMemory::load()
 
 int PhysicalMemory::loadInFreeFrames()
 {
-    if (freeFrames.size > 0)
+    if (freeFrames.size() > 0)
     {
         uint32 index = freeFrames.removeLast();
         return load(index);

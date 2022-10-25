@@ -30,7 +30,7 @@ public:
     uint64 heapBase;
     uint64 heapSize;
     uint64 stackBottom;
-    uint64 stackBase;
+    uint64 stackBase;       // Base address of main thread
     uint64 stackSize;
     OSSpace space;
     
@@ -64,8 +64,8 @@ public:
     void initializeHeapManagement();
     void initializeVirtualMemory();
     void initializeGDT();
+    
     kernel::Task* createTask(mainFunction entryPoint, int argc, char **argv);
-//    kernel::Task* insertTask(mainFunction entryPoint, int argc, char **argv);
     std::Node<Task*>* findTaskPosition();
     void onTaskFinished(Task *task);
 };
