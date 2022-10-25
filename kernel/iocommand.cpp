@@ -2,6 +2,12 @@
 
 using namespace kernel;
 
+uint64 rdtsc() {
+    uint64 low, high;
+    asm volatile("rdtsc" : "=a" (low), "=d" (high));
+    return low | (high << 32);
+}
+
 void outb(uint16 port, uint8 value)
 {
     asm ("outb %0, %1" : : "r" (value), "Nd" (port));

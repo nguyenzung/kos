@@ -48,6 +48,7 @@ protected:
     
     void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b);
     void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint32 color);
+    void text(int16 x, int16 y, char code, uint32 color);
 };
 
 }

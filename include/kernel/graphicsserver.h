@@ -39,6 +39,8 @@ public:
     
     void drawPixel(uint16 x, uint16 y, uint32 color);
     void drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h, uint32 color);
+
+    void drawText(uint16 x, uint16 y, char code, uint32 color);
     void clearScreen(uint32 color);
 };
 

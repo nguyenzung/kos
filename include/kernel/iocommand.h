@@ -5,6 +5,7 @@
 
 using namespace kernel;
 
+uint64 rdtsc();
 void outb(uint16 port, uint8 value);
 uint8 inb(uint16 port);
 void outw(uint16 port, uint16 value);
