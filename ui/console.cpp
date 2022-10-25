@@ -4,10 +4,9 @@
 using namespace ui;
 
 Console::Console(Widget *parent)
-    :Window(parent)
+    :Window(parent), color(0x0000ff), direction(3)
 {
-    x = 20;
-    y = 20;
+
 }
 
 Console::~Console()
@@ -15,14 +14,24 @@ Console::~Console()
     
 }
 
+void Console::setDirection(int direction)
+{
+    this->direction = direction;
+}
+
+void Console::setColor(uint32 color)
+{
+    this->color = color;
+}
+
 void Console::render()
 {
-    static int direction = 5;
-    if (x + width + direction < parent->getWidth() - 5 && x + direction >= 5)
+    
+    if (x + width + direction < parent->getWidth() && x + direction >= 0)
         x += direction;
     else {
         direction = -direction;
     }
-    rectangle(0, 0, width, height, 0x0000ff);
+    rectangle(0, 0, width, height, color);
 }
 

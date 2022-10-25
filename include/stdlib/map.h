@@ -299,6 +299,18 @@ public:
         printf("\n In-Order Travel \n");
         inorderTravel(root);
     }
+    
+    template<typename Processor>
+    void revertInorderProcess(Processor processor)
+    {
+        revertInorderProcess(root, processor);
+    }
+    
+    template<typename Processor>
+    void inorderProcess(Processor processor)
+    {
+        inorderProcess(root, processor);
+    }
 
     void preorderTravel()
     {
@@ -352,6 +364,42 @@ protected:
         if (node->right)
         {
             inorderTravel(node->right);
+        }
+    }
+    
+    template <typename Processor>
+    void revertInorderProcess(TreeNode *node, Processor processor)
+    {
+        if (!node)
+        {
+            return;
+        }
+        if (node->right)
+        {
+            revertInorderProcess(node->right, processor);
+        }
+        processor(node->value());        
+        if (node->left)
+        {
+            revertInorderProcess(node->left, processor);
+        }
+    }
+    
+    template <typename Processor>
+    void inorderProcess(TreeNode *node, Processor processor)
+    {
+        if (!node)
+        {
+            return;
+        }
+        if (node->left)
+        {
+            inorderProcess(node->left, processor);
+        }
+        processor(node->value());        
+        if (node->right)
+        {
+            inorderProcess(node->right, processor);
         }
     }
 
