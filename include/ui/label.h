@@ -5,18 +5,18 @@
 namespace ui {
 
 class Label : public Widget {
- protected:
-	uint32 m_color;
-	const char *m_str = nullptr;
+  protected:
+    uint32 m_color;
+    const char *m_str = nullptr;
 
- public:
-	explicit Label(Widget* parent = 0, const char *txt = nullptr);
-	~Label();
+  public:
+    explicit Label(Widget *parent = 0, const char *txt = nullptr);
+    ~Label();
 
-	void setColor(uint32 color);
-	void setStr(const char* str);
-	virtual void render();
+    void setColor(uint32 color);
+    void setStr(const char *str);
+    virtual void render();
 };
 
-}  // namespace ui
-#endif	// INCLUDE_UI_LABEL_H_
+} // namespace ui
+#endif // INCLUDE_UI_LABEL_H_
