@@ -110,13 +110,13 @@ public:
  
 
 public:
-    kernel::uint64 size;
+    kernel::uint64 size_;
     Node<T> *first;
     Node<T> *last;
     Node<T> *current;
     // Iterator it;
 
-    List():size(0), first(0), last(0), current(0){}
+    List():size_(0), first(0), last(0), current(0){}
 
     ~List(){}
 
@@ -130,7 +130,7 @@ public:
             this->last->addNext(node);
             this->last = node;
         }
-        ++this->size;
+        ++this->size_;
     }
 
     Node<T>* add(T value)
@@ -161,7 +161,7 @@ public:
                 this->last = node;
             }
         }
-        ++this->size;
+        ++this->size_;
     }
 
     /*
@@ -187,7 +187,7 @@ public:
                 {
                     prev->addNext(next);
                 }
-                if (this->size == 1)
+                if (this->size_ == 1)
                 {
                     this->first = this->last = 0;
                 }else{
@@ -200,7 +200,7 @@ public:
                         this->last = curr->prev;
                     }
                 }
-                --this->size;
+                --this->size_;
                 return node;
             }
             curr = curr->next;
@@ -221,7 +221,7 @@ public:
                 {
                     prev->addNext(next);
                 }
-                if (this->size == 1)
+                if (this->size_ == 1)
                 {
                     this->first = this->last = 0;
                 }else{
@@ -234,7 +234,7 @@ public:
                         this->last = curr->prev;
                     }
                 }
-                --this->size;
+                --this->size_;
                 return curr;
             }
             curr = curr->next;
@@ -270,9 +270,9 @@ public:
         return this->current;
     }
 
-    kernel::uint64 getSize()
+    kernel::uint64 size()
     {
-        return this->size;
+        return this->size_;
     }
 
     Iterator begin()
