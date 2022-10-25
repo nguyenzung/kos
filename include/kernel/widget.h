@@ -7,7 +7,7 @@
 
 namespace kernel
 {
-
+class GraphicsServer;
 class Widget
 {
 private:
@@ -30,7 +30,9 @@ public:
     void setPosition(int16 x, int16 y);
     void setIsWrapped(bool isWrapped);
     
-    void osUpdate();
+    void addChild(Widget *child, uint16 z = 0);
+    void removeChild(Widget *widget);
+    
     virtual void render();
 //    virtual void update() = 0;
     
@@ -41,14 +43,15 @@ public:
     uint32 getHeight();
 
 protected:
+    void osUpdate();
     void updateZ(uint16 z);
     void updateZOfChild(Widget *widget, uint16 z);
     uint32 calculateZ(uint16 z);
-    void addChild(Widget *child, uint16 z = 0);
-    
     void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint8 r, uint8 g, uint8 b);
     void rectangle(int16 x, int16 y, uint16 w, uint16 h, uint32 color);
     void text(int16 x, int16 y, char code, uint32 color);
+    
+    friend class GraphicsServer;
 };
 
 }

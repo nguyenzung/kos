@@ -26,16 +26,18 @@ void VESA::setupVideoMode()
     this->frameBuffer = (void*)frameBuffer->address;   // Load memory map
     this->width = 1024;
     this->height = 768;
-    this->depth = 3; 
+    this->depth = 4;
+    if(this->depth == 4)
+        this->alphaIndex = 3;
     this->redIndex = 2;
     this->greenIndex = 1;
     this->blueIndex = 0;    
-//    this->clearScreen(0x00,0xff,0xff);
+    this->clearScreen(0xff,0x00,0x00);
 }
 
 void VESA::drawPixel(uint16 x, uint16 y, uint8 r, uint8 g, uint8 b)
 {
-    uint8 *address = (uint8*)(frameBuffer + y * this->width * 3 + x * 3);
+    uint8 *address = (uint8*)(frameBuffer + y * this->width * this->depth + x * this->depth);
     address[this->redIndex] = r;
     address[this->greenIndex] = g;
     address[this->blueIndex] = b;

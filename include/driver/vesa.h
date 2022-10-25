@@ -17,7 +17,7 @@ public:
 
 protected:    
     void *frameBuffer;
-    
+    uint8 alphaIndex;
     uint8 redIndex;
     uint8 greenIndex;
     uint8 blueIndex;

@@ -72,4 +72,22 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num)
     return 0;
 }
 
+size_t strlen(const char *str)
+{
+    size_t size = 0;
+    while(str[size] != '\0')
+    {
+        ++size;        
+    }
+    return size;
+}
+
+char *strncpy(char *dest, const char *src, size_t n)
+{
+    for (size_t i = 0; i < n; ++i)
+    {
+        dest[i] = src[i];
+    }
+}
+
 }

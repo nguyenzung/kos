@@ -4,7 +4,7 @@ using namespace kernel;
 
 uint64 rdtsc() {
     uint64 low, high;
-    asm volatile("rdtsc" : "=a" (low), "=d" (high));
+    asm ("rdtsc" : "=a" (low), "=d" (high));
     return low | (high << 32);
 }
 

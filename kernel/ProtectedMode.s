@@ -11,7 +11,7 @@ align 8
 	dd 20
 	dd 1024
 	dd 768
-	dd 24
+	dd 32
 align 8
     dw 0
 	dw 0

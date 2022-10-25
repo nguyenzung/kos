@@ -35,8 +35,9 @@ Desktop::Desktop(Widget *parent)
     console22->setDirection(3);
     console22->setColor(0x00ffff);
 
-    Label *label = new Label(console22, "hello");
-    label->setColor(0x00ff00);
+    Label *label = new Label(console22, "LABEL");
+    label->setTextColor(0xff0000);
+    label->setPosition(30, 60);
 }
 
 Desktop::~Desktop()

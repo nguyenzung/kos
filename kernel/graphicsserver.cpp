@@ -161,7 +161,6 @@ void GraphicsServer::initializeDevice(BaseGraphicsDevice *device)
 void GraphicsServer::update()
 {
     // We can just use memmov
-//    asm("cli");
     if (frameBuffer && widget)
     {
         widget->osUpdate();
@@ -174,7 +173,6 @@ void GraphicsServer::update()
             }
         }
     }
-//    asm("sti");
 }
 
 void GraphicsServer::setBaseWidget(Widget *widget)
@@ -187,7 +185,7 @@ void GraphicsServer::drawPixel(uint16 x, uint16 y, uint8 r, uint8 g, uint8 b)
 {
     if (x < 0 || x >= width || y < 0 || y >= height)
         return;
-    uint8 *address = (uint8*)(frameBuffer + y * width * 3 + x * 3);
+    uint8 *address = (uint8*)(frameBuffer + y * width * depth + x * depth);
     address[0] = r;
     address[1] = g;
     address[2] = b;
@@ -209,26 +207,25 @@ void GraphicsServer::clearScreen(uint8 r, uint8 g, uint8 b)
 
 void GraphicsServer::drawPixel(uint16 x, uint16 y, uint32 color)
 {
-    uint8 *address = (uint8*)(frameBuffer + y * width * 3 + x * 3);
+    uint8 *address = (uint8*)(frameBuffer + y * width * depth + x * depth);
     address[0] = (color >> 16) & 0xff;
     address[1] = (color >> 8) & 0xff;
     address[2] = (color >> 0) & 0xff;
 }
 
 void GraphicsServer::drawText(uint16 x, uint16 y, char code, uint32 color) {
+    LOCK(frameBufferLock);
     unsigned char *bitmap = font8x8[static_cast<int>(code)];
     int set;
-    uint32 tmpcolor = color;
     for (int yi = 0; yi < 8; yi++) {
-        for (int xi = 0; xi < 8; xi++) {
+        for (int xi = 0; xi < 8; xi++)
+        {
             set = bitmap[yi] & 1 << xi;
-            if (!set)
-                tmpcolor = 0;
-            else
-                tmpcolor = color;
-            drawPixel(x + xi, y + yi, tmpcolor);
+            if (set)
+                drawPixel(x + xi, y + yi, color);
         }
     }
+    UNLOCK(frameBufferLock);
 }
 
 void GraphicsServer::drawRectangle(uint16 x, uint16 y, uint16 w, uint16 h,

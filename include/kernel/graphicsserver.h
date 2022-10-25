@@ -8,7 +8,6 @@
 
 namespace kernel
 {
-
 class GraphicsServer
 {
 public:

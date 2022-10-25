@@ -6,7 +6,7 @@ using namespace kernel;
 static void microdelay(int amount) {
     uint64 x = rdtsc() + (uint64) amount * 10000;
     while ((int64) (x - rdtsc()) > 0) {
-        asm volatile("pause");
+        asm volatile("hlt");
     }
 }
 

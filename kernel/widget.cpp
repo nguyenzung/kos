@@ -47,6 +47,11 @@ void Widget::setIsWrapped(bool isWrapped)
     this->isWrapped = isWrapped;
 }
 
+void Widget::removeChild(Widget *widget)
+{
+    // TODO
+}
+
 void Widget::osUpdate()
 {
     this->render();
