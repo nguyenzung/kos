@@ -1,5 +1,5 @@
-#include <ui/desktop.h>
 #include <ui/console.h>
+#include <ui/desktop.h>
 #include <ui/label.h>
 
 using namespace ui;
@@ -16,7 +16,6 @@ Desktop::Desktop(Widget *parent)
     console->setSize(960, 640);
     console->setPosition(10, 65);
 
-    
     Console *console1 = new Console(console);
     console1->setSize(480, 320);
     console1->setPosition(60, -20);
@@ -36,8 +35,8 @@ Desktop::Desktop(Widget *parent)
     console22->setDirection(3);
     console22->setColor(0x00ffff);
 
-	Label *label = new Label(console22, "hello");
-	label->setColor(0x00ff00);
+    Label *label = new Label(console22, "hello");
+    label->setColor(0x00ff00);
 }
 
 Desktop::~Desktop()
@@ -45,7 +44,4 @@ Desktop::~Desktop()
     
 }
 
-void Desktop::render()
-{
-    rectangle(0, 0, width, height, 0x0000ff00);
-}
+void Desktop::render() { rectangle(0, 0, width, height, 0x0000ff00); }

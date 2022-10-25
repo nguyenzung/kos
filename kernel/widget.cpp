@@ -4,13 +4,12 @@
 
 using namespace kernel;
 
-
-//Widget::Widget(Widget *parent)
-//    :parent(parent)
+// Widget::Widget(Widget *parent)
+//     :parent(parent)
 //{
-//    if (parent)
-//        parent->addChild(this);
-//}
+//     if (parent)
+//         parent->addChild(this);
+// }
 
 Widget::Widget(Widget *parent, uint16 z)
     :parent(parent), isWrapped(true)
@@ -159,9 +158,6 @@ void Widget::rectangle(int16 x, int16 y, uint16 w, uint16 h, uint32 color)
 
 void Widget::text(int16 x, int16 y, char code, uint32 color) {
 
-	if(code < 'A' || code > 'z')
-		return;
-
     if (isWrapped) {
         int16 xTopLeft = x;
         int16 yTopLeft = y;
@@ -174,9 +170,9 @@ void Widget::text(int16 x, int16 y, char code, uint32 color) {
         y = yTopLeft;
     }
 
-	if (parent) {
-		parent->text(x + this->x, y + this->y, code, color);
-	} else {
-		GraphicsServer::getInstance()->drawText(x, y, code, color);
-	}
+  if (parent) {
+      parent->text(x + this->x, y + this->y, code, color);
+  } else {
+      GraphicsServer::getInstance()->drawText(x, y, code, color);
+  }
 }
