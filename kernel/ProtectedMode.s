@@ -5,12 +5,6 @@ start_multiboot:
     dd end_multiboot - start_multiboot
     dd 0x100000000 - (0xe85250d6 + 0 + (end_multiboot - start_multiboot))
 end_multiboot:
-
-align 8
-    dw 0
-	dw 0
-	dd 8
-
 align 8
 	dw 5
 	dw 1
@@ -18,6 +12,10 @@ align 8
 	dd 1024
 	dd 768
 	dd 24
+align 8
+    dw 0
+	dw 0
+	dd 8
 
 section .text
 bits 32

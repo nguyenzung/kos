@@ -26,7 +26,7 @@ void OS::setupHardware()
 //    mouse.active();
     kernel.loadDevice((BaseDriver*)&mouse);
     
-//    kernel.loadGraphics((BaseGraphicsDevice*)(&vesa));
+    kernel.loadGraphics((BaseGraphicsDevice*)(&vesa));
 }
 
 void OS::startOS()
