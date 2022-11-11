@@ -30,7 +30,8 @@ int PhysicalMemory::loadInFreeFrames()
 {
     if (freeFrames.size() > 0)
     {
-        uint32 index = freeFrames.removeLast();
+        uint32 index = freeFrames.getLast();
+        freeFrames.removeLast();
         return load(index);
     }
     return -1;

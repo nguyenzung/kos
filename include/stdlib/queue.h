@@ -4,7 +4,7 @@
 #include <stdlib/list.h>
 #include <kernel/type.h>
 
-namespace stdlib
+namespace std
 {
 
 template <typename T>
@@ -19,11 +19,29 @@ public:
         data.add(t);
     }
     
-    T pop();
-    
-    kernel::uint32 size()
+    T pop()
     {
-        return data.size;
+        data.removeFirst();
+    }
+    
+    T front()
+    {
+        return data.getFirst();
+    }
+    
+    T back()
+    {
+        return data.getLast();
+    }
+    
+    bool empty() 
+    {
+        return data.size() == 0;
+    }
+   
+    kernel::uint64 size()
+    {
+        return data.size();
     }
 };
 

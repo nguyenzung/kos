@@ -3,7 +3,6 @@
 
 #include <stdlib/pair.h>
 #include <stdlib/math.h>
-// #include <kernel/type.h>
 #include <kernel/printer.h>
 #include <driver/serial.h>
 

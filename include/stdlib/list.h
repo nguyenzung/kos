@@ -163,15 +163,43 @@ public:
         }
         ++this->size_;
     }
+    
+    /*
+    *   Call when list size > 0
+    */
+    T getFirst()
+    {
+        Node<T> *first = this->first;
+        return first->value;
+    }
 
     /*
     *   Call when list size > 0
     */
-    T removeLast()
+    void removeFirst()
+    {
+        Node<T> *first = this->first;
+        this->removeNodeByAddress(first);
+        delete first;
+    }
+    
+    /*
+    *   Call when list size > 0
+    */
+    T getLast()
+    {
+        Node<T> *last = this->last;
+        return last->value;
+    }
+
+    /*
+    *   Call when list size > 0
+    */
+    void removeLast()
     {
         Node<T> *last = this->last;
         this->removeNodeByAddress(last);
-        return last->value;
+        delete last;
     }
 
     Node<T>* removeNodeByAddress(Node<T> *node)
@@ -242,13 +270,13 @@ public:
         return nullptr;
     }
 
-    Node<T>* getFirst()
+    Node<T>* getFirstNode()
     {
         this->current = this->first;
         return this->current;
     }
 
-    Node<T>* getLast()
+    Node<T>* getLastNode()
     {
         return this->last ? this->last->next : this->last;
     }
