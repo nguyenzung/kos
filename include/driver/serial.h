@@ -27,9 +27,18 @@ public:
     bool isBufferNull();
     void send(char a);
     void printSerial(char *msg);
+    void println();
     void printNumber(uint64 number);
 
 };
+
+
+
+template <typename... Args>
+void log(const char *format, Args... args)
+{
+    
+}
 
 }
 #endif

@@ -23,9 +23,14 @@ void SERIAL::send(char a) {
 
 void SERIAL::printSerial(char *msg){
     while (*msg != '\0'){
-      SERIAL::send(*msg);
+      send(*msg);
       msg++;
     }
+}
+
+void SERIAL::println()
+{
+    send('\0');
 }
 
 void SERIAL::printNumber(uint64 number)
