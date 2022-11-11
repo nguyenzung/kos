@@ -26,7 +26,6 @@ void Console::setColor(uint32 color)
 
 void Console::render()
 {
-    
     if (x + width + direction < parent->getWidth() && x + direction >= 0)
         x += direction;
     else {

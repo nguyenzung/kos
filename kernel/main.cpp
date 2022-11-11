@@ -6,6 +6,5 @@ int main() {
     OS os;
     os.initialize();
     os.setupHardware();
-    
     os.startOS();
 }

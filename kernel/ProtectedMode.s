@@ -102,7 +102,7 @@ enablePaging:
     mov cr4, eax
 	
 	mov ecx, 0xC0000080          
-    rdmsr                        
+    rdmsr
     or eax, 1 << 8               
     wrmsr
 	mov eax, cr0                 

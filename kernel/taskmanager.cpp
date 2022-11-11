@@ -24,14 +24,14 @@ Task* TaskManager::addTask(Task *task)
     list.add(task);
     if (list.getCurrent() == 0)
     {
-        list.getFirst();
+        list.getFirstNode();
     }
     return task;
 }
 
 void TaskManager::initialize()
 {
-    this->list.getFirst();
+    this->list.getFirstNode();
 }
 
 void TaskManager::save(uint64 *address)
@@ -56,7 +56,7 @@ void TaskManager::load(uint64 *address)
         std::Node<Task*> *node = this->list.next();
         if (!node)
         {
-            node = this->list.getFirst();
+            node = this->list.getFirstNode();
         }
         if (node)
         {
@@ -106,6 +106,8 @@ int TaskManager::runTask(Task *task)
     printf("\n Start run task %d %d ", task, task->context.entryPoint);
     int result = task->context.entryPoint(task->context.argc, task->context.argv);
     printf("\n Result %d: %d", result, task->context.argc);
+    driver::SERIAL::getInstance()->printSerial("\nFinish a task: ");
+    driver::SERIAL::getInstance()->printNumber(result);
     asm("cli");
     task->onFinished();
     TaskManager::getInstance()->removeTask(task);

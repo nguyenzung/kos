@@ -137,7 +137,7 @@ using namespace kernel;
 IMPL_MODULE_INSTANCE(GraphicsServer)
 
 GraphicsServer::GraphicsServer()
-    :width(0), height(0), depth(0), frameBuffer(0), widget(0)
+    :width(0), height(0), depth(0), frameBuffer(0), widget(0), device(0)
 {
     GraphicsServer::instance = this;
     INIT_LOCK(frameBufferLock);
@@ -156,6 +156,11 @@ void GraphicsServer::initializeDevice(BaseGraphicsDevice *device)
     this->depth = device->depth;
     this->frameBuffer = new uint8[this->width * this->height * this->depth];
     this->device = device;
+}
+
+bool GraphicsServer::isReady()
+{
+    return this->device != nullptr;
 }
 
 void GraphicsServer::update()

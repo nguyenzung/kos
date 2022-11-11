@@ -1,26 +1,36 @@
 #ifndef STDIN_H
 #define STDIN_H
 
+#include <kernel/utils.h>
+
 namespace kernel
 {
 
-class BaseIn
+class BaseInput
 {
     
 };
 
-class MouseIn : public BaseIn
+class MouseIn : public BaseInput
 {
     
 };
 
-class KeyboardIn : public BaseIn
+class KeyboardIn : public BaseInput
 {
     
 };
 
 class StdIn
 {
+public:
+    KeyboardIn keyboardInput;
+    MouseIn mouseInput;
+    
+public:
+    StdIn();
+    ~StdIn();
+    
     
 };
 

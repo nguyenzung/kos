@@ -53,14 +53,11 @@ public:
 
     void initialize();
     void update();
-    
-    void enableInterrupt();
-    void disableInterrupt();
-    bool isInterruptActive();
-    
+
     void loadCores();
     void loadDevice(BaseDriver *handler);
     void loadGraphics(BaseGraphicsDevice *device);
+    void startSystemUI();
 
     static int start(int argc, char**argv);
 

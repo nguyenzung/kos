@@ -16,6 +16,8 @@
 #include <stdlib/algorithm.h>
 #include <tasks/counter.h>
 #include <ui/desktop.h>
+#include <test/test.h>
+
 
 #define HEAP_SIZE 256*1024*1024
 #define MAX_KERNEL_SIZE 1024*1024*1024
@@ -112,8 +114,9 @@ void Kernel::initialize()
     
 //    printf("\n Process ID: %d %d %d ", pid, pid1);
     
-    makeThread(pid, &TaskTest::count, 1000, argv);
-    makeThread(pid, &TaskTest::ask, 2000, argv); 
+//    makeThread(pid, &TaskTest::count, 1000, argv);
+//    makeThread(pid, &TaskTest::ask, 2000, argv); 
+    test();
 //    makeThread(pid1, &TaskTest::processTwo, 120, argv);
     
 //    cmos.updateDateTime();
@@ -155,29 +158,6 @@ void Kernel::update()
     counter++;
 }
 
-void Kernel::enableInterrupt()
-{
-    LOCK(intLock);
-    asm ("sti");
-    UNLOCK(intLock);
-}
-
-void Kernel::disableInterrupt()
-{
-    LOCK(intLock);
-    asm ("cli");
-    UNLOCK(intLock);
-}
-
-bool Kernel::isInterruptActive()
-{
-    LOCK(intLock);
-    uint64 flags;
-    asm ("pushf\n\t" "pop %0":"=g"(flags));
-    UNLOCK(intLock);
-    return flags & (1 << 9);
-}
-
 void Kernel::loadCores()
 {
     
@@ -193,13 +173,21 @@ void Kernel::loadGraphics(BaseGraphicsDevice *device)
 {
     device->active();
     graphics.initializeDevice(device);
-    ui::Desktop *desktop = new ui::Desktop();
-    graphics.setBaseWidget(desktop);
+}
+
+void Kernel::startSystemUI()
+{
+    if (graphics.isReady())
+    {
+        ui::Desktop *desktop = new ui::Desktop();
+        graphics.setBaseWidget(desktop);
+    }
 }
 
 int Kernel::start(int argc, char **argv)
 {    
     asm ("sti");
+    Kernel::getInstance()->startSystemUI();
     asm("_cpp_stop:");
     asm("hlt");
     Kernel::getInstance()->update();

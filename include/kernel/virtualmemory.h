@@ -24,7 +24,6 @@ public:
     MemorySegment stackSegment;
     MemorySegment heapSegment;
     
-
     VirtualMemory();
     
     void initialize(uint64 size, OSSpace space);

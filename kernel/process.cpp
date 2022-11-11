@@ -90,7 +90,7 @@ kernel::Task* kernel::Process::createTask(mainFunction entryPoint, int argc, cha
 
 std::Node<Task*>* kernel::Process::findTaskPosition()
 {
-    std::Node<Task*> *currentNode = tasks.getFirst();
+    std::Node<Task*> *currentNode = tasks.getFirstNode();
     if (currentNode)
     {
         std::Node<Task*> *nextNode = tasks.next();

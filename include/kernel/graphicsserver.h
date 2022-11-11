@@ -5,6 +5,8 @@
 #include <kernel/type.h>
 #include <kernel/utils.h>
 #include <kernel/widget.h>
+#include <kernel/stdin.h>
+#include <kernel/stdout.h>
 
 namespace kernel
 {
@@ -27,6 +29,7 @@ public:
     DEF_MODULE_INSTANCE(GraphicsServer)
     
     void initializeDevice(BaseGraphicsDevice *device);
+    bool isReady();
     
     void update();
     
