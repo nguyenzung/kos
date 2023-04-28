@@ -2,29 +2,29 @@
 
 using namespace kernel;
 
-GDT::GDT()
+GDT64::GDT64()
 {
     
 }
 
-GDT::~GDT()
+GDT64::~GDT64()
 {
     
 }
 
-void GDT::initialize(OSSpace osspace)
+void GDT64::initialize(OSSpace osspace)
 {
     
 }
 
-void GDT::setupKernelModeGDT()
+void GDT64::setupKernelModeGDT()
 {
 //    *((uint64*)&entries[0]) = 0;
 //    entries[1].limit0 = 0;
 //    entries[1].base0 = 0;
 }
 
-void GDT::setupUserModeGDT()
+void GDT64::setupUserModeGDT()
 {
     
 }

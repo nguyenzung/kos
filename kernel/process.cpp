@@ -60,7 +60,7 @@ void kernel::Process::initializeVirtualMemory()
 void kernel::Process::initializeGDT()
 {
     if (!gdt)
-        gdt = new GDT();
+        gdt = new GDT64();
 }
 
 kernel::Task* kernel::Process::createTask(mainFunction entryPoint, int argc, char **argv)

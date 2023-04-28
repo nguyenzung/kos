@@ -23,7 +23,7 @@ void SDT::initialize()
 //    view();
 }
 
-/*   The RSDP is either located within the first 1 KB of the EBDA (Extended BIOS Data Area) 
+ /*   The RSDP is either located within the first 1 KB of the EBDA (Extended BIOS Data Area) 
  *   (a 2 byte real mode segment pointer to it is located at 0x40E),
  *   or in the memory region from 0x000E0000 to 0x000FFFFF (the main BIOS area below 1 MB). 
  */

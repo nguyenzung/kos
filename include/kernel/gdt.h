@@ -15,7 +15,7 @@ namespace kernel
 #define OPERAND_SIZE    1 << 6
 #define LONG            1 << 5
 
-typedef struct GDTEntry
+typedef struct GDT64Entry
 {
     uint16  limit0;
     uint16  base0;
@@ -23,15 +23,15 @@ typedef struct GDTEntry
     uint8   accessByte;
     uint8   limit1AndFlags;    // first 4 bits is used for limit, next 4 bits is used for flags
     uint8   base2;
-} __attribute__((packed)) GDTEntry;
+} __attribute__((packed)) GDT64Entry;
 
-class GDT
+class GDT64
 {
     __attribute__((aligned(0x1000)))
-    GDTEntry entries[4];
+    GDT64Entry entries[4];
 public:
-    GDT();
-    ~GDT();
+    GDT64();
+    ~GDT64();
     
     void initialize(OSSpace osspace);
     

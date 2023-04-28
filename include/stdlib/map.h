@@ -437,12 +437,11 @@ protected:
             {
                 // printf(" \n Swap find in left");
                 return findMaxSuccessor(node->left);
+            } else if (node->right)
+            {
+                 // printf(" \n Swap find in right");
+                 return findMinSuccessor(node->right);
             }
-            // else if (node->right)
-            // {
-            //     // printf(" \n Swap find in right");
-            //     return findMinSuccessor(node->right);
-            // }
         }
         return nullptr;
     }

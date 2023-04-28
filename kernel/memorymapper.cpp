@@ -91,10 +91,10 @@ void MemoryMapper::initialize(uint64 size, OSSpace space)
 
 void MemoryMapper::debug()
 {
-    printf("\nPML4 %b %b ", pml4.value[0], pml4.value[1]);
-    printf("\nPDP %b %b ", pdp.value[0], pdp.value[3]);
-    printf("\nPD %b %b %b %b ", pd[3].value[0], pd[3].value[1], pd[3].value[255], pd[2].value[256]); 
-    printf("\nPT %b %b %b %b ", pt[2047].value[0], pt[2047].value[1], pt[2047].value[255], pt[2047].value[511]); 
+//    printf("\nPML4 %b %b ", pml4.value[0], pml4.value[1]);
+//    printf("\nPDP %b %b ", pdp.value[0], pdp.value[3]);
+//    printf("\nPD %b %b %b %b ", pd[3].value[0], pd[3].value[1], pd[3].value[255], pd[2].value[256]); 
+//    printf("\nPT %b %b %b %b ", pt[2047].value[0], pt[2047].value[1], pt[2047].value[255], pt[2047].value[511]); 
     
 //    printf("\nPML4 %p %p ", &pml4.value[0], &pml4.value[1]);
 //    printf("\nPDP %p %p ", &pdp.value[0], &pdp.value[1]);

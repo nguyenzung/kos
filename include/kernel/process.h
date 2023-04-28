@@ -36,7 +36,7 @@ public:
     
     HeapMemoryManager *heapMemoryManager;
     VirtualMemory *virtualMemory;
-    GDT *gdt;   
+    GDT64 *gdt;   
     std::List<Task*> tasks;
     
     mainFunction entryPoint;
